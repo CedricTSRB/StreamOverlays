@@ -12,7 +12,7 @@
     {id:'instagram',label:'Instagram',svg:'<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="instagram-gradient" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#FFDC80"/><stop offset=".35" stop-color="#F77737"/><stop offset=".68" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><rect x="2" y="2" width="28" height="28" rx="8" fill="url(#instagram-gradient)" stroke="#111" stroke-width="1.5"/><rect x="7" y="7" width="18" height="18" rx="6" fill="none" stroke="#fff" stroke-width="2.2"/><circle cx="16" cy="16" r="4.5" stroke="#fff" fill="none" stroke-width="2.2"/><circle cx="24" cy="8" r="1.5" fill="#fff"/></svg>'}
   ];
   const KEY='goal-overlays-social-v1';
-  const defaults={size:38,gap:20,orientation:'row',accounts:platforms.map(p=>({id:p.id,name:'ADIN',enabled:true}))};
+  const defaults={size:38,gap:20,orientation:'row',accounts:platforms.map(p=>({id:p.id,name:'ADIN',enabled:true,showName:true}))};
   const params=new URLSearchParams(location.search);
   const obs=params.get('overlay')==='social';
   function normalized(raw){
@@ -23,7 +23,7 @@
       orientation:data.orientation==='column'?'column':'row',
       accounts:platforms.map(p=>{
         const v=Array.isArray(data.accounts)?data.accounts.find(a=>a&&a.id===p.id):null;
-        return {id:p.id,name:String(v?.name??'ADIN').slice(0,40),enabled:v?.enabled!==false};
+        return {id:p.id,name:String(v?.name??'ADIN').slice(0,40),enabled:v?.enabled!==false,showName:v?.showName!==false};
       })
     };
   }
@@ -34,18 +34,22 @@
     try{const raw=params.get('config');if(raw&&raw.length<10000)state=normalized(JSON.parse(raw))}catch(_){}
   }
   function save(){if(obs)return;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(_){}}
-  function strip(){
+  function strip(accounts=state.accounts){
     const row=document.createElement('div');
     row.className='social-strip'+(state.orientation==='column'?' is-vertical':'');
     row.style.setProperty('--social-size',state.size+'px');
     row.style.setProperty('--social-gap',state.gap+'px');
     for(const p of platforms){
-      const config=state.accounts.find(a=>a.id===p.id);
+      const config=accounts.find(a=>a.id===p.id);
       if(!config?.enabled)continue;
       const item=document.createElement('div');item.className='social-item';
       const icon=document.createElement('span');icon.className='social-glyph';icon.innerHTML=p.svg;
-      const name=document.createElement('span');name.className='social-name';name.textContent=config.name||p.label;
-      item.append(icon,name);row.appendChild(item);
+      item.appendChild(icon);
+      if(config.showName!==false){
+        const name=document.createElement('span');name.className='social-name';name.textContent=config.name||p.label;
+        item.appendChild(name);
+      }
+      row.appendChild(item);
     }
     return row;
   }
@@ -54,6 +58,48 @@
     if(target)target.replaceChildren(strip());
     const sizeLabel=get('social-size-value');if(sizeLabel)sizeLabel.textContent=state.size+' px';
     const gapLabel=get('social-gap-value');if(gapLabel)gapLabel.textContent=state.gap+' px';
+    updateObsSizes();
+  }
+  // Measure the current logo/text styling instead of guessing OBS dimensions.
+  // For the six example sizes, currently enabled accounts are measured first.
+  function updateObsSizes(){
+    const target=get('social-obs-size-list');
+    if(!target)return;
+    const ordered=[...state.accounts.filter(a=>a.enabled),...state.accounts.filter(a=>!a.enabled)];
+    const selected=state.accounts.filter(a=>a.enabled).length;
+    const measuring=document.createElement('div');
+    measuring.className='social-measure';
+    document.body.appendChild(measuring);
+    const output=document.createDocumentFragment();
+    const round10=value=>Math.ceil(value/10)*10;
+    try{
+      for(let count=1;count<=platforms.length;count++){
+        const accounts=ordered.slice(0,count).map(a=>({...a,enabled:true}));
+        const sample=strip(accounts);
+        sample.style.flexWrap='nowrap';
+        sample.style.maxWidth='none';
+        sample.style.width='max-content';
+        sample.style.justifyContent='flex-start';
+        measuring.appendChild(sample);
+        const rect=sample.getBoundingClientRect();
+        sample.remove();
+        const width=round10(Math.max(100,rect.width+36));
+        const height=round10(Math.max(80,rect.height+36));
+        const option=document.createElement('div');
+        option.className='social-obs-size'+(selected===count?' is-current':'');
+        const label=document.createElement('span');
+        label.textContent=count+' Logo'+(count===1?'':'s');
+        const dimensions=document.createElement('strong');
+        dimensions.textContent=width+' × '+height+' px';
+        option.append(label,dimensions);
+        output.appendChild(option);
+      }
+    } finally { measuring.remove(); }
+    target.replaceChildren(output);
+    const currentLabel=get('social-obs-current');
+    if(currentLabel)currentLabel.textContent=selected
+      ? selected+' ausgewählt · '+(state.orientation==='column'?'untereinander':'nebeneinander')
+      : 'Wähle mindestens ein Logo für dein Overlay.';
   }
   if(obs){
     document.body.classList.add('obs-mode','social-obs-mode');
@@ -71,9 +117,17 @@
     const enabled=document.createElement('input');enabled.type='checkbox';enabled.className='social-enable';enabled.checked=cfg.enabled;enabled.setAttribute('aria-label',p.label+' anzeigen');
     const label=document.createElement('label');label.className='social-platform';const mini=document.createElement('span');mini.className='social-mini';mini.innerHTML=p.svg;label.append(mini,document.createTextNode(p.label));
     const name=document.createElement('input');name.type='text';name.maxLength=40;name.placeholder='Benutzername';name.value=cfg.name;name.setAttribute('aria-label',p.label+' Benutzername');name.disabled=!cfg.enabled;
-    enabled.addEventListener('change',()=>{cfg.enabled=enabled.checked;name.disabled=!cfg.enabled;save();draw()});
+    const nameToggle=document.createElement('label');nameToggle.className='social-name-toggle';
+    const showName=document.createElement('input');showName.type='checkbox';showName.checked=cfg.showName!==false;
+    showName.disabled=!cfg.enabled;showName.setAttribute('aria-label',p.label+' Namen anzeigen');
+    const toggleText=document.createElement('span');toggleText.textContent='Name anzeigen';
+    nameToggle.append(showName,toggleText);
+    enabled.addEventListener('change',()=>{
+      cfg.enabled=enabled.checked;name.disabled=!cfg.enabled;showName.disabled=!cfg.enabled;save();draw();
+    });
     name.addEventListener('input',()=>{cfg.name=name.value.slice(0,40);save();draw()});
-    row.append(enabled,label,name);list.appendChild(row);
+    showName.addEventListener('change',()=>{cfg.showName=showName.checked;save();draw()});
+    row.append(enabled,label,name,nameToggle);list.appendChild(row);
   }
   const size=get('social-size'),gap=get('social-gap'),direction=get('social-layout');
   size.value=state.size;gap.value=state.gap;direction.value=state.orientation;
