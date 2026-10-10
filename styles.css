@@ -28,3 +28,16 @@ body.obs-mode{background:transparent!important;overflow:hidden}body.obs-mode #ap
 .overlay-content.mixed-mode .goal-card.style-transparent .bar{background:#02061487;border:1px solid #ffffff50;height:9px;box-shadow:0 2px 7px #0008}
 .overlay-content.style-transparent .bar-fill,
 .overlay-content.mixed-mode .goal-card.style-transparent .bar-fill{background:var(--accent);box-shadow:0 0 11px var(--accent)}
+
+/* Standalone OBS browser sources: override the Creator Studio's opaque :root
+   canvas. The obs-transparent class is attached in <head> before CSS loads. */
+html.obs-transparent,
+html.obs-transparent body,
+html.obs-transparent .obs-root,
+html.obs-transparent .obs-content {
+  background-color: transparent !important;
+}
+html.obs-transparent,
+html.obs-transparent body {
+  background-image: none !important;
+}
