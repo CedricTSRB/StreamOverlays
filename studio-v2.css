@@ -563,3 +563,36 @@ body:not(.obs-mode) .obs-size-guide-item>span:last-child{font-size:10px;color:va
 body:not(.obs-mode) .obs-size-guide-tip{font-size:11px;color:var(--ui-muted,#8b97ac);line-height:1.75;margin-top:16px}
 @media(max-width:1100px){body:not(.obs-mode) .obs-size-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){body:not(.obs-mode) .obs-size-guide-head{flex-direction:column}body:not(.obs-mode) .obs-size-guide-grid{grid-template-columns:1fr 1fr;gap:8px}body:not(.obs-mode) .obs-size-guide-item{padding:11px}body:not(.obs-mode) .obs-size-guide-item strong{font-size:16px}}
+
+
+/* Compact unified setting widget, scoped to the dashboard (OBS output unchanged). */
+body:not(.obs-mode) .studio-compact-grid{display:grid;grid-template-columns:minmax(390px,.96fr) minmax(400px,1.04fr);gap:18px;align-items:start}
+body:not(.obs-mode) .editor-settings{min-width:0;padding:0!important;overflow:visible}
+body:not(.obs-mode) .editor-settings-header{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:23px 23px 16px}
+body:not(.obs-mode) .editor-settings-header h2{font-size:23px;font-weight:850;letter-spacing:-.65px;margin:8px 0 5px}
+body:not(.obs-mode) .editor-settings-header p{font-size:12px;color:var(--ui-muted);line-height:1.5}
+body:not(.obs-mode) .editor-settings-count{background:var(--ui-hover);border:1px solid var(--ui-border);color:var(--ui-primary);border-radius:20px;padding:8px 11px;white-space:nowrap;font-size:10px;font-weight:800}
+body:not(.obs-mode) .editor-settings-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0 17px;padding:5px;background:var(--ui-hover);border:1px solid var(--ui-border);border-radius:13px}
+body:not(.obs-mode) .editor-settings-tab{display:flex;justify-content:center;align-items:center;gap:6px;min-width:0;min-height:42px;padding:9px 6px;border:0;border-radius:9px;background:transparent;color:var(--ui-muted);font-size:11px;font-weight:800;white-space:nowrap;transition:background .16s,color .16s,box-shadow .16s}
+body:not(.obs-mode) .editor-settings-tab:hover{color:var(--ui-primary)}
+body:not(.obs-mode) .editor-settings-tab.is-active{background:var(--ui-panel);color:var(--ui-primary);box-shadow:0 3px 12px #1017331e;border:1px solid var(--ui-border)}
+body:not(.obs-mode) .editor-settings-body{padding:15px 18px 8px;min-width:0}
+body:not(.obs-mode) .editor-settings-panel[hidden]{display:none!important}
+body:not(.obs-mode) .editor-settings-panel>.card{padding:8px 5px 14px;box-shadow:none;border:0;background:transparent;border-radius:0;overflow:visible}
+body:not(.obs-mode) .editor-settings-panel>.card::before{display:none}
+body:not(.obs-mode) .editor-settings-panel .card-head{margin-bottom:14px}
+body:not(.obs-mode) .editor-settings-panel .card-head h2{font-size:17px}
+body:not(.obs-mode) .editor-settings-panel .card-head p{font-size:11px}
+body:not(.obs-mode) .editor-settings-panel .styles-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+body:not(.obs-mode) .editor-settings-panel .style-tile{padding:6px;border-radius:10px}
+body:not(.obs-mode) .editor-settings-panel .style-art{height:72px;padding:10px}
+body:not(.obs-mode) .editor-settings-panel .style-label{font-size:11px;margin:8px 3px 2px}
+body:not(.obs-mode) .editor-settings-panel .style-desc{font-size:9px;margin:0 3px 4px}
+body:not(.obs-mode) .editor-settings-panel .colors-row{gap:12px}
+body:not(.obs-mode) .editor-settings-footer{display:flex;align-items:center;gap:8px;padding:13px 22px 17px;border-top:1px solid var(--ui-border);font-size:10px;color:var(--ui-muted)}
+body:not(.obs-mode) .editor-settings-footer .save-dot{width:7px;height:7px;flex:0 0 7px}
+body:not(.obs-mode) .compact-preview-column{min-width:0}
+body:not(.obs-mode) .compact-preview-column .preview-card{position:sticky;top:95px}
+body:not(.obs-mode) #studio-settings{scroll-margin-top:100px}
+@media(max-width:1240px){body:not(.obs-mode) .studio-compact-grid{grid-template-columns:1fr}body:not(.obs-mode) .compact-preview-column .preview-card{position:static}}
+@media(max-width:620px){body:not(.obs-mode) .editor-settings-header{padding:18px 16px 12px}body:not(.obs-mode) .editor-settings-count{display:none}body:not(.obs-mode) .editor-settings-tabs{margin:0 10px}body:not(.obs-mode) .editor-settings-tab{font-size:10px;gap:3px;min-height:39px}body:not(.obs-mode) .editor-settings-body{padding:12px 11px 6px}body:not(.obs-mode) .editor-settings-panel .styles-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
