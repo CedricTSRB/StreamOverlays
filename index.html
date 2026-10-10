@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#f6f7fb">
   <meta name="description" content="StreamOverlays Creator Studio – gestalte Abo-Ziele, Follower-Ziele, Timer und Social-Media-Overlays für OBS.">
   <title>StreamOverlays — Creator Studio</title>
+  <script>
+  // Transparent HTML canvas for all standalone OBS views (not just body).
+  if(['subs','followers','timer','all','social'].includes(new URLSearchParams(location.search).get('overlay')))
+    document.documentElement.classList.add('obs-transparent');
+  </script>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="social.css">
 <style id="subboost-dashboard-theme">
