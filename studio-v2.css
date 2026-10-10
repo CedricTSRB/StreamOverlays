@@ -614,3 +614,19 @@ body:not(.obs-mode) .counter-display-fields input,
 body:not(.obs-mode) .counter-display-fields select{display:block;margin-top:6px;width:100%;min-width:0;height:39px;background:var(--ui-hover);color:var(--ui-ink);border:1px solid var(--ui-border);border-radius:9px;padding:8px 10px;font:inherit;font-weight:550}
 body:not(.obs-mode) .counter-display-hint{font-size:10px;color:var(--ui-muted);line-height:1.65;margin-top:11px}
 @media(max-width:510px){body:not(.obs-mode) .counter-display-switches{grid-template-columns:1fr 1fr;gap:6px}body:not(.obs-mode) .counter-option{font-size:10px;padding:9px 7px;gap:5px}body:not(.obs-mode) .counter-display-fields{grid-template-columns:1fr}}
+
+
+/* Central design-tab color palette, compatible with light and dark creator themes. */
+body:not(.obs-mode) .design-color-settings{margin-top:17px;border-top:1px solid var(--ui-border);padding:17px 5px 6px}
+body:not(.obs-mode) .design-color-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+body:not(.obs-mode) .design-color-heading strong{color:var(--ui-ink);font-size:14px;font-weight:850}
+body:not(.obs-mode) .design-color-heading span{color:var(--ui-primary);background:var(--ui-hover);border:1px solid var(--ui-border);border-radius:16px;padding:6px 9px;font-size:10px;font-weight:800}
+body:not(.obs-mode) .design-color-description{font-size:11px;color:var(--ui-muted);line-height:1.6;margin:6px 0 12px}
+body:not(.obs-mode) .design-color-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+body:not(.obs-mode) .design-color-setting{display:block;min-width:0;color:var(--ui-muted);font-size:11px;font-weight:750}
+body:not(.obs-mode) .design-color-input{display:flex;align-items:center;gap:10px;border:1px solid var(--ui-border);background:var(--ui-hover);border-radius:10px;min-width:0;padding:7px 9px;margin-top:6px;height:44px}
+body:not(.obs-mode) .design-color-input input[type=color]{border:0;background:transparent;width:31px;height:28px;padding:0;flex-shrink:0;cursor:pointer}
+body:not(.obs-mode) .design-color-input output{color:var(--ui-ink);font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body:not(.obs-mode) .design-color-reset{margin-left:auto;flex-shrink:0;border:0;color:var(--ui-primary);background:transparent;cursor:pointer;font-size:19px}
+body:not(.obs-mode) .counter-display-fields{grid-template-columns:1fr}
+@media(max-width:540px){body:not(.obs-mode) .design-color-grid{grid-template-columns:1fr}}
