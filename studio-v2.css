@@ -646,3 +646,17 @@ body:not(.obs-mode) .top-actions{gap:10px}
 body:not(.obs-mode) .page{padding-top:23px}
 @media(max-width:840px){body:not(.obs-mode) .topbar{height:auto;min-height:62px;padding:9px 14px;gap:9px}body:not(.obs-mode) .top-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end}body:not(.obs-mode) .header-twitch-connect{max-width:150px}}
 @media(max-width:620px){body:not(.obs-mode) .topbar .crumb{display:none}body:not(.obs-mode) .header-twitch-connect{max-width:125px;font-size:10px}body:not(.obs-mode) .header-twitch-disconnect{font-size:10px}}
+
+
+/* Compact corner shape selector within the Design tab. */
+body:not(.obs-mode) .design-corner-settings{margin-top:17px;border-top:1px solid var(--ui-border);padding:17px 5px 3px}
+body:not(.obs-mode) .design-corner-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+body:not(.obs-mode) .design-corner-heading strong{font-size:14px;font-weight:850;color:var(--ui-ink)}
+body:not(.obs-mode) .design-corner-heading span{font-size:10px;color:var(--ui-primary);font-weight:750}
+body:not(.obs-mode) .design-corner-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+body:not(.obs-mode) .design-corner-option{display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:10px 12px;background:var(--ui-hover);border:1px solid var(--ui-border);border-radius:11px;color:var(--ui-ink);font-size:11px;font-weight:800;cursor:pointer}
+body:not(.obs-mode) .design-corner-option.is-active{border-color:var(--ui-primary);background:color-mix(in srgb,var(--ui-primary) 13%,var(--ui-panel));box-shadow:0 0 0 1px color-mix(in srgb,var(--ui-primary) 18%,transparent)}
+body:not(.obs-mode) .corner-example{display:inline-block;width:29px;height:20px;border:2px solid currentColor;background:color-mix(in srgb,var(--ui-primary) 20%,transparent);flex-shrink:0}
+body:not(.obs-mode) .corner-example-rounded{border-radius:7px}
+body:not(.obs-mode) .corner-example-square{border-radius:0}
+@media(max-width:540px){body:not(.obs-mode) .design-corner-option{gap:6px;font-size:10px;padding:9px 7px}}
