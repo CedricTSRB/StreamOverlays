@@ -64,32 +64,74 @@ html.obs-transparent body {
 @media(max-width:470px){.se-live-copy-grid{grid-template-columns:1fr}}
 
 
-/* Slim, glowing counter style based on the requested blue stream overlay reference. */
-.art-counter{background:linear-gradient(180deg,#07101b,#0a1624);border-top:1px solid #419edddd;border-bottom:1px solid #365e80;display:flex;align-items:center;justify-content:center;gap:9px}
-.art-counter strong{font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;font-size:16px;font-stretch:condensed;color:#f2faff;text-shadow:0 0 5px #acdfff,0 0 10px #4daeff;white-space:nowrap}
-.art-counter strong span{font-size:11px;color:#72b7ec}
-.art-counter strong small{color:#7497af}
-.art-counter b{width:100%;height:3px;margin-top:0;border-radius:0;background:linear-gradient(90deg,#60a9d6 87%,#243748 87%);box-shadow:0 0 5px #4997d9}
-.overlay-content.style-counter{--accent:#4f9ed2}
+/* Soft violet-navy counter. Keep the slim numbers and optional progress line,
+   but visually match the rounded purple goal card with a restrained LED glow. */
+.art-counter{
+  background:linear-gradient(155deg,#151a31 0%,#201c3e 100%);
+  border:1px solid #48416b;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;gap:9px
+}
+.art-counter strong{
+  font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  font-size:16px;font-stretch:condensed;color:#f6f4ff;
+  text-shadow:0 0 4px #d0bbff7a;white-space:nowrap
+}
+.art-counter strong span{font-size:11px;color:#b0a0e2}
+.art-counter strong small{color:#aaa6c9}
+.art-counter b{
+  width:100%;height:3px;margin-top:0;border-radius:9px;
+  background:linear-gradient(90deg,#a08bda 87%,#32304e 87%);
+  box-shadow:0 0 5px #9a83d64b
+}
+.overlay-content.style-counter{--accent:#9b88d3}
 .overlay-content.style-counter .preview-heading{display:none}
 .overlay-content.style-counter .goal-card,
-.overlay-content.mixed-mode .goal-card.style-counter{background:linear-gradient(180deg,#07101be8,#0a1624ec)!important;border:0!important;border-top:1px solid #336b91!important;border-radius:0!important;color:#e8f5ff!important;padding:8px 12px 5px!important;box-shadow:0 0 8px #4395cb3e!important;min-width:0}
+.overlay-content.mixed-mode .goal-card.style-counter{
+  background:linear-gradient(125deg,#151a30f5,#1e1b39f5)!important;
+  border:1px solid #48416b!important;
+  border-radius:13px!important;
+  color:#f3f1ff!important;
+  padding:15px 18px 13px!important;
+  box-shadow:0 2px 12px #090c2050,0 0 7px #9d84d425!important;
+  min-width:0
+}
 .overlay-content.style-counter .goal-top,
-.overlay-content.mixed-mode .goal-card.style-counter .goal-top{justify-content:center;gap:7px;margin-bottom:7px;font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;font-size:16px;font-stretch:condensed;letter-spacing:.25px;text-shadow:0 0 5px #86c8f7,0 0 11px #4894c9}
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top{
+  justify-content:center;gap:7px;margin-bottom:10px;
+  font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  font-size:16px;font-stretch:condensed;letter-spacing:.25px;
+  text-shadow:0 0 5px #9f8ed276
+}
 .overlay-content.style-counter .goal-top .goal-label,
-.overlay-content.mixed-mode .goal-card.style-counter .goal-top .goal-label{color:#76b7e8;font-size:13px;text-transform:uppercase;font-weight:800}
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top .goal-label{
+  color:#b4a5e1;font-size:13px;text-transform:uppercase;font-weight:800
+}
 .overlay-content.style-counter .goal-label-icon,
 .overlay-content.mixed-mode .goal-card.style-counter .goal-label-icon{display:none}
 .overlay-content.style-counter .goal-top strong,
-.overlay-content.mixed-mode .goal-card.style-counter .goal-top strong{font-size:20px;font-weight:900;color:#f5fbff}
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top strong{
+  font-size:20px;font-weight:900;color:#f7f5ff
+}
 .overlay-content.style-counter .goal-top small,
-.overlay-content.mixed-mode .goal-card.style-counter .goal-top small{font-size:14px;color:#8ca6bb;font-weight:700}
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top small{
+  font-size:14px;color:#aaa6c4;font-weight:700
+}
 .overlay-content.style-counter .goal-percent,
-.overlay-content.mixed-mode .goal-card.style-counter .goal-percent{font-size:11px;color:#8dc7f3;font-weight:750;margin-left:6px}
+.overlay-content.mixed-mode .goal-card.style-counter .goal-percent{
+  font-size:11px;color:#bdace7;font-weight:750;margin-left:6px
+}
 .overlay-content.style-counter .bar,
-.overlay-content.mixed-mode .goal-card.style-counter .bar{height:3px!important;border:0!important;border-radius:0!important;background:#203747!important;box-shadow:0 0 4px #152f44;margin-top:2px}
+.overlay-content.mixed-mode .goal-card.style-counter .bar{
+  height:5px!important;border:0!important;border-radius:10px!important;
+  background:#34334b!important;box-shadow:none!important;margin-top:2px
+}
 .overlay-content.style-counter .bar-fill,
-.overlay-content.mixed-mode .goal-card.style-counter .bar-fill{border-radius:0!important;background:#6eb2dc!important;box-shadow:0 0 7px #6eb2dc!important}
+.overlay-content.mixed-mode .goal-card.style-counter .bar-fill{
+  border-radius:10px!important;
+  background:var(--accent,#9b88d3)!important;
+  box-shadow:0 0 5px color-mix(in srgb,var(--accent,#9b88d3) 38%,transparent)!important
+}
 .overlay-content.style-counter .goal-top[hidden],
 .overlay-content.mixed-mode .goal-top[hidden],
 .overlay-content .goal-card .goal-label[hidden],
