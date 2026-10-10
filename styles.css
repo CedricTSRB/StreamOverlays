@@ -170,3 +170,26 @@ html.obs-transparent body {
 .overlay-content.mixed-mode .goal-card.has-custom-bg,
 .overlay-content.style-transparent .goal-card.has-custom-bg,
 .overlay-content.style-counter .goal-card.has-custom-bg{background:var(--custom-bg-color)!important;background-image:none!important}
+
+
+/* Per-widget rounded versus square corners; after style rules so this
+   also overrides the Blue Counter's default shape, without changing colors. */
+.overlay-content .goal-card.corners-rounded,
+.overlay-content.style-counter .goal-card.corners-rounded,
+.overlay-content.mixed-mode .goal-card.corners-rounded,
+.overlay-content.style-sharp .goal-card.corners-rounded,
+.overlay-content.style-transparent .goal-card.corners-rounded{border-radius:14px!important}
+.overlay-content .goal-card.corners-rounded .bar,
+.overlay-content .goal-card.corners-rounded .bar-fill,
+.overlay-content.style-counter .goal-card.corners-rounded .bar,
+.overlay-content.style-counter .goal-card.corners-rounded .bar-fill{border-radius:99px!important}
+.overlay-content .goal-card.corners-square,
+.overlay-content.style-counter .goal-card.corners-square,
+.overlay-content.mixed-mode .goal-card.corners-square,
+.overlay-content.style-fill .goal-card.corners-square,
+.overlay-content.style-image .goal-card.corners-square,
+.overlay-content.style-transparent .goal-card.corners-square{border-radius:0!important}
+.overlay-content .goal-card.corners-square .bar,
+.overlay-content .goal-card.corners-square .bar-fill,
+.overlay-content.style-counter .goal-card.corners-square .bar,
+.overlay-content.style-counter .goal-card.corners-square .bar-fill{border-radius:0!important}
