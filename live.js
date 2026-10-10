@@ -15,18 +15,18 @@
   const setStatus=text=>{status.textContent=text};
   const show=auth=>{
     if(!api){
-      button.disabled=true;button.textContent='Twitch-Verbindung noch nicht verfügbar';
+      button.disabled=true;button.textContent='Twitch nicht verfügbar';
       logout.hidden=true;
       setStatus('Der Betreiber muss einmal die sichere Twitch-Anbindung freischalten. Bis dahin funktionieren die bisherigen Demo-Overlays weiterhin.');
       return;
     }
     button.disabled=false;
     if(auth?.user){
-      button.textContent='Twitch erneut verbinden';
+      button.textContent='Twitch: '+auth.user.display_name;button.title='Mit Twitch als '+auth.user.display_name+' erneut verbinden';
       logout.hidden=false;
-      setStatus('Verbunden als '+auth.user.display_name+'. Deine OBS-Links für Abo- und Follower-Ziele enthalten nun deinen persönlichen Live-Kanal.');
+      setStatus('✓ Verbunden als '+auth.user.display_name+'. Deine OBS-Links für Abo- und Follower-Ziele enthalten deinen Live-Kanal.');
     }else{
-      button.textContent='Mit Twitch verbinden';
+      button.textContent='Twitch verbinden';button.title='Mit Twitch anmelden';
       logout.hidden=true;
       setStatus('Einmal bei Twitch anmelden und Zugriff bestätigen. Danach werden Follower und Abos automatisch in deinem OBS-Overlay aktualisiert.');
     }
