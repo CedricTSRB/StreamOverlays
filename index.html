@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f7fb">
-  <meta name="description" content="Goal Overlays – professionelle Twitch-Overlay-Gestaltung für Abo-Ziele, Follower-Ziele und Stream-Timer.">
-  <title>Goal Overlays · Twitch Overlay Designer</title>
+  <meta name="description" content="StreamOverlays Creator Studio – gestalte Abo-Ziele, Follower-Ziele, Timer und Social-Media-Overlays für OBS.">
+  <title>StreamOverlays — Creator Studio</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="social.css">
 <style id="subboost-dashboard-theme">
@@ -91,11 +91,12 @@
 .overlay-content.mixed-mode .goal-card.style-image{background:linear-gradient(90deg,#111b24de,#111b249d);border:1px solid #ffffff70;box-shadow:0 10px 30px #0003;background-size:cover;background-position:center}
 @media(max-width:840px){.summary-select.is-active{padding:15px 12px}.summary-select.is-active:after{display:none}}
 </style>
+<link rel="stylesheet" href="studio-v2.css">
 </head>
 <body>
 <div id="app-shell">
   <aside class="sidebar">
-    <a class="brand" href="#studio" aria-label="Goal Overlays Startseite"><span class="brand-mark">G<span class="brand-spark">✦</span></span><span><b>Goal</b><small>OVERLAYS</small></span></a>
+    <a class="brand" href="#studio" aria-label="StreamOverlays Startseite"><span class="brand-mark">S<span class="brand-spark">✦</span></span><span><b>Stream</b><small>OVERLAYS</small></span></a>
     <div class="nav-caption">WORKSPACE</div>
     <nav aria-label="Hauptnavigation">
       <a href="#studio" class="nav-link active" data-nav="studio"><span class="nav-ico">▦</span> Overlay Studio</a>
@@ -107,14 +108,14 @@
     </nav>
     <div class="side-bottom">
       <div class="status-card"><span class="status-dot"></span><div><b>Studio bereit</b><small>Lokale Vorschau · ohne Login</small></div></div>
-      <div class="side-foot">V1.0 • Goal Overlays<br><span>Designed for creators</span></div>
+      <div class="side-foot">CREATOR CONSOLE · V2.0<br><span>Crafted for better streams ✦</span></div>
     </div>
   </aside>
 
   <main class="main" id="studio">
-    <header class="topbar"><div class="crumb"><span>Workspace</span><span class="slash">/</span><strong>Overlay Studio</strong></div><div class="top-actions"><span class="autosaved"><span class="save-dot"></span> Einstellungen lokal gespeichert</span><button class="btn btn-small btn-outline" type="button" id="theme-toggle" aria-pressed="false" aria-label="Dunklen Modus aktivieren" title="Dunklen Modus aktivieren"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dunkel</span></button><button class="btn btn-small btn-outline" id="reset-all">Zurücksetzen</button></div></header>
+    <header class="topbar"><div class="crumb"><span>Workspace</span><span class="slash">/</span><strong>Overlay Studio</strong></div><div class="top-actions"><span class="topbar-kicker">✦ CREATOR CONSOLE</span><span class="autosaved"><span class="save-dot"></span> Einstellungen lokal gespeichert</span><button class="btn btn-small btn-outline" type="button" id="theme-toggle" aria-pressed="false" aria-label="Dunklen Modus aktivieren" title="Dunklen Modus aktivieren"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dunkel</span></button><button class="btn btn-small btn-outline" id="reset-all">Zurücksetzen</button></div></header>
     <div class="page">
-      <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> CREATOR TOOLS <span class="eyebrow-sep">/</span> DESIGN STUDIO</div><h1>Dein Stream. <em>Dein Design.</em></h1><p>Klicke oben auf Abo-Ziel, Follower-Ziel oder Stream-Timer. Du bearbeitest dann nur dieses Widget.</p></div><div class="header-badge"><span>✦</span> Neues Studio-Design</div></div>
+      <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> CREATOR TOOLS <span class="eyebrow-sep">/</span> DESIGN STUDIO</div><h1>Dein Stream. <em>Dein Style.</em></h1><p>Professionelle Stream-Overlays selbst gestalten. Wähle dein Widget, tune den Look und hol dir den fertigen OBS-Link.</p><div class="hero-tools"><span><b>✦</b> 7 Design-Styles</span><span><b>●</b> OBS-ready</span><span><b>↗</b> Sofortige Vorschau</span></div></div><a href="#social-media" class="hero-shortcut" aria-label="Zum Social Media Overlay wechseln"><span class="hero-shortcut-orb">↗</span><strong>Social Media</strong><small>Neues Overlay entdecken</small></a></div>
 
       <div class="summary-grid" role="group" aria-label="Widget auswählen">
         <button type="button" class="summary summary-select is-active" data-widget="subs" aria-pressed="true" aria-label="ABO-ZIEL auswählen"><div class="summary-top"><span class="summary-icon violet">✧</span><span class="summary-tag">ABO-ZIEL</span></div><div class="summary-value" id="sum-subs">24 <span>/ 50</span></div><div class="summary-sub">Abos auf dem Weg zum Ziel</div><div class="summary-line"><i id="sum-subs-line"></i></div></button>
@@ -142,13 +143,13 @@
       </div>
 
       <section class="card integration" id="integration"><div class="integration-copy"><span class="section-index">04 / EXPORT</span><h2>Bereit für deinen Stream?</h2><p>Du kannst jedes Widget einzeln als OBS-Browserquelle verwenden oder alle zusammen exportieren. Designs und Farben werden je Widget gespeichert.</p><div class="integration-note"><span>!</span><span><strong>Wichtig:</strong> Diese GitHub-Pages-Version speichert Einstellungen lokal. OBS übernimmt einen Konfigurations-Schnappschuss aus dem Link, aber nicht automatisch spätere Änderungen aus einem anderen Browser. Live-Follows und Subs laufen im separaten StreamElements-Widget.</span></div></div><div class="integration-actions"><button class="btn btn-outline" id="copy-subs">Abo-Overlay ↗</button><button class="btn btn-outline" id="copy-followers">Follower-Overlay ↗</button><button class="btn btn-outline" id="copy-timer">Timer-Overlay ↗</button><button class="btn btn-primary" id="copy-all">Alles zusammen ↗</button></div></section>
-      <footer><span>Goal Overlays © 2026</span><span>Made for better streams · v1.0</span></footer>
+      <footer><span>StreamOverlays © 2026 · Creator Console</span><span>Build your stream. Make it yours. ✦</span></footer>
     </div>
     <section id="social-media" class="social-workspace" hidden>
       <div class="page-heading"><div>
         <div class="eyebrow"><span class="eyebrow-dot"></span> CREATOR TOOLS <span class="eyebrow-sep">/</span> SOCIAL MEDIA</div>
-        <h1>Deine Socials. <em>Dein Overlay.</em></h1>
-        <p>Feste Social-Media-Symbole mit Benutzernamen – wie auf deiner Vorlage. Die Symbole bleiben dauerhaft eingeblendet und können einzeln aktiviert werden.</p>
+        <h1>Deine Socials. <em>Dein Spotlight.</em></h1>
+        <p>Deine Kanäle, dein Name, dein Look. Feste Social-Media-Logos mit transparenter OBS-Ausgabe – individuell einstellbar.</p><div class="hero-tools"><span><b>✦</b> 6 Plattformen</span><span><b>●</b> Immer sichtbar</span><span><b>↗</b> Transparent in OBS</span></div>
       </div><div class="header-badge"><span>✦</span> Transparenter OBS-Hintergrund</div></div>
       <div class="social-editor-grid">
         <section class="card">
@@ -198,8 +199,8 @@
     const meta=document.querySelector('meta[name="theme-color"]');
     if(meta)meta.setAttribute('content',dark?'#0e1422':'#f6f7fb');
   }
-  let saved='light';
-  try{saved=localStorage.getItem(key)==='dark'?'dark':'light'}catch(_){}
+  let saved='dark';
+  try{const stored=localStorage.getItem(key);saved=stored==='light'?'light':'dark'}catch(_){}
   apply(saved);
   button.addEventListener('click',()=>{
     const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
