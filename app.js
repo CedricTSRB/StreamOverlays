@@ -5,9 +5,9 @@
   if(new URLSearchParams(location.search).get('overlay')==='social')return;
   const KEY='subboost-studio-v1';
   const kinds=['subs','followers','timer'];
-  const choices=['neon','glass','fill','sharp','outline','transparent','image'];
+  const choices=['neon','glass','fill','sharp','outline','transparent','image','counter'];
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:''}]));
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',numberFormat:'slash'}]));
   const defaultState={style:'neon',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
@@ -39,7 +39,7 @@
     d.widgets=Object.fromEntries(kinds.map(kind=>{
       const w=d.widgets?.[kind]||{};
       return [kind,{style:choices.includes(w.style)?w.style:d.style,accent:/^#[a-f0-9]{6}$/i.test(w.accent)?w.accent:d.accent,
-        title:String(w.title||d.title).slice(0,32),bgUrl:String(w.bgUrl||d.bgUrl||'').slice(0,2048),bgData:String(w.bgData||'').slice(0,1250000)}];
+        title:String(w.title??d.title).slice(0,32),bgUrl:String(w.bgUrl||d.bgUrl||'').slice(0,2048),bgData:String(w.bgData||'').slice(0,1250000),showLabel:w.showLabel!==false,showNumbers:w.showNumbers!==false,showBar:w.showBar!==false,showPercent:w.showPercent===true,labelText:String(w.labelText??'').slice(0,32),numberFormat:w.numberFormat==='words'?'words':'slash'}];
     }));
     return d;
   }
@@ -96,15 +96,42 @@
     el.className=all?'overlay-content mixed-mode':'overlay-content style-'+w.style;
     el.style.setProperty('--accent',w.accent);
     el.querySelector('#preview-title').textContent=all?state.title:w.title;
-    el.querySelector('#preview-subs').innerHTML=`${state.subs} <small>/ ${state.subsTarget}</small>`;
-    el.querySelector('#preview-followers').innerHTML=`${state.followers} <small>/ ${state.followersTarget}</small>`;
-    el.querySelector('#subs-progress').style.width=safePct(state.subs,state.subsTarget)+'%';
-    el.querySelector('#followers-progress').style.width=safePct(state.followers,state.followersTarget)+'%';
+    for(const kind of ['subs','followers']){
+      const conf=widget(kind);
+      const card=el.querySelector('.'+(kind==='subs'?'subs-card':'followers-card'));
+      const count=kind==='subs'?state.subs:state.followers;
+      const target=kind==='subs'?state.subsTarget:state.followersTarget;
+      const pct=safePct(count,target);
+      const numbers=card.querySelector('#preview-'+kind);
+      const label=card.querySelector('.goal-label-text');
+      const row=card.querySelector('.goal-top');
+      const bar=card.querySelector('.bar');
+      const percent=card.querySelector('.goal-percent');
+      const name=conf.labelText.trim()||(conf.style==='counter'?(kind==='subs'?'SUBS:':'FOLLOWS:'):(kind==='subs'?'Abo-Ziel':'Follower-Ziel'));
+      label.textContent=name;
+      card.querySelector('.goal-label').hidden=!conf.showLabel;
+      numbers.hidden=!conf.showNumbers;
+      percent.hidden=!conf.showPercent;
+      percent.textContent=pct+'%';
+      bar.hidden=!conf.showBar;
+      row.hidden=!conf.showLabel&&!conf.showNumbers&&!conf.showPercent;
+      card.classList.toggle('numbers-only',!conf.showLabel);
+      numbers.replaceChildren();
+      if(conf.numberFormat==='words'){
+        numbers.textContent=count+' '+(kind==='subs'?'Subs':'Follower')+' von '+target;
+      }else{
+        numbers.append(document.createTextNode(count+' '));
+        const small=document.createElement('small');
+        small.textContent='/ '+target;
+        numbers.append(small);
+      }
+      card.querySelector('#'+kind+'-progress').style.width=pct+'%';
+    }
     if(overlayMode && params.get('live') && !liveData){
-      el.querySelector('#preview-subs').textContent=liveError?'Offline':'Verbinde …';
-      el.querySelector('#preview-followers').textContent=liveError?'Offline':'Verbinde …';
+      if(widget('subs').showNumbers)el.querySelector('#preview-subs').textContent=liveError?'Offline':'Verbinde …';
+      if(widget('followers').showNumbers)el.querySelector('#preview-followers').textContent=liveError?'Offline':'Verbinde …';
     }else if(liveData && liveData.subs===null){
-      el.querySelector('#preview-subs').textContent='Nicht verfügbar';
+      if(widget('subs').showNumbers)el.querySelector('#preview-subs').textContent='Nicht verfügbar';
       el.querySelector('#subs-progress').style.width='0%';
     }
     el.querySelector('#preview-timer').textContent=timerText();
@@ -112,7 +139,7 @@
     for(const [kind,cls] of [['subs','subs-card'],['followers','followers-card'],['timer','timer-card']]){
       const card=el.querySelector('.'+cls),c=widget(kind);
       card.hidden=!all&&kind!==view;
-      card.className='goal-card '+cls+' style-'+c.style;
+      card.className='goal-card '+cls+' style-'+c.style+(c.showLabel?'':' label-off')+(c.showBar?'':' bar-off');
       card.style.setProperty('--accent',c.accent);
       const bg=c.bgUrl||c.bgData;
       card.style.backgroundImage=all&&c.style==='image'&&bg?`linear-gradient(#12203255,#12203255),url(${JSON.stringify(bg)})`:'';
@@ -142,6 +169,7 @@
     document.querySelectorAll('[data-style]').forEach(tile=>{tile.classList.toggle('selected',tile.dataset.style===w.style);tile.setAttribute('aria-pressed',String(tile.dataset.style===w.style))});
     document.querySelectorAll('[data-hours]').forEach(b=>b.classList.toggle('active',!state.running&&state.durationMs===Number(b.dataset.hours)*3600000));
     get('hex-label').textContent=w.accent.toUpperCase();
+    if(get('counter-display-settings'))get('counter-display-settings').hidden=selected==='timer';
     const copyLabel=get('copy-overlay-all');if(copyLabel.firstChild)copyLabel.firstChild.textContent=labels[selected]+'-OBS-Link kopieren ';
   }
   function syncFields(){
@@ -150,6 +178,10 @@
       const el=get(id);if(el)el.value=v;
     }
     get('custom-hours').value=String(state.durationMs/3600000);
+    for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).checked=w[prop];
+    get('counter-label-text').value=w.labelText;
+    get('counter-label-text').placeholder=state.selectedWidget==='followers'?'z. B. FOLLOWS:':'z. B. SUBS:';
+    get('counter-number-format').value=w.numberFormat;
   }
   function selectWidget(kind){
     if(!kinds.includes(kind))return;
@@ -176,6 +208,9 @@
   document.querySelectorAll('[data-widget]').forEach(el=>el.addEventListener('click',()=>selectWidget(el.dataset.widget)));document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('click',()=>{widget().style=el.dataset.style;persistAndRender()}));changeNum('subs-current','subs',0);changeNum('subs-target','subsTarget',1);changeNum('followers-current','followers',0);changeNum('followers-target','followersTarget',1);
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
   get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;persistAndRender()});get('background-url').addEventListener('input',ev=>{widget().bgUrl=ev.target.value.trim().slice(0,2048);persistAndRender()});
+  for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
+  get('counter-label-text').addEventListener('input',ev=>{widget().labelText=ev.target.value.slice(0,32);persistAndRender()});
+  get('counter-number-format').addEventListener('change',ev=>{widget().numberFormat=ev.target.value==='words'?'words':'slash';persistAndRender()});
   get('background-file').addEventListener('change',ev=>{const file=ev.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){notify('Bitte eine Bilddatei auswählen.');return}if(file.size>800000){notify('Maximal 800 KB: bitte Bild verkleinern oder Bild-URL nutzen.');return}const reader=new FileReader();reader.onload=()=>{widget().bgData=String(reader.result);widget().bgUrl='';get('background-url').value='';widget().style='image';persistAndRender()};reader.readAsDataURL(file)});
   get('timer-toggle').addEventListener('click',toggleTimer);get('timer-reset').addEventListener('click',resetTimer);document.querySelectorAll('[data-hours]').forEach(b=>b.addEventListener('click',()=>chooseDuration(b.dataset.hours)));get('custom-hours').addEventListener('change',ev=>{if(Number(ev.target.value)>0)chooseDuration(ev.target.value)});
   get('copy-overlay-all').addEventListener('click',()=>copy(state.selectedWidget));for(const [id,view] of [['copy-all','all'],['copy-subs','subs'],['copy-followers','followers'],['copy-timer','timer']])get(id).addEventListener('click',()=>copy(view));get('open-preview').addEventListener('click',()=>window.open(linkFor(state.selectedWidget),'_blank','noopener,noreferrer'));
