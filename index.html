@@ -160,7 +160,7 @@
         <section class="card">
           <span class="section-index">01 / ACCOUNTS</span>
           <h2>Plattformen &amp; Benutzernamen</h2>
-          <p>Setze ein Häkchen für jedes gewünschte Logo und trage deinen Namen dahinter ein.</p>
+          <p>Wähle deine Logos und entscheide für jede Plattform, ob der Benutzername daneben stehen soll.</p>
           <div id="social-account-list"></div>
           <div class="social-settings">
             <label for="social-size">Größe <span id="social-size-value">38 px</span><input id="social-size" type="range" min="20" max="80" value="38"></label>
@@ -173,6 +173,12 @@
           <h2>Social Media Overlay <span class="live-pill"><i></i> VORSCHAU</span></h2>
           <p>Farbige Plattform-Logos, weiße Schrift und kräftige Konturen – im Stream immer sichtbar.</p>
           <div id="social-preview" class="social-checker" aria-label="Vorschau des transparenten Social-Media-Overlays"></div>
+          <div class="social-obs-guide" aria-label="Empfohlene Maße für OBS-Browserquellen">
+            <h3>OBS-Größenempfehlungen · Breite × Höhe</h3>
+            <p id="social-obs-current" aria-live="polite">Wird an deine Auswahl angepasst.</p>
+            <div id="social-obs-size-list" class="social-obs-size-list"></div>
+            <p>Die sechs Empfehlungen passen sich an Logo-Größe, Namen, Abstand und Anordnung an. In OBS bei der Browserquelle unter „Breite“ und „Höhe“ eintragen. Lange Benutzernamen brauchen mehr Platz.</p>
+          </div>
           <div class="social-actions">
             <button type="button" id="social-copy" class="btn btn-primary">OBS-Link kopieren ↗</button>
             <button type="button" id="social-open" class="btn btn-outline">Vollbildvorschau ⤢</button>
