@@ -7,6 +7,7 @@
   <meta name="description" content="Goal Overlays – professionelle Twitch-Overlay-Gestaltung für Abo-Ziele, Follower-Ziele und Stream-Timer.">
   <title>Goal Overlays · Twitch Overlay Designer</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="social.css">
 <style id="subboost-dashboard-theme">
 /* Dark Mode only changes the studio interface; the Twitch/OBS overlay keeps its own appearance. */
 :root[data-theme="dark"]{color-scheme:dark;color:#e9edff;background:#0e1422}
@@ -100,6 +101,7 @@
       <a href="#studio" class="nav-link active" data-nav="studio"><span class="nav-ico">▦</span> Overlay Studio</a>
       <a href="#designs" class="nav-link" data-nav="designs"><span class="nav-ico">◈</span> Design-Bibliothek</a>
       <a href="#goals" class="nav-link" data-nav="goals"><span class="nav-ico">◫</span> Goals & Timer</a>
+      <a href="#social-media" class="nav-link" data-nav="social-media"><span class="nav-ico">◎</span> Social Media Overlay</a>
 
       <a href="#integration" class="nav-link" data-nav="integration"><span class="nav-ico">⇄</span> OBS & Integration</a>
     </nav>
@@ -142,11 +144,43 @@
       <section class="card integration" id="integration"><div class="integration-copy"><span class="section-index">04 / EXPORT</span><h2>Bereit für deinen Stream?</h2><p>Du kannst jedes Widget einzeln als OBS-Browserquelle verwenden oder alle zusammen exportieren. Designs und Farben werden je Widget gespeichert.</p><div class="integration-note"><span>!</span><span><strong>Wichtig:</strong> Diese GitHub-Pages-Version speichert Einstellungen lokal. OBS übernimmt einen Konfigurations-Schnappschuss aus dem Link, aber nicht automatisch spätere Änderungen aus einem anderen Browser. Live-Follows und Subs laufen im separaten StreamElements-Widget.</span></div></div><div class="integration-actions"><button class="btn btn-outline" id="copy-subs">Abo-Overlay ↗</button><button class="btn btn-outline" id="copy-followers">Follower-Overlay ↗</button><button class="btn btn-outline" id="copy-timer">Timer-Overlay ↗</button><button class="btn btn-primary" id="copy-all">Alles zusammen ↗</button></div></section>
       <footer><span>Goal Overlays © 2026</span><span>Made for better streams · v1.0</span></footer>
     </div>
+    <section id="social-media" class="social-workspace" hidden>
+      <div class="page-heading"><div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span> CREATOR TOOLS <span class="eyebrow-sep">/</span> SOCIAL MEDIA</div>
+        <h1>Deine Socials. <em>Dein Overlay.</em></h1>
+        <p>Feste Social-Media-Symbole mit Benutzernamen – wie auf deiner Vorlage. Die Symbole bleiben dauerhaft eingeblendet und können einzeln aktiviert werden.</p>
+      </div><div class="header-badge"><span>✦</span> Transparenter OBS-Hintergrund</div></div>
+      <div class="social-editor-grid">
+        <section class="card">
+          <span class="section-index">01 / ACCOUNTS</span>
+          <h2>Plattformen &amp; Benutzernamen</h2>
+          <p>Setze ein Häkchen für jedes gewünschte Logo und trage deinen Namen dahinter ein.</p>
+          <div id="social-account-list"></div>
+          <div class="social-settings">
+            <label for="social-size">Größe <span id="social-size-value">38 px</span><input id="social-size" type="range" min="20" max="80" value="38"></label>
+            <label for="social-gap">Abstand <span id="social-gap-value">20 px</span><input id="social-gap" type="range" min="0" max="60" value="20"></label>
+            <label for="social-layout">Anordnung <select id="social-layout"><option value="row">Nebeneinander</option><option value="column">Untereinander</option></select></label>
+          </div>
+        </section>
+        <section class="card">
+          <span class="section-index">02 / LIVE-VORSCHAU</span>
+          <h2>Social Media Overlay <span class="live-pill"><i></i> VORSCHAU</span></h2>
+          <p>Farbige Plattform-Logos, weiße Schrift und kräftige Konturen – im Stream immer sichtbar.</p>
+          <div id="social-preview" class="social-checker" aria-label="Vorschau des transparenten Social-Media-Overlays"></div>
+          <div class="social-actions">
+            <button type="button" id="social-copy" class="btn btn-primary">OBS-Link kopieren ↗</button>
+            <button type="button" id="social-open" class="btn btn-outline">Vollbildvorschau ⤢</button>
+          </div>
+          <p class="social-tip">In OBS: Browser-Quelle hinzufügen und den kopierten Link einfügen. Das Overlay ist transparent, bleibt fest eingeblendet und benötigt keine Twitch-Anmeldung. Änderungen an den Namen erfordern einen neuen OBS-Link.</p>
+        </section>
+      </div>
+    </section>
   </main>
 </div>
 <div id="obs-overlay-root" class="obs-root" hidden><div class="obs-content" id="obs-content"></div><div class="obs-interact" id="obs-interact"><button type="button" id="obs-start-pause">▶ Start / Pause</button><button type="button" id="obs-reset">↺ Reset</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="app.js"></script>
+<script src="social.js"></script>
 <script id="subboost-theme-controller">
 (()=>{
   if(new URLSearchParams(location.search).has('overlay'))return;
