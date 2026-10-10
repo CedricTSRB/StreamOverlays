@@ -144,9 +144,23 @@
         <button type="button" class="summary summary-select" data-widget="timer" aria-pressed="false" aria-label="STREAM-TIMER auswählen"><div class="summary-top"><span class="summary-icon green">◷</span><span class="summary-tag">STREAM-TIMER</span></div><div class="summary-value" id="sum-timer">12:00:00</div><div class="summary-sub" id="sum-timer-status">Bereit zum Starten</div><div class="summary-line green-line"><i id="sum-timer-line"></i></div></button>
       </div>
 
-      <div class="studio-grid">
-        <div class="left-stack">
-          <section class="card" id="designs"><div class="card-head"><div><span class="section-index">01 / DESIGN</span><h2>Wähle deinen Stil</h2><p>Sieben unterschiedliche Looks – jetzt auch komplett transparent.</p></div><div class="pill">7 Designs</div></div><div class="styles-grid" id="styles-grid">
+      <div class="studio-grid studio-compact-grid">
+        <div class="editor-settings card" id="studio-settings">
+          <div class="editor-settings-header">
+            <div><span class="section-index">DEIN OVERLAY · ALLES AN EINEM ORT</span><h2>Overlay-Einstellungen</h2><p>Alle wichtigen Einstellungen in einem kompakten Widget.</p></div>
+            <span class="editor-settings-count">3 Bereiche</span>
+          </div>
+          <div class="editor-settings-tabs" role="tablist" aria-label="Overlay-Einstellungen">
+            <button type="button" class="editor-settings-tab is-active" id="studio-tab-goals" role="tab" aria-selected="true" aria-controls="goals" data-editor-tab="goals"><span aria-hidden="true">◎</span> Ziele &amp; Timer</button>
+            <button type="button" class="editor-settings-tab" id="studio-tab-designs" role="tab" aria-selected="false" aria-controls="designs" data-editor-tab="designs"><span aria-hidden="true">✦</span> Design</button>
+            <button type="button" class="editor-settings-tab" id="studio-tab-fine" role="tab" aria-selected="false" aria-controls="fine-tuning" data-editor-tab="fine"><span aria-hidden="true">⚙</span> Feinschliff</button>
+          </div>
+          <div class="editor-settings-body">
+            <div class="editor-settings-panel is-active" id="studio-panel-goals" role="tabpanel" aria-labelledby="studio-tab-goals" data-editor-panel="goals">
+              <section class="card controls-card" id="goals"><div class="card-head tight"><div><span class="section-index">03 / GOALS & TIMER</span><h2>Ziele einstellen</h2><p>Hier änderst du nur das oben ausgewählte Widget.</p></div></div><div class="goals-settings" id="goal-counter-settings"><div class="settings-row" id="subs-settings-row"><div class="settings-label"><span class="settings-icon violet">✧</span><div><strong>Abo-Ziel</strong><small>Fortschritt anzeigen</small></div></div><div class="setting-inputs"><label>Aktuell<input type="number" min="0" max="1000000" id="subs-current" value="24"></label><label>Ziel<input type="number" min="1" max="1000000" id="subs-target" value="50"></label><button class="increment" id="test-sub" type="button" title="Test-Abo hinzufügen">+1</button></div></div><div class="settings-row" id="followers-settings-row" hidden><div class="settings-label"><span class="settings-icon blue">↗</span><div><strong>Follower-Ziel</strong><small>Zählt aufwärts</small></div></div><div class="setting-inputs"><label>Aktuell<input type="number" min="0" max="1000000" id="followers-current" value="128"></label><label>Ziel<input type="number" min="1" max="1000000" id="followers-target" value="200"></label><button class="increment" id="test-follower" type="button" title="Test-Follow hinzufügen">+1</button></div></div></div><div class="divider" id="goals-divider" hidden></div><div class="timer-settings" id="timer-settings" hidden><div class="timer-settings-head"><div class="settings-label"><span class="settings-icon green">◷</span><div><strong>Stream-Timer</strong><small>Countdown mit Pause und Fortsetzen</small></div></div><strong id="timer-control-display">12:00:00</strong></div><div class="preset-row"><button type="button" class="preset active" data-hours="12">12 Stunden</button><button type="button" class="preset" data-hours="24">24 Stunden</button><button type="button" class="preset" data-hours="48">48 Stunden</button><label class="custom-hours">Eigen: <input type="number" min="1" max="240" id="custom-hours" placeholder="Std."></label></div><div class="timer-buttons"><button id="timer-toggle" class="btn btn-dark">▶ Timer starten</button><button id="timer-reset" class="btn btn-outline">↺ Zurücksetzen</button></div></div></section>
+            </div>
+            <div class="editor-settings-panel" id="studio-panel-designs" role="tabpanel" aria-labelledby="studio-tab-designs" data-editor-panel="designs" hidden>
+              <section class="card" id="designs"><div class="card-head"><div><span class="section-index">01 / DESIGN</span><h2>Wähle deinen Stil</h2><p>Sieben unterschiedliche Looks – jetzt auch komplett transparent.</p></div><div class="pill">7 Designs</div></div><div class="styles-grid" id="styles-grid">
             <button type="button" class="style-tile selected" data-style="neon"><span class="style-art art-neon"><i></i><strong>GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Neon <span class="select-check">✓</span></span><span class="style-desc">Leuchtende Akzente</span></button>
             <button type="button" class="style-tile" data-style="glass"><span class="style-art art-glass"><i></i><strong>GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Glas <span class="select-check">✓</span></span><span class="style-desc">Frosted Glass</span></button>
             <button type="button" class="style-tile" data-style="fill"><span class="style-art art-fill"><i></i><strong>GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Fill <span class="select-check">✓</span></span><span class="style-desc">Kräftige Flächen</span></button>
@@ -155,12 +169,16 @@
             <button type="button" class="style-tile" data-style="transparent"><span class="style-art art-transparent"><i></i><strong>GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Transparent <span class="select-check">✓</span></span><span class="style-desc">Ohne Hintergrund für OBS</span></button>
             <button type="button" class="style-tile" data-style="image"><span class="style-art art-image"><i></i><strong>GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Eigenes Bild <span class="select-check">✓</span></span><span class="style-desc">Dein Hintergrund</span></button>
           </div></section>
-          <section class="card personalization"><div class="card-head tight"><div><span class="section-index">02 / ANPASSEN</span><h2>Feinschliff <span id="active-design-label" class="active-context">· Abo-Ziel</span></h2></div></div><div class="colors-row"><div><label class="field-label" for="accent">Akzentfarbe</label><div class="color-input"><input id="accent" type="color" value="#7863ee"><span id="hex-label">#7863EE</span></div></div><div><label class="field-label" for="label-name">Overlay-Titel</label><input id="label-name" type="text" maxlength="32" value="STREAM GOALS" placeholder="STREAM GOALS"></div></div><div class="image-field"><label class="field-label" for="background-url">Hintergrundbild <span>(für Stil „Eigenes Bild“)</span></label><input id="background-url" type="url" placeholder="https://.../mein-bild.jpg"><label class="upload-label" for="background-file"><span>↑</span> Oder Bild für lokale Vorschau auswählen <input type="file" id="background-file" accept="image/*"></label><small class="hint">Ein lokal ausgewähltes Bild bleibt in deinem Browser. Für den OBS-Link eine öffentliche Bild-URL verwenden.</small></div></section>
+            </div>
+            <div class="editor-settings-panel" id="fine-tuning" role="tabpanel" aria-labelledby="studio-tab-fine" data-editor-panel="fine" hidden>
+              <section class="card personalization"><div class="card-head tight"><div><span class="section-index">02 / ANPASSEN</span><h2>Feinschliff <span id="active-design-label" class="active-context">· Abo-Ziel</span></h2></div></div><div class="colors-row"><div><label class="field-label" for="accent">Akzentfarbe</label><div class="color-input"><input id="accent" type="color" value="#7863ee"><span id="hex-label">#7863EE</span></div></div><div><label class="field-label" for="label-name">Overlay-Titel</label><input id="label-name" type="text" maxlength="32" value="STREAM GOALS" placeholder="STREAM GOALS"></div></div><div class="image-field"><label class="field-label" for="background-url">Hintergrundbild <span>(für Stil „Eigenes Bild“)</span></label><input id="background-url" type="url" placeholder="https://.../mein-bild.jpg"><label class="upload-label" for="background-file"><span>↑</span> Oder Bild für lokale Vorschau auswählen <input type="file" id="background-file" accept="image/*"></label><small class="hint">Ein lokal ausgewähltes Bild bleibt in deinem Browser. Für den OBS-Link eine öffentliche Bild-URL verwenden.</small></div></section>
+            </div>
+          </div>
+          <div class="editor-settings-footer"><span class="save-dot" aria-hidden="true"></span> Deine Änderungen werden automatisch gespeichert.</div>
         </div>
-
-        <div class="right-stack"><section class="card preview-card"><div class="card-head preview-title"><div><span class="section-index">LIVE EDITOR</span><h2>Overlay-Vorschau <span id="active-preview-label" class="active-context">· Abo-Ziel</span> <span class="live-pill"><i></i> VORSCHAU</span></h2><p>Änderungen siehst du sofort – ohne Stream.</p></div><button class="icon-btn" title="Vollbildvorschau" id="open-preview" aria-label="Ausgewähltes Widget in neuer Ansicht öffnen">⤢</button></div><div class="preview-stage"><div class="stage-top"><span><i class="stage-dot"></i> 1920 × 1080</span><span>OBS · Browser-Quelle</span></div><div class="preview-inner"><div id="overlay-preview" class="overlay-content style-neon"><div class="preview-heading"><span id="preview-title">STREAM GOALS</span><span class="tiny-live"><span></span> LIVE LOOK</span></div><div class="goal-card subs-card"><div class="goal-top"><span>✦ <span>Abo-Ziel</span></span><strong id="preview-subs">24 <small>/ 50</small></strong></div><div class="bar"><div class="bar-fill" id="subs-progress"></div></div></div><div class="goal-card followers-card"><div class="goal-top"><span>↗ <span>Follower-Ziel</span></span><strong id="preview-followers">128 <small>/ 200</small></strong></div><div class="bar"><div class="bar-fill" id="followers-progress"></div></div></div><div class="goal-card timer-card"><div class="timer-card-content"><div><span class="timer-label">◷ STREAM-TIMER</span><div class="timer-subline" id="timer-state-label">Bereit zum Starten</div></div><strong id="preview-timer">12:00:00</strong></div></div></div></div><div class="stage-bottom">Vorschau · transparente Overlay-Fläche</div></div><div class="preview-footer"><div><span class="preview-foot-icon">ⓘ</span> Die Vorschau zeigt das oben gewählte Widget. Mit Twitch-Verbindung laden deine OBS-Links echte Live-Zahlen.</div><button class="btn btn-primary" id="copy-overlay-all">Abo-OBS-Link kopieren <span>↗</span></button></div></section>
-
-        <section class="card controls-card" id="goals"><div class="card-head tight"><div><span class="section-index">03 / GOALS & TIMER</span><h2>Ziele einstellen</h2><p>Hier änderst du nur das oben ausgewählte Widget.</p></div></div><div class="goals-settings" id="goal-counter-settings"><div class="settings-row" id="subs-settings-row"><div class="settings-label"><span class="settings-icon violet">✧</span><div><strong>Abo-Ziel</strong><small>Fortschritt anzeigen</small></div></div><div class="setting-inputs"><label>Aktuell<input type="number" min="0" max="1000000" id="subs-current" value="24"></label><label>Ziel<input type="number" min="1" max="1000000" id="subs-target" value="50"></label><button class="increment" id="test-sub" type="button" title="Test-Abo hinzufügen">+1</button></div></div><div class="settings-row" id="followers-settings-row" hidden><div class="settings-label"><span class="settings-icon blue">↗</span><div><strong>Follower-Ziel</strong><small>Zählt aufwärts</small></div></div><div class="setting-inputs"><label>Aktuell<input type="number" min="0" max="1000000" id="followers-current" value="128"></label><label>Ziel<input type="number" min="1" max="1000000" id="followers-target" value="200"></label><button class="increment" id="test-follower" type="button" title="Test-Follow hinzufügen">+1</button></div></div></div><div class="divider" id="goals-divider" hidden></div><div class="timer-settings" id="timer-settings" hidden><div class="timer-settings-head"><div class="settings-label"><span class="settings-icon green">◷</span><div><strong>Stream-Timer</strong><small>Countdown mit Pause und Fortsetzen</small></div></div><strong id="timer-control-display">12:00:00</strong></div><div class="preset-row"><button type="button" class="preset active" data-hours="12">12 Stunden</button><button type="button" class="preset" data-hours="24">24 Stunden</button><button type="button" class="preset" data-hours="48">48 Stunden</button><label class="custom-hours">Eigen: <input type="number" min="1" max="240" id="custom-hours" placeholder="Std."></label></div><div class="timer-buttons"><button id="timer-toggle" class="btn btn-dark">▶ Timer starten</button><button id="timer-reset" class="btn btn-outline">↺ Zurücksetzen</button></div></div></section></div>
+        <div class="compact-preview-column">
+          <section class="card preview-card"><div class="card-head preview-title"><div><span class="section-index">LIVE EDITOR</span><h2>Overlay-Vorschau <span id="active-preview-label" class="active-context">· Abo-Ziel</span> <span class="live-pill"><i></i> VORSCHAU</span></h2><p>Änderungen siehst du sofort – ohne Stream.</p></div><button class="icon-btn" title="Vollbildvorschau" id="open-preview" aria-label="Ausgewähltes Widget in neuer Ansicht öffnen">⤢</button></div><div class="preview-stage"><div class="stage-top"><span><i class="stage-dot"></i> 1920 × 1080</span><span>OBS · Browser-Quelle</span></div><div class="preview-inner"><div id="overlay-preview" class="overlay-content style-neon"><div class="preview-heading"><span id="preview-title">STREAM GOALS</span><span class="tiny-live"><span></span> LIVE LOOK</span></div><div class="goal-card subs-card"><div class="goal-top"><span>✦ <span>Abo-Ziel</span></span><strong id="preview-subs">24 <small>/ 50</small></strong></div><div class="bar"><div class="bar-fill" id="subs-progress"></div></div></div><div class="goal-card followers-card"><div class="goal-top"><span>↗ <span>Follower-Ziel</span></span><strong id="preview-followers">128 <small>/ 200</small></strong></div><div class="bar"><div class="bar-fill" id="followers-progress"></div></div></div><div class="goal-card timer-card"><div class="timer-card-content"><div><span class="timer-label">◷ STREAM-TIMER</span><div class="timer-subline" id="timer-state-label">Bereit zum Starten</div></div><strong id="preview-timer">12:00:00</strong></div></div></div></div><div class="stage-bottom">Vorschau · transparente Overlay-Fläche</div></div><div class="preview-footer"><div><span class="preview-foot-icon">ⓘ</span> Die Vorschau zeigt das oben gewählte Widget. Mit Twitch-Verbindung laden deine OBS-Links echte Live-Zahlen.</div><button class="btn btn-primary" id="copy-overlay-all">Abo-OBS-Link kopieren <span>↗</span></button></div></section>
+        </div>
       </div>
 
       <section class="card integration" id="integration"><div class="integration-copy"><span class="section-index">04 / EXPORT</span><h2>Bereit für deinen Stream?</h2><p>Du kannst jedes Widget einzeln als OBS-Browserquelle verwenden oder alle zusammen exportieren. Designs und Farben werden je Widget gespeichert.</p><div class="integration-note"><span>!</span><span><strong>Wichtig:</strong> Diese GitHub-Pages-Version speichert Einstellungen lokal. OBS übernimmt einen Konfigurations-Schnappschuss aus dem Link, aber nicht automatisch spätere Änderungen aus einem anderen Browser. Mit Twitch-Verbindung zeigen die Abo- und Follower-Overlays automatisch aktuelle Zahlen.</span></div></div><div class="integration-actions"><button class="btn btn-outline" id="copy-subs">Abo-Overlay ↗</button><button class="btn btn-outline" id="copy-followers">Follower-Overlay ↗</button><button class="btn btn-outline" id="copy-timer">Timer-Overlay ↗</button><button class="btn btn-primary" id="copy-all">Alles zusammen ↗</button></div></section>
@@ -244,6 +262,47 @@
 </div>
 <div id="obs-overlay-root" class="obs-root" hidden><div class="obs-content" id="obs-content"></div><div class="obs-interact" id="obs-interact"><button type="button" id="obs-start-pause">▶ Start / Pause</button><button type="button" id="obs-reset">↺ Reset</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<script id="studio-compact-tabs">
+(()=>{
+  'use strict';
+  if(new URLSearchParams(location.search).has('overlay'))return;
+  const tabs=Array.from(document.querySelectorAll('[data-editor-tab]'));
+  const panels=Array.from(document.querySelectorAll('[data-editor-panel]'));
+  if(tabs.length!==3||panels.length!==3)return;
+  const activate=(name,scroll=false)=>{
+    if(!tabs.some(tab=>tab.dataset.editorTab===name))return;
+    tabs.forEach(tab=>{
+      const active=tab.dataset.editorTab===name;
+      tab.classList.toggle('is-active',active);
+      tab.setAttribute('aria-selected',String(active));
+      tab.tabIndex=active?0:-1;
+    });
+    panels.forEach(panel=>{
+      const active=panel.dataset.editorPanel===name;
+      panel.hidden=!active;
+      panel.classList.toggle('is-active',active);
+    });
+    if(scroll)requestAnimationFrame(()=>document.getElementById('studio-settings')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  };
+  const route=()=>{
+    if(location.hash==='#designs')activate('designs',true);
+    else if(location.hash==='#goals')activate('goals',true);
+    else if(location.hash==='#fine-tuning')activate('fine',true);
+  };
+  tabs.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>activate(tab.dataset.editorTab));
+    tab.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();
+      const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+      activate(tabs[next].dataset.editorTab);
+      tabs[next].focus();
+    });
+  });
+  window.addEventListener('hashchange',route);
+  route();
+})();
+</script>
 <script src="live-config.js"></script>
 <script src="app.js"></script>
 <script src="live.js"></script>
