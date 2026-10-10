@@ -148,6 +148,30 @@
       </div>
 
       <section class="card integration" id="integration"><div class="integration-copy"><span class="section-index">04 / EXPORT</span><h2>Bereit für deinen Stream?</h2><p>Du kannst jedes Widget einzeln als OBS-Browserquelle verwenden oder alle zusammen exportieren. Designs und Farben werden je Widget gespeichert.</p><div class="integration-note"><span>!</span><span><strong>Wichtig:</strong> Diese GitHub-Pages-Version speichert Einstellungen lokal. OBS übernimmt einen Konfigurations-Schnappschuss aus dem Link, aber nicht automatisch spätere Änderungen aus einem anderen Browser. Live-Follows und Subs laufen im separaten StreamElements-Widget.</span></div></div><div class="integration-actions"><button class="btn btn-outline" id="copy-subs">Abo-Overlay ↗</button><button class="btn btn-outline" id="copy-followers">Follower-Overlay ↗</button><button class="btn btn-outline" id="copy-timer">Timer-Overlay ↗</button><button class="btn btn-primary" id="copy-all">Alles zusammen ↗</button></div></section>
+      <section class="card se-live-panel" id="se-live-panel" aria-labelledby="se-live-title">
+        <div class="se-live-heading">
+          <div>
+            <span class="section-index">05 / LIVE-TRACKING</span>
+            <h2 id="se-live-title">Live-Follower &amp; Abos mit StreamElements</h2>
+            <p>Jeder Streamer nutzt seinen eigenen Twitch-Kanal. Es werden keine Zugangsdaten auf dieser Webseite gesammelt oder zwischen Nutzern geteilt.</p>
+          </div>
+          <span class="se-live-tag">Einrichtung pro Kanal</span>
+        </div>
+        <ol class="se-live-steps">
+          <li>Bei <a href="https://streamelements.com/" target="_blank" rel="noopener noreferrer">StreamElements mit Twitch anmelden ↗</a> und unter <strong>Overlays</strong> ein neues Overlay erstellen.</li>
+          <li>Im StreamElements-Editor über <strong>+</strong> ein <strong>Custom Widget</strong> hinzufügen und <strong>Open Editor</strong> öffnen.</li>
+          <li>Die vier Code-Teile unten nacheinander kopieren und in die gleichnamigen Tabs des Custom-Widget-Editors einfügen: <strong>HTML, CSS, JS, FIELDS</strong>. Dort speichern.</li>
+          <li>Das <strong>StreamElements-Overlay</strong> als Browserquelle in OBS einfügen. Nur dieser StreamElements-Link zeigt die echten Live-Zähler. Deine bisherigen statischen Website-OBS-Links bleiben Vorschauen.</li>
+        </ol>
+        <div class="se-live-copy-grid" aria-label="Code für das StreamElements-Custom-Widget">
+          <button type="button" class="btn btn-outline" data-se-copy="HTML.html">HTML-Code kopieren</button>
+          <button type="button" class="btn btn-outline" data-se-copy="CSS.css">CSS-Code kopieren</button>
+          <button type="button" class="btn btn-outline" data-se-copy="JS.js">JS-Code kopieren</button>
+          <button type="button" class="btn btn-outline" data-se-copy="FIELDS.json">FIELDS-Code kopieren</button>
+        </div>
+        <p id="se-live-copy-status" class="se-live-status" role="status" aria-live="polite">Die Live-Zähler verwenden die Follower- und Abo-Daten des jeweils verbundenen StreamElements-Kanals. Dein Social-Media-Overlay bleibt unabhängig nutzbar.</p>
+        <a class="se-live-docs" href="https://docs.streamelements.com/overlays/first-custom-widget" target="_blank" rel="noopener noreferrer">Offizielle StreamElements-Einrichtungsanleitung ↗</a>
+      </section>
       <footer><span>StreamOverlays © 2026 · Creator Console</span><span>Build your stream. Make it yours. ✦</span></footer>
     </div>
     <section id="social-media" class="social-workspace" hidden>
