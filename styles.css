@@ -101,3 +101,26 @@ html.obs-transparent body {
 .overlay-content .goal-card.numbers-only .goal-top strong{margin:0 auto}
 .overlay-content .goal-card .goal-top .goal-percent{font-size:11px;font-weight:800;white-space:nowrap}
 .overlay-content.style-counter .goal-card .goal-top{display:flex;flex-wrap:wrap}
+
+
+/* Per-widget custom colors: shared by editor previews, mixed scene and OBS browser sources. */
+.overlay-content .goal-card.has-custom-text,
+.overlay-content .goal-card.has-custom-text .goal-top,
+.overlay-content .goal-card.has-custom-text .goal-label,
+.overlay-content .goal-card.has-custom-text .goal-label-text,
+.overlay-content .goal-card.has-custom-text .goal-top strong,
+.overlay-content .goal-card.has-custom-text .goal-top small,
+.overlay-content .goal-card.has-custom-text .goal-percent,
+.overlay-content .goal-card.has-custom-text .timer-card-content,
+.overlay-content .goal-card.has-custom-text .timer-card strong,
+.overlay-content .goal-card.has-custom-text .timer-label,
+.overlay-content .goal-card.has-custom-text .timer-subline,
+.overlay-content .goal-card.has-custom-text #preview-timer,
+.overlay-content .goal-card.has-custom-text #timer-state-label{color:var(--custom-text-color)!important}
+.overlay-content .goal-card.has-custom-bar .bar-fill,
+.overlay-content.mixed-mode .goal-card.has-custom-bar .bar-fill,
+.overlay-content.style-counter .goal-card.has-custom-bar .bar-fill{background:var(--custom-bar-color)!important;box-shadow:0 0 10px var(--custom-bar-color)!important}
+.overlay-content .goal-card.has-custom-bg,
+.overlay-content.mixed-mode .goal-card.has-custom-bg,
+.overlay-content.style-transparent .goal-card.has-custom-bg,
+.overlay-content.style-counter .goal-card.has-custom-bg{background:var(--custom-bg-color)!important;background-image:none!important}
