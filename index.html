@@ -217,6 +217,44 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="app.js"></script>
 <script src="social.js"></script>
+<script id="se-live-install-helper">
+(()=>{
+  const allowed = new Set(['HTML.html','CSS.css','JS.js','FIELDS.json']);
+  const status = document.getElementById('se-live-copy-status');
+  for(const button of document.querySelectorAll('[data-se-copy]')){
+    button.addEventListener('click', async () => {
+      const file = button.dataset.seCopy;
+      if(!allowed.has(file)) return;
+      const original=button.textContent;
+      button.disabled=true;
+      try {
+        const address=new URL('streamelements/'+file, document.baseURI);
+        const response=await fetch(address, {cache:'no-store'});
+        if(!response.ok)throw new Error('HTTP '+response.status);
+        const code=await response.text();
+        if(!code.trim())throw new Error('Datei ist leer');
+        if(file==='FIELDS.json')JSON.parse(code);
+        if(navigator.clipboard?.writeText){
+          await navigator.clipboard.writeText(code);
+        }else{
+          const field=document.createElement('textarea');
+          field.value=code;field.readOnly=true;field.style.cssText='position:fixed;left:-9999px';
+          document.body.appendChild(field);field.select();
+          const copied=document.execCommand('copy');field.remove();
+          if(!copied)throw new Error('Zwischenablage nicht verfügbar');
+        }
+        button.textContent='✓ Kopiert';
+        if(status)status.textContent=file+' kopiert. Im StreamElements-Editor in den passenden Tab einfügen und speichern.';
+      }catch(error){
+        if(status)status.textContent='Code konnte nicht kopiert werden. Öffne die Datei streamelements/'+file+' in GitHub und kopiere sie von dort. Prüfe, ob die Webseite über HTTPS geöffnet wurde.';
+      }finally{
+        button.disabled=false;
+        setTimeout(()=>{button.textContent=original},2000);
+      }
+    });
+  }
+})();
+</script>
 <script id="subboost-theme-controller">
 (()=>{
   if(new URLSearchParams(location.search).has('overlay'))return;
