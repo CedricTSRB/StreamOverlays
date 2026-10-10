@@ -1,0 +1,17 @@
+name = "streamoverlays-live"
+main = "backend/worker.js"
+compatibility_date = "2026-10-10"
+
+# Set these to your ACTUAL GitHub Pages URL and deployed Worker URL before deployment.
+[vars]
+SITE_URL = "https://cedrictsrb.github.io/StreamOverlays/"
+CALLBACK_URL = "https://REPLACE_WITH_WORKER_URL.workers.dev/auth/callback"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "streamoverlays-live"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Set secrets via `npx wrangler secret put TWITCH_CLIENT_ID`,
+# `npx wrangler secret put TWITCH_CLIENT_SECRET` and
+# `npx wrangler secret put TOKEN_KEY_BASE64`; never commit secret values.
