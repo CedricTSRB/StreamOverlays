@@ -193,3 +193,34 @@ html.obs-transparent body {
 .overlay-content .goal-card.corners-square .bar-fill,
 .overlay-content.style-counter .goal-card.corners-square .bar,
 .overlay-content.style-counter .goal-card.corners-square .bar-fill{border-radius:0!important}
+
+
+/* Centered goal captions and counts for preview and OBS.
+   Applies to subscription/follower goals across all designs, including
+   the slim violet counter, whether labels or percentages are enabled. */
+.overlay-content .subs-card .goal-top,
+.overlay-content .followers-card .goal-top,
+.overlay-content.style-counter .subs-card .goal-top,
+.overlay-content.style-counter .followers-card .goal-top,
+.overlay-content.mixed-mode .goal-card.subs-card .goal-top,
+.overlay-content.mixed-mode .goal-card.followers-card .goal-top{
+  justify-content:center!important;
+  align-items:center;
+  flex-wrap:wrap;
+  text-align:center;
+  column-gap:8px;
+  row-gap:4px;
+}
+.overlay-content .subs-card .goal-top .goal-label,
+.overlay-content .followers-card .goal-top .goal-label{
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.overlay-content .subs-card .goal-top strong,
+.overlay-content .followers-card .goal-top strong,
+.overlay-content.style-counter .goal-card.numbers-only .goal-top strong,
+.overlay-content.mixed-mode .goal-card.style-counter.numbers-only .goal-top strong{
+  margin:0!important;
+  text-align:center;
+}
