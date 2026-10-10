@@ -3,4 +3,4 @@
    Example: 'https://streamoverlays-live.account.workers.dev'
    Never place Twitch secrets, access tokens, or refresh tokens in this file.
 */
-window.STREAMOVERLAYS_LIVE_API = '';
+window.STREAMOVERLAYS_LIVE_API = 'https://streamoverlays-live.cedric-liese1307.workers.dev';
