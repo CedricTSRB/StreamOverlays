@@ -122,6 +122,22 @@
     <div class="page">
       <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> CREATOR TOOLS <span class="eyebrow-sep">/</span> DESIGN STUDIO</div><h1>Dein Stream. <em>Dein Style.</em></h1><p>Professionelle Stream-Overlays selbst gestalten. Wähle dein Widget, tune den Look und hol dir den fertigen OBS-Link.</p><div class="hero-tools"><span><b>✦</b> 7 Design-Styles</span><span><b>●</b> OBS-ready</span><span><b>↗</b> Sofortige Vorschau</span></div></div><a href="#social-media" class="hero-shortcut" aria-label="Zum Social Media Overlay wechseln"><span class="hero-shortcut-orb">↗</span><strong>Social Media</strong><small>Neues Overlay entdecken</small></a></div>
 
+      <section class="card" id="twitch-connection" aria-labelledby="twitch-title" style="margin-bottom:22px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px">
+          <div style="flex:1;min-width:220px">
+            <span class="section-index">TWITCH / LIVE VERBINDUNG</span>
+            <h2 id="twitch-title" style="font-size:20px;margin:8px 0">Mit Twitch verbinden</h2>
+            <p style="font-size:13px;color:#9ba4b4;line-height:1.6;margin-bottom:10px">Verbinde deinen Kanal, gestalte ein Ziel und kopiere deinen persönlichen OBS-Link. Follower und aktive Abos werden automatisch aktualisiert.</p>
+            <p id="live-connect-status" role="status" aria-live="polite" style="font-size:12px;margin:8px 0">Verbindung wird geladen …</p>
+            <p id="live-feed-status" role="status" aria-live="polite" style="font-size:11px;color:#9ba4b4">Noch keine Live-Daten.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button type="button" class="btn btn-primary" id="live-connect">Mit Twitch verbinden</button>
+            <button type="button" class="btn btn-outline" id="live-disconnect" hidden>Verbindung trennen</button>
+          </div>
+        </div>
+      </section>
+
       <div class="summary-grid" role="group" aria-label="Widget auswählen">
         <button type="button" class="summary summary-select is-active" data-widget="subs" aria-pressed="true" aria-label="ABO-ZIEL auswählen"><div class="summary-top"><span class="summary-icon violet">✧</span><span class="summary-tag">ABO-ZIEL</span></div><div class="summary-value" id="sum-subs">24 <span>/ 50</span></div><div class="summary-sub">Abos auf dem Weg zum Ziel</div><div class="summary-line"><i id="sum-subs-line"></i></div></button>
         <button type="button" class="summary summary-select" data-widget="followers" aria-pressed="false" aria-label="FOLLOWER-ZIEL auswählen"><div class="summary-top"><span class="summary-icon blue">↗</span><span class="summary-tag">FOLLOWER-ZIEL</span></div><div class="summary-value" id="sum-followers">128 <span>/ 200</span></div><div class="summary-sub">Follower auf dem Weg zum Ziel</div><div class="summary-line blue-line"><i id="sum-followers-line"></i></div></button>
@@ -215,7 +231,9 @@
 </div>
 <div id="obs-overlay-root" class="obs-root" hidden><div class="obs-content" id="obs-content"></div><div class="obs-interact" id="obs-interact"><button type="button" id="obs-start-pause">▶ Start / Pause</button><button type="button" id="obs-reset">↺ Reset</button></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<script src="live-config.js"></script>
 <script src="app.js"></script>
+<script src="live.js"></script>
 <script src="social.js"></script>
 <script id="se-live-install-helper">
 (()=>{
