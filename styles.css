@@ -41,3 +41,24 @@ html.obs-transparent,
 html.obs-transparent body {
   background-image: none !important;
 }
+
+/* StreamElements live setup panel */
+.se-live-panel{display:block;margin-top:20px;padding:24px 28px}
+.se-live-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.se-live-heading h2{font-size:21px;letter-spacing:-.5px;margin:7px 0 8px}
+.se-live-heading p{font-size:12px;line-height:1.65;color:#8b97ac;max-width:750px}
+.se-live-tag{display:inline-flex;flex-shrink:0;border:1px solid #b1a4ed;border-radius:24px;background:#f0edff;color:#6556cd;font-size:11px;font-weight:750;padding:7px 10px}
+.se-live-steps{counter-reset:none;margin:21px 0 17px;padding-left:22px;color:inherit;font-size:12px;line-height:1.75}
+.se-live-steps li{padding:3px 0 5px 5px}
+.se-live-steps li::marker{color:#7869e7;font-weight:800}
+.se-live-steps a,.se-live-docs{color:#7462e3;text-decoration:underline;text-underline-offset:2px}
+.se-live-copy-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.se-live-copy-grid button{white-space:normal;min-height:44px;font-size:11px}
+.se-live-copy-grid button:disabled{opacity:.65;cursor:wait}
+.se-live-status{font-size:11px;line-height:1.6;color:#8794ab;margin:13px 0 9px}
+.se-live-docs{font-size:11px;font-weight:700}
+:root[data-theme="dark"] .se-live-heading p,:root[data-theme="dark"] .se-live-status{color:#aab7ce}
+:root[data-theme="dark"] .se-live-tag{background:#30274d;color:#c6b9ff;border-color:#594879}
+:root[data-theme="dark"] .se-live-steps a,:root[data-theme="dark"] .se-live-docs{color:#b6a5ff}
+@media(max-width:850px){.se-live-copy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.se-live-heading{flex-direction:column}.se-live-panel{padding:20px}}
+@media(max-width:470px){.se-live-copy-grid{grid-template-columns:1fr}}
