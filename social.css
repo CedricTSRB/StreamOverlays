@@ -6,7 +6,7 @@
 .social-workspace .card{padding:24px}
 .social-workspace .card h2{font-size:20px;margin:4px 0 5px}
 .social-workspace .card p{margin:0 0 20px;color:#8895aa;line-height:1.55}
-.social-account-row{display:grid;grid-template-columns:auto 88px minmax(0,1fr);gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #e9ecf3}
+.social-account-row{display:grid;grid-template-columns:auto 88px minmax(90px,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #e9ecf3}
 .social-account-row:last-child{border-bottom:0}
 .social-account-row .social-enable{width:17px;height:17px;accent-color:#7c65ef;cursor:pointer}
 .social-account-row .social-platform{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:750;color:inherit}
@@ -14,6 +14,18 @@
 .social-account-row .social-platform svg{width:25px;height:25px}
 .social-account-row input[type=text]{min-width:0;width:100%;height:39px;padding:0 12px;border-radius:9px;border:1px solid #d9dfea;font:inherit;background:#fff;color:#1b2540}
 .social-account-row input[type=text]:disabled{opacity:.45}
+.social-name-toggle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:750;color:#69748c;white-space:nowrap;cursor:pointer}
+.social-name-toggle input[type=checkbox]{width:15px;height:15px;accent-color:#7c65ef;cursor:pointer}
+.social-name-toggle:has(input:disabled){opacity:.5;cursor:default}
+.social-measure{position:fixed;left:-10000px;top:-10000px;visibility:hidden;pointer-events:none;white-space:nowrap;z-index:-1}
+.social-obs-guide{margin-top:18px;padding:15px;border:1px solid #e3e6f3;border-radius:13px;background:#f9faff}
+.social-obs-guide h3{font-size:14px;letter-spacing:-.2px;margin:0 0 5px;font-weight:800}
+.social-obs-guide p{font-size:11px;line-height:1.5;color:#7b869a;margin:8px 0 0}
+.social-obs-guide #social-obs-current{font-size:11px;color:#6e59d6;font-weight:750;margin:2px 0 10px}
+.social-obs-size-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.social-obs-size{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;background:#fff;border:1px solid #e4e7f2;border-radius:9px;font-size:11px;color:#637088}
+.social-obs-size strong{font-size:11px;white-space:nowrap;color:#202b43;font-variant-numeric:tabular-nums}
+.social-obs-size.is-current{border-color:#8a77e8;background:#f2efff;color:#5d4fc2}
 .social-settings{display:flex;flex-wrap:wrap;align-items:end;gap:14px;margin:22px 0 6px}
 .social-settings label{font-size:12px;font-weight:750;color:#64748b;display:flex;flex-direction:column;gap:9px}
 .social-settings input[type=range]{width:135px;accent-color:#7c65ef}
@@ -31,7 +43,12 @@
 :root[data-theme=dark] .social-workspace .card p,:root[data-theme=dark] .social-tip{color:#aab7ce}
 :root[data-theme=dark] .social-account-row{border-color:#344058}
 :root[data-theme=dark] .social-account-row input[type=text],:root[data-theme=dark] .social-settings select{background:#101a2d;color:#eff2ff;border-color:#3a4961}
-:root[data-theme=dark] .social-settings label{color:#adbbd1}
+:root[data-theme=dark] .social-settings label,:root[data-theme=dark] .social-name-toggle{color:#adbbd1}
+:root[data-theme=dark] .social-obs-guide{background:#131d30;border-color:#394862}
+:root[data-theme=dark] .social-obs-size{background:#1b293e;color:#b6c4db;border-color:#3a4961}
+:root[data-theme=dark] .social-obs-size strong{color:#edf1ff}
+:root[data-theme=dark] .social-obs-size.is-current{background:#30264f;border-color:#8a77e8}
+:root[data-theme=dark] .social-obs-guide p{color:#aab7ce}
 :root[data-theme=dark] .social-checker{border-color:#46546d}
 body.obs-mode.social-obs-mode{background:transparent!important}
 body.social-obs-mode .obs-root{display:flex!important;align-items:center;justify-content:center;min-height:100vh;background:transparent!important;overflow:visible;padding:0!important}
@@ -39,4 +56,5 @@ body.social-obs-mode .obs-content{display:flex;align-items:center;justify-conten
 body.social-obs-mode .obs-interact{display:none!important}
 body.social-obs-mode .social-strip{max-width:none}
 @media(max-width:1100px){.social-editor-grid{grid-template-columns:1fr}.social-workspace{padding:30px 26px}}
+@media(max-width:680px){.social-obs-size-list{grid-template-columns:1fr}.social-name-toggle{grid-column:3;justify-self:start}}
 @media(max-width:520px){.social-workspace{padding:24px 14px}.social-account-row{grid-template-columns:20px 65px minmax(0,1fr);gap:8px}.social-account-row .social-platform{font-size:10px}.social-account-row .social-platform .social-mini,.social-account-row .social-platform svg{width:19px;height:19px}}
