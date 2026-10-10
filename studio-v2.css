@@ -630,3 +630,19 @@ body:not(.obs-mode) .design-color-input output{color:var(--ui-ink);font-size:11p
 body:not(.obs-mode) .design-color-reset{margin-left:auto;flex-shrink:0;border:0;color:var(--ui-primary);background:transparent;cursor:pointer;font-size:19px}
 body:not(.obs-mode) .counter-display-fields{grid-template-columns:1fr}
 @media(max-width:540px){body:not(.obs-mode) .design-color-grid{grid-template-columns:1fr}}
+
+
+/* Compact Twitch account controls in the global top bar. The studio hero is removed. */
+body:not(.obs-mode) .header-twitch{display:flex;align-items:center;gap:6px;position:relative;flex:0 0 auto}
+body:not(.obs-mode) .header-twitch-connect{background:#9146ff;color:#fff;border:1px solid #a56bff;font-weight:800;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 3px 14px #9146ff2c}
+body:not(.obs-mode) .header-twitch-connect:hover{background:#a16afa;color:#fff}
+body:not(.obs-mode) .header-twitch-connect:disabled{opacity:.6;cursor:not-allowed}
+body:not(.obs-mode) .header-twitch-disconnect{background:var(--ui-hover);border:1px solid var(--ui-border);color:var(--ui-muted);font-size:10px}
+body:not(.obs-mode) .header-twitch-popover{position:absolute;top:calc(100% + 13px);right:0;z-index:50;width:min(340px,80vw);padding:13px 15px;background:var(--ui-panel);border:1px solid var(--ui-border);border-radius:12px;box-shadow:var(--ui-shadow);color:var(--ui-muted);font-size:11px;line-height:1.65;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none;white-space:normal}
+body:not(.obs-mode) .header-twitch-popover p+p{margin-top:6px}
+body:not(.obs-mode) .header-twitch:hover .header-twitch-popover,
+body:not(.obs-mode) .header-twitch:focus-within .header-twitch-popover{opacity:1;visibility:visible;transform:translateY(0)}
+body:not(.obs-mode) .top-actions{gap:10px}
+body:not(.obs-mode) .page{padding-top:23px}
+@media(max-width:840px){body:not(.obs-mode) .topbar{height:auto;min-height:62px;padding:9px 14px;gap:9px}body:not(.obs-mode) .top-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end}body:not(.obs-mode) .header-twitch-connect{max-width:150px}}
+@media(max-width:620px){body:not(.obs-mode) .topbar .crumb{display:none}body:not(.obs-mode) .header-twitch-connect{max-width:125px;font-size:10px}body:not(.obs-mode) .header-twitch-disconnect{font-size:10px}}
