@@ -62,3 +62,42 @@ html.obs-transparent body {
 :root[data-theme="dark"] .se-live-steps a,:root[data-theme="dark"] .se-live-docs{color:#b6a5ff}
 @media(max-width:850px){.se-live-copy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.se-live-heading{flex-direction:column}.se-live-panel{padding:20px}}
 @media(max-width:470px){.se-live-copy-grid{grid-template-columns:1fr}}
+
+
+/* Slim, glowing counter style based on the requested blue stream overlay reference. */
+.art-counter{background:linear-gradient(180deg,#07101b,#0a1624);border-top:1px solid #419edddd;border-bottom:1px solid #365e80;display:flex;align-items:center;justify-content:center;gap:9px}
+.art-counter strong{font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;font-size:16px;font-stretch:condensed;color:#f2faff;text-shadow:0 0 5px #acdfff,0 0 10px #4daeff;white-space:nowrap}
+.art-counter strong span{font-size:11px;color:#72b7ec}
+.art-counter strong small{color:#7497af}
+.art-counter b{width:100%;height:3px;margin-top:0;border-radius:0;background:linear-gradient(90deg,#60a9d6 87%,#243748 87%);box-shadow:0 0 5px #4997d9}
+.overlay-content.style-counter{--accent:#4f9ed2}
+.overlay-content.style-counter .preview-heading{display:none}
+.overlay-content.style-counter .goal-card,
+.overlay-content.mixed-mode .goal-card.style-counter{background:linear-gradient(180deg,#07101be8,#0a1624ec)!important;border:0!important;border-top:1px solid #336b91!important;border-radius:0!important;color:#e8f5ff!important;padding:8px 12px 5px!important;box-shadow:0 0 8px #4395cb3e!important;min-width:0}
+.overlay-content.style-counter .goal-top,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top{justify-content:center;gap:7px;margin-bottom:7px;font-family:"Arial Narrow","Roboto Condensed",Impact,sans-serif;font-size:16px;font-stretch:condensed;letter-spacing:.25px;text-shadow:0 0 5px #86c8f7,0 0 11px #4894c9}
+.overlay-content.style-counter .goal-top .goal-label,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top .goal-label{color:#76b7e8;font-size:13px;text-transform:uppercase;font-weight:800}
+.overlay-content.style-counter .goal-label-icon,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-label-icon{display:none}
+.overlay-content.style-counter .goal-top strong,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top strong{font-size:20px;font-weight:900;color:#f5fbff}
+.overlay-content.style-counter .goal-top small,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top small{font-size:14px;color:#8ca6bb;font-weight:700}
+.overlay-content.style-counter .goal-percent,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-percent{font-size:11px;color:#8dc7f3;font-weight:750;margin-left:6px}
+.overlay-content.style-counter .bar,
+.overlay-content.mixed-mode .goal-card.style-counter .bar{height:3px!important;border:0!important;border-radius:0!important;background:#203747!important;box-shadow:0 0 4px #152f44;margin-top:2px}
+.overlay-content.style-counter .bar-fill,
+.overlay-content.mixed-mode .goal-card.style-counter .bar-fill{border-radius:0!important;background:#6eb2dc!important;box-shadow:0 0 7px #6eb2dc!important}
+.overlay-content.style-counter .goal-top[hidden],
+.overlay-content.mixed-mode .goal-top[hidden],
+.overlay-content .goal-card .goal-label[hidden],
+.overlay-content .goal-card .goal-percent[hidden],
+.overlay-content .goal-card .bar[hidden],
+.overlay-content .goal-card #preview-subs[hidden],
+.overlay-content .goal-card #preview-followers[hidden]{display:none!important}
+.overlay-content .goal-card.numbers-only .goal-top{justify-content:center}
+.overlay-content .goal-card.numbers-only .goal-top strong{margin:0 auto}
+.overlay-content .goal-card .goal-top .goal-percent{font-size:11px;font-weight:800;white-space:nowrap}
+.overlay-content.style-counter .goal-card .goal-top{display:flex;flex-wrap:wrap}
