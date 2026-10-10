@@ -143,6 +143,10 @@ html.obs-transparent body {
 .overlay-content .goal-card.numbers-only .goal-top strong{margin:0 auto}
 .overlay-content .goal-card .goal-top .goal-percent{font-size:11px;font-weight:800;white-space:nowrap}
 .overlay-content.style-counter .goal-card .goal-top{display:flex;flex-wrap:wrap}
+.overlay-content.style-counter .goal-card .goal-top,
+.overlay-content.mixed-mode .goal-card.style-counter .goal-top{justify-content:flex-start}
+.overlay-content.style-counter .goal-card.numbers-only .goal-top strong,
+.overlay-content.mixed-mode .goal-card.style-counter.numbers-only .goal-top strong{margin:0}
 
 
 /* Per-widget custom colors: shared by editor previews, mixed scene and OBS browser sources. */
