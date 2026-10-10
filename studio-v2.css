@@ -510,3 +510,39 @@ body:not(.obs-mode) .social-tip{color:var(--ui-muted)!important}
     animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;
   }
 }
+
+
+/* OBS TRANSPARENCY FIX — the HTML canvas must be transparent as well.
+   In the previous theme, :root supplied an opaque fallback background even
+   when body.obs-mode and all overlay wrappers were transparent.
+   These rules apply only in OBS mode and never to the dashboard preview. */
+html.obs-transparent,
+html.obs-transparent:root,
+html.obs-transparent:root[data-theme="dark"],
+html.obs-transparent body,
+html.obs-transparent body.obs-mode {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html.obs-transparent body.obs-mode #obs-overlay-root,
+html.obs-transparent body.obs-mode .obs-root,
+html.obs-transparent body.obs-mode .obs-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html.obs-transparent body.obs-mode .social-strip,
+html.obs-transparent body.obs-mode .social-item,
+html.obs-transparent body.obs-mode .social-name {
+  background: transparent !important;
+  background-image: none !important;
+}
+/* Goal widgets keep their selected design; selecting "Transparent"
+   removes the goal-card panel while keeping the actual text and bars. */
+html.obs-transparent body.obs-mode .overlay-content.style-transparent,
+html.obs-transparent body.obs-mode .overlay-content.mixed-mode:has(.style-transparent) {
+  background: transparent !important;
+  background-image: none !important;
+}
