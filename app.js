@@ -1,6 +1,8 @@
 /* Goal Overlays. 100% statische Client-App; keine Twitch-Verbindung im Dashboard. */
 (() => {
   'use strict';
+  // The social overlay uses its own transparent renderer.
+  if(new URLSearchParams(location.search).get('overlay')==='social')return;
   const KEY='subboost-studio-v1';
   const kinds=['subs','followers','timer'];
   const choices=['neon','glass','fill','sharp','outline','transparent','image'];
