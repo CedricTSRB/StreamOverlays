@@ -46,11 +46,46 @@
   let state=normalize(load());
   const params=new URLSearchParams(window.location.search),obsView=params.get('overlay');
   const overlayMode=['all','subs','followers','timer'].includes(obsView);
+  const LIVE_API=String(window.STREAMOVERLAYS_LIVE_API||'').trim().replace(/\/+$/,'');
+  const AUTH_KEY='streamoverlays:auth:v1';
+  function currentLiveId(){
+    if(overlayMode)return params.get('live')||'';
+    try{
+      const auth=JSON.parse(localStorage.getItem(AUTH_KEY)||'null');
+      if(auth?.expiresAt && auth.expiresAt<Date.now())return '';
+      return auth?.user?.overlay_id||'';
+    }catch(_){return ''}
+  }
+  let liveData=null,liveError='';
+  let liveId=currentLiveId();
+  function liveReady(){return !!LIVE_API && /^[a-f0-9]{40}$/.test(liveId)}
   if(overlayMode){try{const raw=params.get('config');if(raw&&raw.length<12000)state=normalize({...state,...JSON.parse(raw),bgData:''})}catch(_){}}
   const widget=kind=>state.widgets[kind||state.selectedWidget];
   const safePct=(cur,total)=>Math.min(100,Math.max(0,Math.round(cur/Math.max(1,total)*100)));
   const fmt=(ms)=>{const s=Math.max(0,Math.ceil(ms/1000));const hrs=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return `${String(hrs).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`};
   const currentTimer=()=>state.running&&state.startedAt?Math.max(0,state.remainingMs-(Date.now()-state.startedAt)):state.remainingMs;
+  async function updateLiveCounts(){
+    if(!liveReady())return;
+    const requestId=liveId;
+    try{
+      const response=await fetch(LIVE_API+'/live/'+requestId,{cache:'no-store'});
+      if(!response.ok)throw Error('HTTP '+response.status);
+      const data=await response.json();
+      if(requestId!==liveId)return;
+      liveData=data;
+      liveError='';
+      if(data.followers!==null&&Number.isFinite(Number(data.followers)))state.followers=clamp(data.followers,0,1000000);
+      if(data.subs!==null&&Number.isFinite(Number(data.subs)))state.subs=clamp(data.subs,0,1000000);
+      render();
+      const status=get('live-feed-status');
+      if(status)status.textContent='Live-Daten von '+(data.channel||'Twitch')+(data.stale?' (letzter bekannter Stand)':'')+' · Aktualisierung ca. alle 30 Sekunden.';
+    }catch(_){
+      liveError='Twitch-Daten gerade nicht erreichbar';
+      if(overlayMode)render();
+      const status=get('live-feed-status');
+      if(status)status.textContent=liveError+' – bestehende Werte bleiben erhalten.';
+    }
+  }
   function persist(){if(overlayMode)return;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){notify('Speicher voll: Bild bitte kleiner wählen.')}}
   function persistAndRender(){persist();render()}
   function timerText(){let ms=currentTimer();if(state.running&&ms===0){state.running=false;state.startedAt=null;state.remainingMs=0;persist()}return fmt(ms)}
@@ -65,6 +100,13 @@
     el.querySelector('#preview-followers').innerHTML=`${state.followers} <small>/ ${state.followersTarget}</small>`;
     el.querySelector('#subs-progress').style.width=safePct(state.subs,state.subsTarget)+'%';
     el.querySelector('#followers-progress').style.width=safePct(state.followers,state.followersTarget)+'%';
+    if(overlayMode && params.get('live') && !liveData){
+      el.querySelector('#preview-subs').textContent=liveError?'Offline':'Verbinde …';
+      el.querySelector('#preview-followers').textContent=liveError?'Offline':'Verbinde …';
+    }else if(liveData && liveData.subs===null){
+      el.querySelector('#preview-subs').textContent='Nicht verfügbar';
+      el.querySelector('#subs-progress').style.width='0%';
+    }
     el.querySelector('#preview-timer').textContent=timerText();
     el.querySelector('#timer-state-label').textContent=stateText();
     for(const [kind,cls] of [['subs','subs-card'],['followers','followers-card'],['timer','timer-card']]){
@@ -123,10 +165,13 @@
     const obj={...state,widgets,bgData:'',remainingMs:currentTimer(),startedAt:state.running?Date.now():null};
     if(!/^https?:$/i.test(location.protocol))notify('Für OBS-Link zuerst auf GitHub Pages veröffentlichen.');
     const url=new URL(window.location.href);url.search='';url.hash='';
-    url.searchParams.set('overlay',view);url.searchParams.set('config',JSON.stringify(obj));return url.toString();
+    url.searchParams.set('overlay',view);url.searchParams.set('config',JSON.stringify(obj));
+    const id=currentLiveId();
+    if(LIVE_API && /^[a-f0-9]{40}$/.test(id) && ['subs','followers','all'].includes(view))url.searchParams.set('live',id);
+    return url.toString();
   }
   async function copy(view){const url=linkFor(view);try{await navigator.clipboard.writeText(url);notify('Overlay-Link kopiert. In OBS als Browser-Quelle einfügen.')}catch(_){window.prompt('Diesen OBS-Link kopieren:',url)}}
-  if(overlayMode){document.body.classList.add('obs-mode');get('obs-overlay-root').hidden=false;get('obs-overlay-root').dataset.view=obsView;get('obs-overlay-root').classList.toggle('has-timer',['all','timer'].includes(obsView));const cloned=get('overlay-preview').cloneNode(true);get('obs-content').appendChild(cloned);const s=document.createElement('style');s.textContent=obsView==='subs'?'.obs-root .followers-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='followers'?'.obs-root .subs-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='timer'?'.obs-root .subs-card,.obs-root .followers-card,.obs-root .preview-heading{display:none}':'';document.head.appendChild(s);get('obs-start-pause').addEventListener('click',toggleTimer);get('obs-reset').addEventListener('click',resetTimer);render();setInterval(render,300);return}
+  if(overlayMode){document.body.classList.add('obs-mode');get('obs-overlay-root').hidden=false;get('obs-overlay-root').dataset.view=obsView;get('obs-overlay-root').classList.toggle('has-timer',['all','timer'].includes(obsView));const cloned=get('overlay-preview').cloneNode(true);get('obs-content').appendChild(cloned);const s=document.createElement('style');s.textContent=obsView==='subs'?'.obs-root .followers-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='followers'?'.obs-root .subs-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='timer'?'.obs-root .subs-card,.obs-root .followers-card,.obs-root .preview-heading{display:none}':'';document.head.appendChild(s);get('obs-start-pause').addEventListener('click',toggleTimer);get('obs-reset').addEventListener('click',resetTimer);render();setInterval(render,300);if(liveReady()){updateLiveCounts();setInterval(updateLiveCounts,30000)}return}
   syncFields();
   document.querySelectorAll('[data-widget]').forEach(el=>el.addEventListener('click',()=>selectWidget(el.dataset.widget)));document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('click',()=>{widget().style=el.dataset.style;persistAndRender()}));changeNum('subs-current','subs',0);changeNum('subs-target','subsTarget',1);changeNum('followers-current','followers',0);changeNum('followers-target','followersTarget',1);
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
@@ -135,4 +180,14 @@
   get('timer-toggle').addEventListener('click',toggleTimer);get('timer-reset').addEventListener('click',resetTimer);document.querySelectorAll('[data-hours]').forEach(b=>b.addEventListener('click',()=>chooseDuration(b.dataset.hours)));get('custom-hours').addEventListener('change',ev=>{if(Number(ev.target.value)>0)chooseDuration(ev.target.value)});
   get('copy-overlay-all').addEventListener('click',()=>copy(state.selectedWidget));for(const [id,view] of [['copy-all','all'],['copy-subs','subs'],['copy-followers','followers'],['copy-timer','timer']])get(id).addEventListener('click',()=>copy(view));get('open-preview').addEventListener('click',()=>window.open(linkFor(state.selectedWidget),'_blank','noopener,noreferrer'));
   get('reset-all').addEventListener('click',()=>{if(window.confirm('Alle lokalen Einstellungen zurücksetzen?')){state=normalize({...defaultState,widgets:createWidgets()});try{localStorage.removeItem('subboost-studio-independent-widgets-v1')}catch(_){}persist();syncFields();render();notify('Einstellungen zurückgesetzt.')}});render();setInterval(render,300);
+  if(liveReady()) {updateLiveCounts();setInterval(updateLiveCounts,30000)}
+  window.addEventListener('streamoverlays:auth',event=>{
+    liveId=event.detail?.user?.overlay_id||'';
+    liveData=null;liveError='';
+    if(liveReady())updateLiveCounts();
+    else {
+      const status=get('live-feed-status');
+      if(status)status.textContent='Live-Tracking nicht verbunden.';
+    }
+  });
 })();
