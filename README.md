@@ -19,18 +19,21 @@ Die GitHub-Pages-Webseite ist **statisch**. Sie zeigt manuell eingestellte Testw
 **Echte Twitch-Follows und Subs** sind über das separate **StreamElements-Custom-Widget** vorgesehen; dafür muss StreamElements mit Twitch verbunden und der Code einmal ins Custom Widget eingefügt werden. Dieses Widget übernimmt seine Zielwerte aus StreamElements-Feldern, nicht aus den GitHub-Pages-Einstellungen. Es ist vorbereitet, aber ohne echten Kanal noch nicht live getestet.
 
 ## Webseite kostenlos auf GitHub Pages veröffentlichen
-1. Das bereits angelegte **öffentliche Repository** `CedricTSRB/subboost-studio` öffnen.
-2. Im Repository **Add file → Upload files** wählen. Das ZIP-Paket zuerst entpacken und die Dateien `index.html`, `styles.css`, `app.js`, `README.md` sowie den Ordner `streamelements` **direkt in das Stammverzeichnis** hochladen (nicht den äußeren Ordner `SubBoost-GitHub-Upload`). Änderungen mit **Commit changes** speichern.
-3. Im Repository auf **Settings → Pages → Build and deployment → Deploy from a branch** gehen. Branch `main`, Ordner `/(root)` wählen und **Save** drücken.
-4. Die Seite ist anschließend unter `https://cedrictsrb.github.io/subboost-studio/` erreichbar, sofern das Repository genau so heißt. (Gegebenenfalls muss GitHub Pages erst bereitgestellt werden.)
-5. Goal Overlays auf der veröffentlichten Seite öffnen, Design auswählen, Ziele einstellen und OBS-Links kopieren. Falls die Seite noch nicht erreichbar ist, die Veröffentlichung unter **Actions** bzw. **Settings → Pages** prüfen. In OBS **Quellen → + → Browser → URL einfügen**.
+Das Repository heißt [CedricTSRB/StreamOverlays](https://github.com/CedricTSRB/StreamOverlays).
+Unter **Settings → Pages → Build and deployment** kann die Veröffentlichung aus dem Branch `main` und dem Ordner `/(root)` aktiviert werden.
+Wenn GitHub Pages aktiv ist, ist die übliche URL `https://cedrictsrb.github.io/StreamOverlays/`; im Repository unter **Settings → Pages** steht die tatsächliche Adresse.
 
-Wichtig: GitHub Pages ist öffentlich. Niemals Twitch-/StreamElements-API-Tokens oder andere geheime Zugangsdaten in dieses Repository hochladen.
+## Für mehrere Streamer: eigene Live-Daten ohne gemeinsames Konto
+Die Webseite steht jedem Besucher offen, auch Tausenden gleichzeitig. Sie verwaltet aber **keine Twitch-Anmeldungen** und keine Zugangsdaten. Für **echtes Live-Tracking** richtet jeder Streamer sein eigenes StreamElements-Custom-Widget ein und verwendet **seinen eigenen StreamElements-Overlay-Link** in OBS.
+Das Widget greift auf die Sessiondaten genau dieses StreamElements-Kanals zu; Daten anderer Nutzer werden nicht vermischt.
+Der Webseitenbereich **OBS & Integration → Live-Follower & Abos mit StreamElements** enthält eine Anleitung und vier Kopierbuttons für HTML, CSS, JS und FIELDS.
+Wichtig: Die bisherigen **GitHub-OBS-Links für Abo-/Follower-Ziele** bleiben ohne diesen separaten Live-Overlay-Link **statisch**. Es gibt noch kein vollautomatisches Twitch-OAuth-Onboarding innerhalb dieser GitHub-Pages-Seite.
+Teile niemals Twitch-, StreamElements-API-Tokens oder private Overlay-URLs öffentlich.
 
 ## Live-Verbindung mit StreamElements einrichten
 1. Twitch in [StreamElements](https://streamelements.com/) verbinden.
 2. Unter **My Overlays** ein Overlay erstellen und ein **Custom Widget** hinzufügen.
-3. Widget → **Open Editor**: Den Inhalt von `streamelements/HTML.html` in **HTML**, `CSS.css` in **CSS**, `JS.js` in **JS** und `FIELDS.json` in **FIELDS** kopieren.
+3. Widget → **Open Editor**: In der Webseite unter **OBS & Integration → Live-Follower & Abos** die vier Code-Teile über die Kopierbuttons übernehmen; alternativ die Dateien aus `streamelements/` öffnen und in die gleichnamigen Tabs **HTML**, **CSS**, **JS**, **FIELDS** einfügen.
 4. Änderungen speichern, im Widget-Editor Ziele und Stil einstellen.
 5. Das StreamElements-Overlay in OBS als **Browser-Quelle** einfügen. Dann kommen die Zähler aus der Twitch/StreamElements-Session.
 6. Timer in der StreamElements-Widget-Bedienung über die Buttons in den FIELDS starten/pausieren oder zurücksetzen. Er wird über den StreamElements-Store gespeichert.
