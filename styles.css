@@ -236,3 +236,7 @@ html.obs-transparent body {
 .overlay-content .goal-card .goal-top{min-height:0;max-height:65px;overflow:visible}
 .overlay-content .goal-card .goal-label,.overlay-content .goal-card .goal-top strong{white-space:nowrap;min-width:0}
 .overlay-content .goal-card .goal-top strong small{font-size:inherit!important;line-height:inherit!important}
+
+/* Anchor goal progress bar to the bottom regardless of text font size. */
+.overlay-content .goal-card{position:relative;padding-bottom:32px!important}
+.overlay-content .goal-card > .bar{position:absolute!important;left:18px;right:18px;bottom:16px;margin:0!important;width:auto!important}
