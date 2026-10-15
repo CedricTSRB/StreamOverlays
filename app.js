@@ -7,7 +7,7 @@
   const kinds=['subs','followers','timer'];
   const choices=['neon','glass','fill','sharp','outline','transparent','image','counter'];
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default'}]));
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default'}]));
   const defaultState={style:'neon',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
@@ -39,7 +39,7 @@
     d.widgets=Object.fromEntries(kinds.map(kind=>{
       const w=d.widgets?.[kind]||{};
       return [kind,{style:choices.includes(w.style)?w.style:d.style,accent:(w.style==='counter'&&String(w.accent).toLowerCase()==='#4f9ed2')?'#9b88d3':(/^#[a-f0-9]{6}$/i.test(w.accent)?w.accent:d.accent),
-        title:String(w.title??d.title).slice(0,32),bgUrl:String(w.bgUrl||d.bgUrl||'').slice(0,2048),bgData:String(w.bgData||'').slice(0,1250000),showLabel:w.showLabel!==false,showNumbers:w.showNumbers!==false,showBar:w.showBar!==false,showPercent:w.showPercent===true,labelText:String(w.labelText??'').slice(0,32),textColor:/^#[0-9a-f]{6}$/i.test(w.textColor||'')?w.textColor:'',barColor:/^#[0-9a-f]{6}$/i.test(w.barColor||'')?w.barColor:'',backgroundColor:/^#[0-9a-f]{6}$/i.test(w.backgroundColor||'')?w.backgroundColor:'',cornerStyle:['rounded','square'].includes(w.cornerStyle)?w.cornerStyle:'default'}];
+        title:String(w.title??d.title).slice(0,32),bgUrl:String(w.bgUrl||d.bgUrl||'').slice(0,2048),bgData:String(w.bgData||'').slice(0,1250000),showLabel:w.showLabel!==false,showNumbers:w.showNumbers!==false,showBar:w.showBar!==false,showPercent:w.showPercent===true,labelText:String(w.labelText??'').slice(0,32),labelSize:clamp(w.labelSize??12,8,60),numberSize:clamp(w.numberSize??15,10,90),labelX:clamp(w.labelX??0,-250,250),labelY:clamp(w.labelY??0,-250,250),numberX:clamp(w.numberX??0,-250,250),numberY:clamp(w.numberY??0,-250,250),textColor:/^#[0-9a-f]{6}$/i.test(w.textColor||'')?w.textColor:'',barColor:/^#[0-9a-f]{6}$/i.test(w.barColor||'')?w.barColor:'',backgroundColor:/^#[0-9a-f]{6}$/i.test(w.backgroundColor||'')?w.backgroundColor:'',cornerStyle:['rounded','square'].includes(w.cornerStyle)?w.cornerStyle:'default'}];
     }));
     return d;
   }
@@ -112,6 +112,11 @@
       const percent=card.querySelector('.goal-percent');
       const name=conf.labelText.trim()||(conf.style==='counter'?(kind==='subs'?'SUBS:':'FOLLOWS:'):(kind==='subs'?'Abo-Ziel':'Follower-Ziel'));
       label.textContent=name;
+      const labelBox=card.querySelector('.goal-label');
+      labelBox.style.fontSize=conf.labelSize+'px';
+      labelBox.style.transform='translate('+conf.labelX+'px,'+conf.labelY+'px)';
+      numbers.style.fontSize=conf.numberSize+'px';
+      numbers.style.transform='translate('+conf.numberX+'px,'+conf.numberY+'px)';
       card.querySelector('.goal-label').hidden=!conf.showLabel;
       numbers.hidden=!conf.showNumbers;
       percent.hidden=!conf.showPercent;
@@ -188,6 +193,7 @@
     get('custom-hours').value=String(state.durationMs/3600000);
     for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).checked=w[prop];
     get('counter-label-text').value=w.labelText;
+    for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']]){get(id).value=w[prop];get(id+'-value').textContent=w[prop]+' px'}
     get('counter-label-text').placeholder=state.selectedWidget==='followers'?'z. B. FOLLOWS:':'z. B. SUBS:';
     for(const [id,output,prop,fallback] of [['overlay-text-color','overlay-text-color-value','textColor','#ffffff'],['overlay-bar-color','overlay-bar-color-value','barColor',w.accent],['overlay-bg-color','overlay-bg-color-value','backgroundColor','#13172a']]){
       get(id).value=w[prop]||fallback;
@@ -220,6 +226,13 @@
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
   get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;persistAndRender()});get('background-url').addEventListener('input',ev=>{widget().bgUrl=ev.target.value.trim().slice(0,2048);persistAndRender()});
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
+  for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']])get(id).addEventListener('input',ev=>{widget()[prop]=Number(ev.target.value);get(id+'-value').textContent=ev.target.value+' px';persistAndRender()});
+  get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
+  let drag=null;
+  const preview=get('overlay-preview');
+  preview.addEventListener('pointerdown',ev=>{const target=ev.target.closest('.goal-label,#preview-subs,#preview-followers');if(!target)return;const card=target.closest('.goal-card');const kind=card?.classList.contains('subs-card')?'subs':card?.classList.contains('followers-card')?'followers':null;if(!kind||kind!==state.selectedWidget)return;const part=target.classList.contains('goal-label')?'label':'number';drag={kind,part,x:ev.clientX,y:ev.clientY,startX:widget(kind)[part+'X'],startY:widget(kind)[part+'Y']};target.setPointerCapture(ev.pointerId);ev.preventDefault()});
+  preview.addEventListener('pointermove',ev=>{if(!drag)return;const scale=preview.getBoundingClientRect().width/Math.max(1,preview.offsetWidth);const w=widget(drag.kind);w[drag.part+'X']=clamp(drag.startX+(ev.clientX-drag.x)/scale,-250,250);w[drag.part+'Y']=clamp(drag.startY+(ev.clientY-drag.y)/scale,-250,250);persistAndRender()});
+  for(const event of ['pointerup','pointercancel'])preview.addEventListener(event,()=>drag=null);
   get('counter-label-text').addEventListener('input',ev=>{widget().labelText=ev.target.value.slice(0,32);persistAndRender()});
   for(const [id,output,prop] of [['overlay-text-color','overlay-text-color-value','textColor'],['overlay-bar-color','overlay-bar-color-value','barColor'],['overlay-bg-color','overlay-bg-color-value','backgroundColor']])get(id).addEventListener('input',ev=>{widget()[prop]=ev.target.value;get(output).textContent=ev.target.value.toUpperCase();persistAndRender()});
   document.querySelectorAll('[data-reset-color]').forEach(button=>button.addEventListener('click',()=>{widget()[button.dataset.resetColor]='';syncFields();persistAndRender()}));
