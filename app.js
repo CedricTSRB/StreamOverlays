@@ -114,10 +114,10 @@
       label.textContent=name;
       const labelBox=card.querySelector('.goal-label');
       labelBox.style.fontSize=(conf.labelSize*(conf.allSize||100)/100)+'px';
-      labelBox.style.transform='translate('+conf.labelX+'px,'+conf.labelY+'px)';
+      labelBox.style.transform='translate('+(conf.labelX||0)+'px,'+(conf.labelY||0)+'px)';
       numbers.style.fontSize=(conf.numberSize*(conf.allSize||100)/100)+'px';
       card.style.zoom='';
-      numbers.style.transform='translate('+conf.numberX+'px,'+conf.numberY+'px)';
+      numbers.style.transform='translate('+(conf.labelX||0)+'px,'+(conf.labelY||0)+'px)';
       card.querySelector('.goal-label').hidden=!conf.showLabel;
       numbers.hidden=!conf.showNumbers;
       percent.hidden=!conf.showPercent;
@@ -231,8 +231,8 @@
   get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
   let drag=null;
   const preview=get('overlay-preview');
-  preview.addEventListener('pointerdown',ev=>{const target=ev.target.closest('.goal-label,#preview-subs,#preview-followers');if(!target)return;const card=target.closest('.goal-card');const kind=card?.classList.contains('subs-card')?'subs':card?.classList.contains('followers-card')?'followers':null;if(!kind||kind!==state.selectedWidget)return;const part=target.classList.contains('goal-label')?'label':'number';drag={kind,part,x:ev.clientX,y:ev.clientY,startX:widget(kind)[part+'X'],startY:widget(kind)[part+'Y']};target.setPointerCapture(ev.pointerId);ev.preventDefault()});
-  preview.addEventListener('pointermove',ev=>{if(!drag)return;const scale=preview.getBoundingClientRect().width/Math.max(1,preview.offsetWidth);const w=widget(drag.kind);w[drag.part+'X']=clamp(drag.startX+(ev.clientX-drag.x)/scale,-250,250);w[drag.part+'Y']=clamp(drag.startY+(ev.clientY-drag.y)/scale,-250,250);persistAndRender()});
+  preview.addEventListener('pointerdown',ev=>{const target=ev.target.closest('.goal-label,#preview-subs,#preview-followers');if(!target)return;const card=target.closest('.goal-card');const kind=card?.classList.contains('subs-card')?'subs':card?.classList.contains('followers-card')?'followers':null;if(!kind||kind!==state.selectedWidget)return;const w=widget(kind);drag={kind,x:ev.clientX,y:ev.clientY,startX:w.labelX||0,startY:w.labelY||0};target.setPointerCapture(ev.pointerId);ev.preventDefault()});
+  preview.addEventListener('pointermove',ev=>{if(!drag)return;const scale=preview.getBoundingClientRect().width/Math.max(1,preview.offsetWidth);const w=widget(drag.kind);const x=clamp(drag.startX+(ev.clientX-drag.x)/scale,-250,250),y=clamp(drag.startY+(ev.clientY-drag.y)/scale,-250,250);w.labelX=x;w.numberX=x;w.labelY=y;w.numberY=y;persistAndRender()});
   for(const event of ['pointerup','pointercancel'])preview.addEventListener(event,()=>drag=null);
   get('counter-label-text').addEventListener('input',ev=>{widget().labelText=ev.target.value.slice(0,32);persistAndRender()});
   for(const [id,output,prop] of [['overlay-text-color','overlay-text-color-value','textColor'],['overlay-bar-color','overlay-bar-color-value','barColor'],['overlay-bg-color','overlay-bg-color-value','backgroundColor']])get(id).addEventListener('input',ev=>{widget()[prop]=ev.target.value;get(output).textContent=ev.target.value.toUpperCase();persistAndRender()});
