@@ -7,7 +7,7 @@
   const kinds=['subs','followers','timer'];
   const choices=['neon','glass','fill','sharp','outline','transparent','image','counter'];
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default'}]));
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default',boxWidth:440,boxHeight:100}]));
   const defaultState={style:'neon',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
@@ -105,6 +105,10 @@
       const count=kind==='subs'?state.subs:state.followers;
       const target=kind==='subs'?state.subsTarget:state.followersTarget;
       const pct=safePct(count,target);
+      card.style.setProperty('width',(conf.boxWidth||440)+'px','important');
+      card.style.setProperty('height',(conf.boxHeight||100)+'px','important');
+      card.style.setProperty('min-height',(conf.boxHeight||100)+'px','important');
+      card.style.setProperty('max-height',(conf.boxHeight||100)+'px','important');
       const numbers=card.querySelector('#preview-'+kind);
       const label=card.querySelector('.goal-label-text');
       const row=card.querySelector('.goal-top');
@@ -229,6 +233,14 @@
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
   get('all-size').addEventListener('input',ev=>{widget().allSize=Number(ev.target.value);get('all-size-value').textContent=ev.target.value+' %';persistAndRender()});
   get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
+  // Editor-only corner grip; OBS output never gets a resize handle.
+  if(!new URLSearchParams(location.search).has('overlay')){
+    for(const kind of kinds){const card=get('overlay-preview')?.querySelector('.'+kind+'-card');if(card){const grip=document.createElement('span');grip.className='tsrb-resize-grip';grip.title='Overlay-Größe durch Ziehen ändern';grip.setAttribute('aria-label','Overlay-Größe ändern');card.appendChild(grip)}}
+  }
+  let resizeDrag=null;
+  get('overlay-preview').addEventListener('pointerdown',ev=>{const grip=ev.target.closest('.tsrb-resize-grip');if(!grip)return;const card=grip.closest('.goal-card');const kind=card.classList.contains('subs-card')?'subs':'followers';if(kind!==state.selectedWidget)return;const w=widget(kind);resizeDrag={kind,x:ev.clientX,y:ev.clientY,width:w.boxWidth||440,height:w.boxHeight||100};grip.setPointerCapture(ev.pointerId);ev.preventDefault();ev.stopPropagation()});
+  get('overlay-preview').addEventListener('pointermove',ev=>{if(!resizeDrag)return;const scale=get('overlay-preview').getBoundingClientRect().width/Math.max(1,get('overlay-preview').offsetWidth);const w=widget(resizeDrag.kind);w.boxWidth=clamp(Math.round(resizeDrag.width+(ev.clientX-resizeDrag.x)/scale),160,700);w.boxHeight=clamp(Math.round(resizeDrag.height+(ev.clientY-resizeDrag.y)/scale),65,350);persistAndRender()});
+  for(const type of ['pointerup','pointercancel'])get('overlay-preview').addEventListener(type,()=>resizeDrag=null);
   let drag=null;
   const preview=get('overlay-preview');
   preview.addEventListener('pointerdown',ev=>{const target=ev.target.closest('.goal-label,#preview-subs,#preview-followers');if(!target)return;const card=target.closest('.goal-card');const kind=card?.classList.contains('subs-card')?'subs':card?.classList.contains('followers-card')?'followers':null;if(!kind||kind!==state.selectedWidget)return;const w=widget(kind);drag={kind,x:ev.clientX,y:ev.clientY,startX:w.labelX||0,startY:w.labelY||0};target.setPointerCapture(ev.pointerId);ev.preventDefault()});
