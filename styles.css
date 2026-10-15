@@ -227,3 +227,6 @@ html.obs-transparent body {
 
 /* TSRB typography controls */
 .tsrb-text-editor{display:grid;gap:12px;margin:16px 0;padding:16px;border:1px solid #e2e6ef;border-radius:12px;background:#fafaff}.tsrb-text-editor>strong{font-size:13px}.tsrb-text-editor p{font-size:11px;color:#758097}.tsrb-text-editor label{display:grid;gap:6px;font-size:12px;font-weight:650}.tsrb-text-editor input[type=range]{width:100%;accent-color:#7863ee}.tsrb-text-editor output{font-weight:500;color:#7863ee}.tsrb-text-editor button{justify-self:start}.overlay-content .goal-label,.overlay-content #preview-subs,.overlay-content #preview-followers{position:relative;touch-action:none}.preview-stage .overlay-content .goal-label,.preview-stage .overlay-content #preview-subs,.preview-stage .overlay-content #preview-followers{cursor:grab}
+
+/* Current count and target scale together with the number-size slider. */
+.goal-top strong small{font-size:1em;line-height:inherit;vertical-align:baseline}
