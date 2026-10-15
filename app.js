@@ -195,7 +195,6 @@
     for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).checked=w[prop];
     get('counter-label-text').value=w.labelText;
     get('all-size').value=w.allSize||100;get('all-size-value').textContent=(w.allSize||100)+' %';
-    for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']]){get(id).value=w[prop];get(id+'-value').textContent=w[prop]+' px'}
     get('counter-label-text').placeholder=state.selectedWidget==='followers'?'z. B. FOLLOWS:':'z. B. SUBS:';
     for(const [id,output,prop,fallback] of [['overlay-text-color','overlay-text-color-value','textColor','#ffffff'],['overlay-bar-color','overlay-bar-color-value','barColor',w.accent],['overlay-bg-color','overlay-bg-color-value','backgroundColor','#13172a']]){
       get(id).value=w[prop]||fallback;
@@ -228,7 +227,6 @@
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
   get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;persistAndRender()});get('background-url').addEventListener('input',ev=>{widget().bgUrl=ev.target.value.trim().slice(0,2048);persistAndRender()});
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
-  for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']])get(id).addEventListener('input',ev=>{widget()[prop]=Number(ev.target.value);get(id+'-value').textContent=ev.target.value+' px';persistAndRender()});
   get('all-size').addEventListener('input',ev=>{widget().allSize=Number(ev.target.value);get('all-size-value').textContent=ev.target.value+' %';persistAndRender()});
   get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
   let drag=null;
