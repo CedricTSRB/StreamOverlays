@@ -7,7 +7,7 @@
   const kinds=['subs','followers','timer'];
   const choices=['neon','glass','fill','sharp','outline','transparent','image','counter'];
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default'}]));
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default'}]));
   const defaultState={style:'neon',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
@@ -116,6 +116,7 @@
       labelBox.style.fontSize=conf.labelSize+'px';
       labelBox.style.transform='translate('+conf.labelX+'px,'+conf.labelY+'px)';
       numbers.style.fontSize=conf.numberSize+'px';
+      card.style.zoom=String((conf.allSize||100)/100);
       numbers.style.transform='translate('+conf.numberX+'px,'+conf.numberY+'px)';
       card.querySelector('.goal-label').hidden=!conf.showLabel;
       numbers.hidden=!conf.showNumbers;
@@ -193,6 +194,7 @@
     get('custom-hours').value=String(state.durationMs/3600000);
     for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).checked=w[prop];
     get('counter-label-text').value=w.labelText;
+    get('all-size').value=w.allSize||100;get('all-size-value').textContent=(w.allSize||100)+' %';
     for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']]){get(id).value=w[prop];get(id+'-value').textContent=w[prop]+' px'}
     get('counter-label-text').placeholder=state.selectedWidget==='followers'?'z. B. FOLLOWS:':'z. B. SUBS:';
     for(const [id,output,prop,fallback] of [['overlay-text-color','overlay-text-color-value','textColor','#ffffff'],['overlay-bar-color','overlay-bar-color-value','barColor',w.accent],['overlay-bg-color','overlay-bg-color-value','backgroundColor','#13172a']]){
@@ -227,6 +229,7 @@
   get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;persistAndRender()});get('background-url').addEventListener('input',ev=>{widget().bgUrl=ev.target.value.trim().slice(0,2048);persistAndRender()});
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
   for(const [id,prop] of [['label-size','labelSize'],['number-size','numberSize']])get(id).addEventListener('input',ev=>{widget()[prop]=Number(ev.target.value);get(id+'-value').textContent=ev.target.value+' px';persistAndRender()});
+  get('all-size').addEventListener('input',ev=>{widget().allSize=Number(ev.target.value);get('all-size-value').textContent=ev.target.value+' %';persistAndRender()});
   get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
   let drag=null;
   const preview=get('overlay-preview');
