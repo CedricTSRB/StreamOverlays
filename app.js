@@ -113,9 +113,9 @@
       const name=conf.labelText.trim()||(conf.style==='counter'?(kind==='subs'?'SUBS:':'FOLLOWS:'):(kind==='subs'?'Abo-Ziel':'Follower-Ziel'));
       label.textContent=name;
       const labelBox=card.querySelector('.goal-label');
-      labelBox.style.fontSize=(conf.labelSize*(conf.allSize||100)/100)+'px';
+      labelBox.style.setProperty('font-size',(15*(conf.allSize||100)/100)+'px','important');
       labelBox.style.transform='translate('+(conf.labelX||0)+'px,'+(conf.labelY||0)+'px)';
-      numbers.style.fontSize=(conf.numberSize*(conf.allSize||100)/100)+'px';
+      numbers.style.setProperty('font-size',(15*(conf.allSize||100)/100)+'px','important');
       card.style.zoom='';
       numbers.style.transform='translate('+(conf.labelX||0)+'px,'+(conf.labelY||0)+'px)';
       card.querySelector('.goal-label').hidden=!conf.showLabel;
