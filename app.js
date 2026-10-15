@@ -239,7 +239,7 @@
   }
   let resizeDrag=null;
   get('overlay-preview').addEventListener('pointerdown',ev=>{const grip=ev.target.closest('.tsrb-resize-grip');if(!grip)return;const card=grip.closest('.goal-card');const kind=card.classList.contains('subs-card')?'subs':'followers';if(kind!==state.selectedWidget)return;const w=widget(kind);resizeDrag={kind,x:ev.clientX,y:ev.clientY,width:w.boxWidth||440,height:w.boxHeight||100};grip.setPointerCapture(ev.pointerId);ev.preventDefault();ev.stopPropagation()});
-  get('overlay-preview').addEventListener('pointermove',ev=>{if(!resizeDrag)return;const scale=get('overlay-preview').getBoundingClientRect().width/Math.max(1,get('overlay-preview').offsetWidth);const w=widget(resizeDrag.kind);w.boxWidth=clamp(Math.round(resizeDrag.width+(ev.clientX-resizeDrag.x)/scale),160,700);w.boxHeight=clamp(Math.round(resizeDrag.height+(ev.clientY-resizeDrag.y)/scale),65,350);persistAndRender()});
+  get('overlay-preview').addEventListener('pointermove',ev=>{if(!resizeDrag)return;const scale=get('overlay-preview').getBoundingClientRect().width/Math.max(1,get('overlay-preview').offsetWidth);const w=widget(resizeDrag.kind);const card=get('overlay-preview').querySelector('.'+resizeDrag.kind+'-card');const availableWidth=Math.max(160,card?.parentElement?.clientWidth||440);w.boxWidth=clamp(Math.round(resizeDrag.width+(ev.clientX-resizeDrag.x)/scale),160,availableWidth);w.boxHeight=clamp(Math.round(resizeDrag.height+(ev.clientY-resizeDrag.y)/scale),65,350);persistAndRender()});
   for(const type of ['pointerup','pointercancel'])get('overlay-preview').addEventListener(type,()=>resizeDrag=null);
   let drag=null;
   const preview=get('overlay-preview');
