@@ -240,3 +240,8 @@ html.obs-transparent body {
 /* Anchor goal progress bar to the bottom regardless of text font size. */
 .overlay-content .goal-card{position:relative;padding-bottom:32px!important}
 .overlay-content .goal-card > .bar{position:absolute!important;left:18px;right:18px;bottom:16px;margin:0!important;width:auto!important}
+
+/* Fixed geometry: only the goal text may change size or position. */
+.overlay-content .goal-card{height:100px!important;min-height:100px!important;max-height:100px!important;box-sizing:border-box!important;position:relative!important;overflow:hidden!important}
+.overlay-content .goal-card > .goal-top{position:absolute!important;top:16px;left:18px;right:18px;height:40px!important;min-height:0!important;max-height:none!important;margin:0!important;display:flex;align-items:flex-start;justify-content:space-between;overflow:visible!important}
+.overlay-content .goal-card > .bar{position:absolute!important;left:18px!important;right:18px!important;bottom:16px!important;margin:0!important}
