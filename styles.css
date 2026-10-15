@@ -230,3 +230,9 @@ html.obs-transparent body {
 
 /* Current count and target scale together with the number-size slider. */
 .goal-top strong small{font-size:1em;line-height:inherit;vertical-align:baseline}
+
+/* Keep goal box dimensions independent from the unified font-size slider. */
+.overlay-content .goal-card{box-sizing:border-box;height:100px;min-height:100px;max-height:100px;overflow:hidden}
+.overlay-content .goal-card .goal-top{min-height:0;max-height:65px;overflow:visible}
+.overlay-content .goal-card .goal-label,.overlay-content .goal-card .goal-top strong{white-space:nowrap;min-width:0}
+.overlay-content .goal-card .goal-top strong small{font-size:inherit!important;line-height:inherit!important}
