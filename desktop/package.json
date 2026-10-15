@@ -1,0 +1,32 @@
+{
+  "name": "tsrb-multichat",
+  "version": "0.2.0",
+  "private": true,
+  "description": "TSRB MultiChat Desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "de.tsrb.multichat",
+    "productName": "TSRB MultiChat",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "renderer.js"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
