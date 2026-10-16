@@ -685,3 +685,74 @@ body:not(.obs-mode) .right-stack .preview-inner{min-height:240px}
 @media(min-width:1150px){body:not(.obs-mode) .right-stack{position:sticky;top:95px;align-self:start}}
 @media(max-width:1100px){body:not(.obs-mode) .studio-grid{grid-template-columns:1fr}body:not(.obs-mode) .right-stack{position:static}}
 @media(prefers-reduced-motion:reduce){body:not(.obs-mode) .studio-grid *{scroll-behavior:auto;transition:none!important}}
+
+/* TSRB MultiChat download, visible in the studio and never in OBS overlays. */
+body:not(.obs-mode) .header-multichat-download{
+  color:#fff;background:linear-gradient(135deg,#7254e8,#5a43c9);
+  border-color:transparent;box-shadow:0 5px 14px rgba(96,67,203,.2);
+  white-space:nowrap;gap:7px;
+}
+body:not(.obs-mode) .header-multichat-download:hover,
+body:not(.obs-mode) .header-multichat-download:focus-visible{
+  color:#fff;background:linear-gradient(135deg,#8166ee,#674bda);
+  border-color:transparent;box-shadow:0 7px 18px rgba(96,67,203,.3);
+}
+body:not(.obs-mode) .header-multichat-download .download-icon{
+  background:rgba(255,255,255,.17);color:#fff;
+}
+body:not(.obs-mode) .multichat-header-meta{
+  display:inline-block;padding:3px 6px;border-radius:5px;
+  background:rgba(255,255,255,.16);font-size:9px;font-weight:750;
+}
+body:not(.obs-mode) .multichat-install-panel{
+  display:flex;align-items:center;gap:17px;flex-wrap:wrap;
+  margin:-4px 0 25px;padding:19px 22px;
+  border:1px solid var(--ui-border);border-radius:18px;
+  color:var(--ui-ink);background:var(--ui-panel);
+  box-shadow:var(--ui-shadow);
+}
+body:not(.obs-mode) .multichat-install-mark{
+  display:grid;place-items:center;flex:0 0 45px;
+  height:45px;border-radius:13px;
+  background:linear-gradient(135deg,#8665ef,#5640c4);color:white;
+  font-size:25px;font-weight:850;
+}
+body:not(.obs-mode) .multichat-install-copy{flex:1 1 275px;min-width:0}
+body:not(.obs-mode) .multichat-install-eyebrow{
+  display:block;color:var(--ui-primary);font-size:9px;
+  font-weight:850;letter-spacing:1.3px;margin-bottom:5px;
+}
+body:not(.obs-mode) .multichat-install-copy h2{
+  margin:0 0 4px;font-size:18px;font-weight:850;letter-spacing:-.4px;
+}
+body:not(.obs-mode) .multichat-install-copy p{
+  max-width:650px;color:var(--ui-muted);font-size:11px;line-height:1.6;
+}
+body:not(.obs-mode) .multichat-install-cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  flex:0 0 auto;min-height:41px;padding:11px 16px;
+  border-radius:10px;color:white;
+  background:linear-gradient(135deg,#7254e8,#5a43c9);
+  text-decoration:none;font-weight:800;font-size:12px;
+  box-shadow:0 5px 14px rgba(96,67,203,.17);
+  transition:transform .18s,box-shadow .18s;
+}
+body:not(.obs-mode) .multichat-install-cta:hover,
+body:not(.obs-mode) .multichat-install-cta:focus-visible{
+  transform:translateY(-2px);box-shadow:0 8px 18px rgba(96,67,203,.28);
+}
+body.obs-mode .multichat-install-panel{display:none!important}
+@media(max-width:1140px){
+  body:not(.obs-mode) .multichat-header-meta{display:none}
+  body:not(.obs-mode) .header-multichat-download{padding:9px 11px}
+}
+@media(max-width:650px){
+  body:not(.obs-mode) .multichat-install-panel{padding:15px;gap:12px}
+  body:not(.obs-mode) .multichat-install-copy{flex-basis:calc(100% - 64px)}
+  body:not(.obs-mode) .multichat-install-cta{width:100%}
+  body:not(.obs-mode) .multichat-header-label{font-size:10px}
+}
+@media(max-width:395px){
+  body:not(.obs-mode) .multichat-header-label{font-size:0}
+  body:not(.obs-mode) .header-multichat-download .download-icon{font-size:15px}
+}
