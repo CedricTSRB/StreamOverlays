@@ -660,3 +660,18 @@ body:not(.obs-mode) .corner-example{display:inline-block;width:29px;height:20px;
 body:not(.obs-mode) .corner-example-rounded{border-radius:7px}
 body:not(.obs-mode) .corner-example-square{border-radius:0}
 @media(max-width:540px){body:not(.obs-mode) .design-corner-option{gap:6px;font-size:10px;padding:9px 7px}}
+
+
+/* Editor usability refresh — studio only; OBS output and goal summary untouched. */
+body:not(.obs-mode) .studio-grid{align-items:start;grid-template-columns:minmax(320px,0.9fr) minmax(420px,1.1fr)}
+body:not(.obs-mode) .left-stack .card{border-radius:18px}
+body:not(.obs-mode) .left-stack .card-head{padding-bottom:14px;border-bottom:1px solid var(--ui-line)}
+body:not(.obs-mode) .left-stack .field-label{font-weight:750}
+body:not(.obs-mode) .left-stack :is(input,select,button){accent-color:var(--ui-primary)}
+body:not(.obs-mode) .left-stack input:not([type="color"]):not([type="checkbox"]):not([type="range"]){min-height:39px;border-radius:10px}
+body:not(.obs-mode) .left-stack :is(input,select):focus-visible{outline:2px solid var(--ui-primary);outline-offset:2px}
+body:not(.obs-mode) .right-stack .preview-stage{border-radius:16px}
+body:not(.obs-mode) .right-stack .preview-inner{min-height:240px}
+@media(min-width:1150px){body:not(.obs-mode) .right-stack{position:sticky;top:95px;align-self:start}}
+@media(max-width:1100px){body:not(.obs-mode) .studio-grid{grid-template-columns:1fr}body:not(.obs-mode) .right-stack{position:static}}
+@media(prefers-reduced-motion:reduce){body:not(.obs-mode) .studio-grid *{scroll-behavior:auto;transition:none!important}}
