@@ -61,3 +61,12 @@ Technische Referenzen:
 `npm install` und `npx playwright install chromium` ausführen. Dann mit `python -m http.server 8765` die Website bereitstellen und in einem zweiten Terminal `npm test` starten. Optional: `TEST_URL` für einen anderen Server, `CHROMIUM_PATH` für ein vorhandenes Chromium.
 
 Die automatisierten Playwright-Browsertests prüfen die drei Widgets und sieben auswählbaren Designs, CSS-Animationen in der OBS-Ansicht, gemeinsame Typografie, feste Box-/Balkengeometrie, Ziehen und Größenänderung, Farben, Sichtbarkeit, Timer Start/Pause, lokale Speicherung, Migration entfernter Designs, mobile Darstellung sowie OBS-Schnappschüsse in einem frischen Browser-Kontext. Ein direkter Test im nativen OBS-Programm und mit realen Twitch-Ereignissen ist damit nicht ersetzt.
+
+## TSRB MultiChat herunterladen (Windows)
+
+Oben rechts im Creator Studio steht direkt neben **Twitch verbinden** der Button **↓ MultiChat**. Er führt zum portablen Windows-Programm (EXE):
+
+https://github.com/CedricTSRB/StreamOverlays/releases/latest/download/TSRB-MultiChat-Windows.exe
+
+Der GitHub-Actions-Workflow `.github/workflows/multichat-windows.yml` baut die App aus `desktop/`, führt die Tests aus und veröffentlicht die EXE unter GitHub **Releases**. Der öffentliche Link ist erst verfügbar, wenn der Workflow erfolgreich abgeschlossen wurde. Die Desktop-App benötigt Windows; für die OBS-Chatquelle muss sie geöffnet bleiben.
+
