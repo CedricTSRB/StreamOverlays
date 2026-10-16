@@ -756,3 +756,5 @@ body.obs-mode .multichat-install-panel{display:none!important}
   body:not(.obs-mode) .multichat-header-label{font-size:0}
   body:not(.obs-mode) .header-multichat-download .download-icon{font-size:15px}
 }
+
+/* OBS dock banner remains styled as the main MultiChat download. */
