@@ -99,6 +99,7 @@
 <link rel="stylesheet" href="studio-v2.css">
 <link rel="stylesheet" href="editor.css">
   <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="goal-presets.css">
   <link rel="stylesheet" href="scenes.css">
 </head>
 <body>
@@ -163,7 +164,7 @@
               </div><div class="divider" id="goals-divider" hidden></div><div class="timer-settings" id="timer-settings" hidden><div class="timer-settings-head"><div class="settings-label"><span class="settings-icon green">◷</span><div><strong>Stream-Timer</strong><small>Countdown mit Pause und Fortsetzen</small></div></div><strong id="timer-control-display">12:00:00</strong></div><div class="preset-row"><button type="button" class="preset active" data-hours="12">12 Stunden</button><button type="button" class="preset" data-hours="24">24 Stunden</button><button type="button" class="preset" data-hours="48">48 Stunden</button><label class="custom-hours">Eigen: <input type="number" min="1" max="240" id="custom-hours" placeholder="Std."></label></div><div class="timer-buttons"><button id="timer-toggle" class="btn btn-dark">▶ Timer starten</button><button id="timer-reset" class="btn btn-outline">↺ Zurücksetzen</button></div></div></section>
             </div>
             <div class="editor-settings-panel" id="studio-panel-designs" role="tabpanel" aria-labelledby="studio-tab-designs" data-editor-panel="designs" hidden>
-              <section class="card" id="designs"><div class="card-head"><div><span class="section-index">01 / DESIGN</span><h2>Wähle deinen Stil</h2><p>Fünf neue animierte Vorlagen plus zwei bewährte Designs.</p></div><div class="pill">7 Designs</div></div><div class="styles-grid" id="styles-grid">
+              <section class="card" id="designs"><div class="card-head"><div><span class="section-index">01 / DESIGN</span><h2>Wähle deinen Stil</h2><p>36 weitere kreative Designs plus die sieben bisherigen Vorlagen.</p></div><div class="pill">43 Designs</div></div><div class="styles-grid" id="styles-grid">
             <button type="button" class="style-tile selected" data-style="frame" aria-pressed="true"><span class="style-art art-frame"><i></i><strong>SUB GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Silber-Rahmen <span class="select-check">✓</span></span><span class="style-desc">Schwarz · Silber · Licht</span></button>
             <button type="button" class="style-tile" data-style="cyber" aria-pressed="false"><span class="style-art art-cyber"><i></i><strong>SUB GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Cyber Violet <span class="select-check">✓</span></span><span class="style-desc">Violette Partikel</span></button>
             <button type="button" class="style-tile" data-style="pastel" aria-pressed="false"><span class="style-art art-pastel"><i></i><strong>SUB GOAL</strong><small>34 / 50</small><b></b></span><span class="style-label">Pastell-Lila <span class="select-check">✓</span></span><span class="style-desc">Sanfter Farbverlauf</span></button>
@@ -326,6 +327,7 @@
 })();
 </script>
 <script src="live-config.js"></script>
+<script src="goal-presets.js"></script>
 <script src="app.js"></script>
 <script src="live.js"></script>
 <script src="social.js"></script>
