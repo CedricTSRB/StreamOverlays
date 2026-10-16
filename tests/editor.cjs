@@ -47,21 +47,29 @@ const assert=require('node:assert/strict');
  for(const id of ['counter-show-label','counter-show-numbers','counter-show-bar'])await page.locator('#'+id).check();
  // Every design preserves geometry, custom colors and unified type.
  await page.locator('[data-widget=subs]').click();await page.locator('[data-editor-tab=designs]').click();
- for(const style of ['neon','glass','fill','sharp','outline','transparent','counter','image']){
+ for(const style of ['frame','cyber','pastel','arcade','sparkle','transparent','counter']){
   await page.locator('[data-style='+style+']').click();await set('overlay-text-color','#12abcd');await set('overlay-bar-color','#aa1234');await set('overlay-bg-color','#123456');
   assert.equal(await page.locator('#preview-subs small').evaluate(e=>getComputedStyle(e).fontSize),'30px');
   assert.equal(await page.locator('#preview-subs').evaluate(e=>getComputedStyle(e).color),'rgb(18, 171, 205)');
   assert.equal(await page.locator('#subs-progress').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(170, 18, 52)');
  }
- // Local images survive export and fresh-browser reload.
- await page.locator('[data-editor-tab=fine]').click();
- await page.locator('#background-file').setInputFiles({name:'test.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});
- await page.waitForTimeout(100);await page.locator('[data-editor-tab=designs]').click();await page.locator('[data-reset-color=backgroundColor]').click();
- await page.locator('#copy-overlay-all').click();const imageURL=await page.evaluate(()=>navigator.clipboard.readText());const obs=await context.newPage();await obs.goto(imageURL);
- assert((await obs.locator('.obs-content .subs-card').evaluate(e=>getComputedStyle(e).backgroundImage)).includes('data:image/png'));
- await page.reload();await page.locator('[data-editor-tab=fine]').click();assert.equal(await page.locator('#text-x').inputValue(),'42');
+ // OBS renders the animated design in a fresh browser context.
+ await page.locator('[data-editor-tab=designs]').click();
+ await page.locator('[data-style=sparkle]').click();
+ assert.equal(await page.locator('#overlay-preview .subs-card').evaluate(e=>e.classList.contains('style-sparkle')),true);
+ assert.equal(await page.locator('#overlay-preview .subs-card .bar-fill').evaluate(e=>getComputedStyle(e).animationName),'cyber-glow');
+ await page.locator('#copy-overlay-all').click();const themedURL=await page.evaluate(()=>navigator.clipboard.readText());
+ const themedOBS=await browser.newContext({viewport:{width:1920,height:1080}});const themedPage=await themedOBS.newPage();
+ await themedPage.goto(themedURL);
+ assert.equal(await themedPage.locator('.obs-content .subs-card').evaluate(e=>e.classList.contains('style-sparkle')),true);
+ assert.equal(await themedPage.locator('.obs-content .subs-card .bar-fill').evaluate(e=>getComputedStyle(e).animationName),'cyber-glow');
+ await themedOBS.close();
+ assert.deepEqual(await page.locator('[data-style]').evaluateAll(nodes=>nodes.map(n=>n.dataset.style)),['frame','cyber','pastel','arcade','sparkle','transparent','counter']);
+ // Existing saved presets should migrate.
+ await page.evaluate(()=>{const old=JSON.parse(localStorage.getItem('subboost-studio-v1'));old.widgets.subs.style='sharp';localStorage.setItem('subboost-studio-v1',JSON.stringify(old))});
+ await page.reload();assert.equal(await page.locator('#overlay-preview .subs-card').evaluate(e=>e.classList.contains('style-frame')),true);await page.locator('[data-editor-tab=fine]').click();assert.equal(await page.locator('#text-x').inputValue(),'42');
  await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/editor-desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/editor-mobile.png',fullPage:true});
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile page should not overflow');
- assert.deepEqual(errors,[]);await browser.close();console.log('PASS: widgets, fonts, geometry, dragging, eight designs, colors, persistence, snapshot export, uploaded image, transparency and mobile layout');
+ assert.deepEqual(errors,[]);await browser.close();console.log('PASS: widgets, fonts, geometry, dragging, seven designs, animations, migration, colors, persistence, snapshot export, transparency and mobile layout');
 })().catch(e=>{console.error(e);process.exit(1)});
