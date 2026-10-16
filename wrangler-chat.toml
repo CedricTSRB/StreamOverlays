@@ -1,0 +1,8 @@
+name = "streamoverlays-chat"
+main = "chat-backend/worker.js"
+compatibility_date = "2026-10-10"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "streamoverlays-live"
+database_id = "f81e9438-98f0-4f1d-9515-d91aa21dd553"
