@@ -1,0 +1,46 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+const page=await browser.newPage({viewport:{width:1440,height:1080},permissions:['clipboard-read','clipboard-write']});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto(process.env.TEST_URL||'http://127.0.0.1:8765/');
+await page.locator('#studio-tab-designs').click();
+await page.locator('#styles-grid .goal-preset-tile').first().waitFor();
+assert.equal(await page.locator('[data-style]').count(),43);
+assert.equal(await page.locator('.goal-preset-tile').count(),36);
+assert.equal(await page.locator('#goal-theme-count').textContent(),'43 von 43 Designs');
+await page.locator('#goal-theme-search').fill('pixel dungeon');
+assert.equal(await page.locator('[data-style]:visible').count(),1);
+await page.locator('#goal-theme-search').fill('');
+await page.locator('#goal-theme-category').selectOption('Fantasy');
+assert.equal(await page.locator('[data-style]:visible').count(),3);
+await page.locator('#goal-theme-category').selectOption('Alle');
+for(const kind of ['subs','followers','timer']){
+ await page.locator('[data-widget='+kind+']').click();
+ await page.locator('[data-style=pixel-dungeon]').click();
+ assert.equal(await page.locator('#overlay-preview .'+kind+'-card').evaluate(e=>e.classList.contains('style-pixel-dungeon')),true);
+ const palette=await page.locator('#accent').inputValue();
+ assert.equal(palette.toLowerCase(),'#8be36b');
+ await page.locator('[data-style=alchemy]').click();
+ assert.equal(await page.locator('#overlay-preview .'+kind+'-card').evaluate(e=>e.classList.contains('style-alchemy')),true);
+ assert.equal(await page.locator('#accent').inputValue().then(s=>s.toLowerCase()),'#d4ae7a');
+ await page.locator('#copy-overlay-all').click();const url=await page.evaluate(()=>navigator.clipboard.readText());
+ const obs=await browser.newPage({viewport:{width:1920,height:1080}});
+ await obs.goto(url);const card=obs.locator('.obs-content .'+kind+'-card');
+ assert.equal(await card.evaluate(e=>e.classList.contains('style-alchemy')),true);
+ assert.equal(await card.evaluate(e=>getComputedStyle(e).borderTopStyle),'double');
+ await obs.close();
+}
+await page.reload();await page.locator('#studio-tab-designs').click();
+assert.equal(await page.locator('[data-style]').count(),43);
+await page.locator('[data-widget=subs]').click();
+assert.equal(await page.locator('#overlay-preview .subs-card').evaluate(e=>e.classList.contains('style-alchemy')),true);
+await page.locator('[data-style=vhs-glitch]').click();
+const animation=await page.locator('#overlay-preview .subs-card .bar-fill').evaluate(e=>getComputedStyle(e).animationName);
+assert.equal(animation,'goal-jitter');
+await page.setViewportSize({width:390,height:844});
+assert.equal(await page.locator('[data-style]').count(),43);
+assert.deepEqual(errors,[]);
+await browser.close();console.log('PASS 36 new styles + 7 classic, filters, per-widget selection, OBS and persistence');
+})().catch(e=>{console.error(e);process.exit(1)});
