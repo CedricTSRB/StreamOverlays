@@ -8,7 +8,7 @@
   <title>TSRB Stream Tools — Creator Studio</title>
   <script>
   // Transparent HTML canvas for all standalone OBS views (not just body).
-  if(['subs','followers','timer','all','social'].includes(new URLSearchParams(location.search).get('overlay')))
+  if(['subs','followers','timer','all','social','chat'].includes(new URLSearchParams(location.search).get('overlay')))
     document.documentElement.classList.add('obs-transparent');
   </script>
   <link rel="stylesheet" href="styles.css">
@@ -101,6 +101,7 @@
   <link rel="stylesheet" href="themes.css">
   <link rel="stylesheet" href="goal-presets.css">
   <link rel="stylesheet" href="scenes.css">
+  <link rel="stylesheet" href="multichat.css">
 </head>
 <body>
 <div id="app-shell">
@@ -328,6 +329,8 @@
 <script src="live.js"></script>
 <script src="social.js"></script>
 <script src="scenes.js"></script>
+<script src="chat-config.js"></script>
+<script src="multichat.js"></script>
 <script id="se-live-install-helper">
 (()=>{
   const allowed = new Set(['HTML.html','CSS.css','JS.js','FIELDS.json']);
