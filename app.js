@@ -59,7 +59,7 @@
   let liveData=null,liveError='';
   let liveId=currentLiveId();
   function liveReady(){return !!LIVE_API && /^[a-f0-9]{40}$/.test(liveId)}
-  if(overlayMode){try{const raw=params.get('config');if(raw&&raw.length<30000)state=normalize({...state,...JSON.parse(raw),bgData:''})}catch(_){}}
+  if(overlayMode){try{const raw=params.get('config');if(raw&&raw.length<30000){const saved=JSON.parse(raw);state=normalize({...state,...saved,bgData:'',widgets:{...state.widgets,...saved.widgets}})}}catch(_){}}
   const widget=kind=>state.widgets[kind||state.selectedWidget];
   const safePct=(cur,total)=>Math.min(100,Math.max(0,Math.round(cur/Math.max(1,total)*100)));
   const fmt=(ms)=>{const s=Math.max(0,Math.ceil(ms/1000));const hrs=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return `${String(hrs).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`};
