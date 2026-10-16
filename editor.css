@@ -1,0 +1,45 @@
+/* Shared geometry: the exact same renderer is used in the editor and OBS. */
+.overlay-content .goal-card > .goal-top,
+.overlay-content .goal-card > .timer-card-content {
+  position:absolute!important;left:18px!important;right:auto!important;top:16px!important;
+  width:max-content!important;height:auto!important;min-height:0!important;max-height:none!important;
+  display:flex;flex-wrap:nowrap!important;align-items:center!important;justify-content:flex-start!important;
+  gap:.45em!important;margin:0!important;padding:0!important;white-space:nowrap;
+  font-family:var(--text-font)!important;font-size:var(--text-size)!important;line-height:1.25!important;
+  transform:translate(var(--text-x),var(--text-y));transform-origin:left top;
+}
+.overlay-content .goal-card :is(.goal-top,.timer-card-content) * {
+  font-family:inherit!important;font-size:inherit!important;line-height:inherit!important;
+  letter-spacing:normal!important;white-space:nowrap;flex-shrink:0;
+}
+.overlay-content .goal-card .goal-top strong {margin:0!important}
+.overlay-content .goal-card .goal-label-icon {display:none}
+.overlay-content .goal-card .timer-card-content > div {display:flex;gap:.45em;align-items:center}
+.overlay-content .goal-card .timer-subline {display:none}
+.overlay-content .goal-card > .bar {height:9px!important;left:18px!important;right:18px!important;bottom:16px!important}
+.overlay-content .goal-card {flex-shrink:0!important;background-size:cover!important;background-position:center!important}
+.overlay-content .goal-card[hidden],.overlay-content .goal-top[hidden] {display:none!important}
+/* A neutral wrapper avoids double backgrounds, scale differences and clipped wide cards. */
+#overlay-preview.overlay-content,.obs-content .overlay-content {
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  width:max-content!important;max-width:none!important;min-width:0!important;
+  padding:0!important;margin:0!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;transform:none!important;gap:12px!important;
+}
+body.obs-mode .obs-content {width:max-content;max-width:none}
+body.obs-mode .obs-root {padding:24px!important}
+body:not(.obs-mode) .preview-inner {display:block!important;overflow:auto;max-height:720px;min-height:300px;padding:24px!important}
+body:not(.obs-mode) .preview-inner::after {pointer-events:none}
+body:not(.obs-mode) .preview-stage :is(.goal-top,.timer-card-content) {cursor:grab;touch-action:none;user-select:none}
+body:not(.obs-mode) .preview-stage :is(.goal-top,.timer-card-content):hover {outline:1px dashed #b4a5ff;outline-offset:5px}
+body:not(.obs-mode) .tsrb-text-editor {background:var(--ui-hover);color:var(--ui-ink);border-color:var(--ui-border);margin:0 0 18px;padding:18px;border-radius:14px;gap:14px}
+body:not(.obs-mode) .tsrb-text-editor p {color:var(--ui-muted);line-height:1.6}
+body:not(.obs-mode) .tsrb-text-editor :is(input[type=number],select) {width:100%;min-width:0;height:40px;padding:8px 10px;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-panel);color:var(--ui-ink);font:inherit}
+.geometry-grid {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+body:not(.obs-mode) #studio-settings :is(input,select,button):focus-visible {outline:2px solid var(--ui-primary);outline-offset:3px}
+body:not(.obs-mode) .compact-preview-column {position:sticky;top:90px}
+body:not(.obs-mode) .preview-footer {flex-direction:column;align-items:stretch;gap:14px}
+body:not(.obs-mode) #copy-overlay-all {min-height:44px;justify-content:center}
+@media(max-width:1240px){body:not(.obs-mode) .compact-preview-column{position:static}}
+.overlay-content .goal-card {overflow:visible!important}
+body:not(.obs-mode) .preview-inner {overflow:auto}

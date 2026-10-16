@@ -49,3 +49,15 @@ Technische Referenzen:
 
 ## Lokal benutzen
 `index.html` per Doppelklick im Browser öffnen. Für verlässlich nutzbare OBS-Links bitte erst auf GitHub Pages veröffentlichen.
+
+## Überarbeiteter Editor
+- Die drei oberen Auswahlkarten bleiben unverändert. Unter **Text & Größe** werden Schriftart, gemeinsame Schriftgröße und Textposition eingestellt – auch für den Timer.
+- Beschriftung, Zähler, Zielzahl und Prozentzahl bilden eine gemeinsame Textgruppe. Ziehen verschiebt die ganze Gruppe. Box und Balken bleiben dabei unverändert.
+- Boxmaße und Position können numerisch geändert werden; der Griff unten rechts ändert nur die Boxgröße. Die Vorschau wird bei wenig Platz verkleinert, die OBS-Ausgabe bleibt in Originalgröße.
+- **Speichern & OBS-Link kopieren** sichert die Einstellungen lokal und erstellt einen vollständigen Schnappschuss einschließlich hochgeladener Bilder im URL-Fragment. Alte `?config=`-Links funktionieren weiterhin. Für spätere Designänderungen muss der neue Link in OBS eingesetzt werden.
+- In OBS eine Browser-Quelle mit **1920 × 1080** anlegen. Sehr große Boxpositionen oder die kombinierte Ansicht können eine größere Quelle benötigen. Twitch-Zahlen werden bei bestehender Verbindung weiterhin separat aktualisiert.
+
+### Funktionstests
+`npm install` und `npx playwright install chromium` ausführen. Dann mit `python -m http.server 8765` die Website bereitstellen und in einem zweiten Terminal `npm test` starten. Optional: `TEST_URL` für einen anderen Server, `CHROMIUM_PATH` für ein vorhandenes Chromium.
+
+Die Browsertests prüfen alle drei Widgets, alle acht Designs, gemeinsame Typografie, feste Box-/Balkengeometrie, Ziehen und Größenänderung, Farben, Sichtbarkeit, Timer Start/Pause, lokale Speicherung, mobile Darstellung sowie OBS-Schnappschüsse in einem frischen Browser-Kontext inklusive Transparenz und Bildübertragung. Ein direkter Test im nativen OBS-Programm und mit realen Twitch-Ereignissen ist damit nicht ersetzt.
