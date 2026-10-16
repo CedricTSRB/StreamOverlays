@@ -1,13 +1,13 @@
 {
   "name": "tsrb-multichat",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "description": "Windows multi-platform live chat dashboard and local OBS source",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.cjs",
-    "dist": "electron-builder --win portable"
+    "dist": "electron-builder --win nsis-web --x64 --publish never"
   },
   "devDependencies": {
     "electron": "^38.0.0",
@@ -31,8 +31,29 @@
     ],
     "win": {
       "target": [
-        "portable"
+        "nsis-web"
       ]
+    },
+    "nsisWeb": {
+      "artifactName": "TSRB-MultiChat-Setup.exe",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "selectPerMachineByDefault": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "TSRB MultiChat",
+      "runAfterFinish": true,
+      "installerLanguages": [
+        "de_DE",
+        "en_US"
+      ]
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "CedricTSRB",
+      "repo": "StreamOverlays",
+      "vPrefixedTagName": true
     }
   },
   "dependencies": {

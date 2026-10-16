@@ -64,9 +64,12 @@ Die automatisierten Playwright-Browsertests prüfen die drei Widgets und sieben 
 
 ## TSRB MultiChat herunterladen (Windows)
 
-Oben rechts im Creator Studio steht direkt neben **Twitch verbinden** der Button **↓ MultiChat**. Er führt zum portablen Windows-Programm (EXE):
+Oben rechts im Creator Studio steht direkt neben **Twitch verbinden** der Button **↓ MultiChat**. Er führt zum Windows-Web-Installer:
 
-https://github.com/CedricTSRB/StreamOverlays/releases/latest/download/TSRB-MultiChat-Windows.exe
+https://github.com/CedricTSRB/StreamOverlays/releases/latest/download/TSRB-MultiChat-Setup.exe
 
-Der GitHub-Actions-Workflow `.github/workflows/multichat-windows.yml` baut die App aus `desktop/`, führt die Tests aus und veröffentlicht die EXE unter GitHub **Releases**. Der öffentliche Link ist erst verfügbar, wenn der Workflow erfolgreich abgeschlossen wurde. Die Desktop-App benötigt Windows; für die OBS-Chatquelle muss sie geöffnet bleiben.
+Nach dem Herunterladen **TSRB-MultiChat-Setup.exe** öffnen. Das Setup fragt den Installationsordner ab, lädt danach die benötigten Programmdateien mit Fortschrittsanzeige aus der passenden GitHub-Release-Version herunter und richtet **TSRB MultiChat** ein. Eine Desktop- sowie Startmenü-Verknüpfung und eine Deinstallation über Windows werden unterstützt. Für die Installation ist eine Internetverbindung nötig; danach startet die App normal als Windows-Programm.
 
+Der Workflow `.github/workflows/multichat-windows.yml` erstellt das kleine Setup **und** die zugehörigen `.7z`-Programmpakete, testet die Anwendung und veröffentlicht sämtliche benötigten Dateien unter GitHub Releases als Tag `v<version>`. **Wichtig:** Der Installer funktioniert erst, nachdem der GitHub-Actions-Build erfolgreich abgeschlossen ist und alle Release-Assets öffentlich verfügbar sind.
+
+Der Installer ist derzeit nicht digital signiert. Windows SmartScreen kann beim Start daher eine Sicherheitswarnung anzeigen. Für die OBS-Chatquelle muss die Desktop-App geöffnet bleiben.

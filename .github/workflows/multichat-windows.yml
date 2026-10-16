@@ -1,4 +1,4 @@
-name: Build and publish TSRB MultiChat Windows
+name: Build and publish TSRB MultiChat Web Installer
 
 on:
   workflow_dispatch:
@@ -9,6 +9,10 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: multichat-windows-release
+  cancel-in-progress: false
 
 jobs:
   windows:
@@ -24,26 +28,40 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run dist
+      - name: Check web installer and downloadable package
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "dist/TSRB-MultiChat-Setup.exe")) {
+            throw "Web installer EXE was not built"
+          }
+          $packages = @(Get-ChildItem -Path dist -Filter '*.7z' -File)
+          if ($packages.Count -eq 0) {
+            throw "Missing required application download package (*.7z)"
+          }
       - uses: actions/upload-artifact@v4
         with:
-          name: TSRB-MultiChat-Windows
-          path: desktop/dist/*.exe
+          name: TSRB-MultiChat-Web-Installer
+          path: |
+            desktop/dist/TSRB-MultiChat-Setup.exe
+            desktop/dist/*.7z
+            desktop/dist/latest.yml
           if-no-files-found: error
-      - name: Publish direct Windows EXE download
+      - name: Publish web installer and package to GitHub Releases
         if: github.ref == 'refs/heads/main'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
-          $tag = "multichat-v$version"
-          $exe = Get-ChildItem -Path dist -Filter '*.exe' | Select-Object -First 1
-          if (-not $exe) { throw "No Windows executable found in desktop/dist" }
-          $download = "dist/TSRB-MultiChat-Windows.exe"
-          Copy-Item -LiteralPath $exe.FullName -Destination $download -Force
+          $tag = "v$version"
+          $assets = @("dist/TSRB-MultiChat-Setup.exe")
+          $assets += @(Get-ChildItem -Path dist -Filter '*.7z' -File | ForEach-Object { $_.FullName })
+          if (Test-Path 'dist/latest.yml') { $assets += 'dist/latest.yml' }
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
-            gh release upload $tag $download --clobber --repo $env:GITHUB_REPOSITORY
+            gh release upload $tag @assets --clobber --repo $env:GITHUB_REPOSITORY
+            if ($LASTEXITCODE -ne 0) { throw "Failed to upload web installer assets" }
           } else {
-            gh release create $tag $download --repo $env:GITHUB_REPOSITORY --target main --title "TSRB MultiChat v$version (Windows)" --notes "Portable Windows-Version von TSRB MultiChat. EXE herunterladen und starten; kein Installer erforderlich." --latest
+            gh release create $tag @assets --repo $env:GITHUB_REPOSITORY --target main --title "TSRB MultiChat v$version (Windows Web Installer)" --notes "Windows-Web-Installer: Setup starten, Download-Fortschritt ansehen und TSRB MultiChat installieren. Benötigt Internet während der Installation." --latest
+            if ($LASTEXITCODE -ne 0) { throw "Failed to publish web installer release" }
           }
