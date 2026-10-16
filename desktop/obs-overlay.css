@@ -1,0 +1,7 @@
+html,body{margin:0;background:transparent!important;color:#fff;font:600 19px system-ui,Segoe UI,sans-serif;overflow:hidden}
+#feed{display:flex;flex-direction:column;gap:8px;max-width:850px;padding:15px}
+.message{padding:10px 14px;background:#10162cdb;border-left:4px solid var(--brand);border-radius:10px;word-break:break-word;text-shadow:0 1px 2px #0009}
+.source{display:inline-block;font-size:11px;opacity:.85;margin-right:8px;color:var(--brand)}
+.user{font-weight:900;color:var(--brand)}
+.text{font-weight:500}
+@media(prefers-reduced-motion:no-preference){.message{animation:slidein .25s ease-out}@keyframes slidein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}}
