@@ -1,0 +1,29 @@
+name: Goal preset gallery tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'goal-presets.js'
+      - 'goal-presets.css'
+      - 'tests/goal-presets.cjs'
+      - '.github/workflows/goal-presets-tests.yml'
+  workflow_dispatch:
+jobs:
+  presets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Start static studio
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/goal-http.log 2>&1 &
+          sleep 2
+      - name: Check 43 goal designs and OBS rendering
+        run: node tests/goal-presets.cjs
