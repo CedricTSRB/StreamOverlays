@@ -1,4 +1,4 @@
-/* Stream-Szenen: 24 original animated scene sets; Pinterest links show inspiration only. */
+/* Stream-Szenen: 24 original animated scene sets. */
 (()=>{
 'use strict';
 const params=new URLSearchParams(location.search);
@@ -94,7 +94,7 @@ work.innerHTML=`
     <div class="ss-section-heading"><div><span class="section-index">04 / PASSENDES 3ER-BUNDLE</span><h2>Alle drei Bildschirme</h2></div><span class="ss-section-hint">Jeden einzeln in OBS verwenden</span></div>
     <div id="ss-trio" class="ss-trio"></div>
   </section>
-  <div class="ss-section-heading ss-gallery-heading"><div><span class="section-index">05 / DESIGN-BIBLIOTHEK</span><h2>Design wählen <span class="ss-count">24 Vorlagen</span></h2><p>Bild-Vorschau anklicken und sofort oben sehen. Alle Designs sind eigenständig erstellt; Pinterest-Links dienen nur der Inspiration.</p></div><div class="ss-filter"><label for="ss-filter">Kategorie</label><select id="ss-filter"><option value="Alle">Alle Designs</option></select></div></div>
+  <div class="ss-section-heading ss-gallery-heading"><div><span class="section-index">05 / DESIGN-BIBLIOTHEK</span><h2>Design wählen <span class="ss-count">24 Vorlagen</span></h2><p>Bild-Vorschau anklicken und sofort oben sehen. Alle Designs sind eigenständig erstellt.</p></div><div class="ss-filter"><label for="ss-filter">Kategorie</label><select id="ss-filter"><option value="Alle">Alle Designs</option></select></div></div>
   <div class="ss-library" id="ss-library"></div>
 `;
 document.querySelector('.main')?.append(work);
@@ -142,8 +142,7 @@ const holder=document.createElement('div');holder.className='ss-pack-holder';con
 tile.setAttribute('aria-pressed',String(i===state.pack));tile.setAttribute('aria-label',p[0]+' Design auswählen');tile.append(createScene(i,'soon',true));
 const title=document.createElement('strong');title.textContent=p[0];const desc=document.createElement('span');desc.textContent=p[4]+' · 3 Bildschirme';tile.append(title,desc);const mark=document.createElement('span');mark.className='ss-design-selected';mark.textContent='✓ Ausgewählt';tile.append(mark);
 tile.addEventListener('click',()=>{state.pack=i;feature();document.querySelector('.ss-work-grid')?.scrollIntoView({behavior:'smooth',block:'start'});});
-const more=document.createElement('a');more.href='https://www.pinterest.com/search/pins/?q='+encodeURIComponent(p[4]+' stream starting soon be right back ending bundle');more.target='_blank';more.rel='noopener noreferrer';more.textContent='Pinterest-Inspiration ↗';more.title='Pinterest-Suche nach ähnlichen Stream-Bundles. Keine fremden Vorlagen werden verwendet.';
-holder.append(tile,more);lib.append(holder);
+holder.append(tile);lib.append(holder);
 })}
 async function copy(stage,button){state.stage=stage;feature();try{await navigator.clipboard.writeText(url());if(button){button.textContent='✓';setTimeout(()=>button.textContent='OBS ↗',1400)}else{$('ss-copy').textContent='✓ Link kopiert';setTimeout(()=>$('ss-copy').textContent='OBS-Link kopieren ↗',1400)}}catch(_){window.prompt('OBS-Link kopieren:',url())}}
 function xml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]))}
