@@ -150,6 +150,8 @@
       card.hidden=!all&&kind!==view;
       card.className='goal-card '+cls+' style-'+c.style+(c.showLabel?'':' label-off')+(c.showBar?'':' bar-off')+(c.cornerStyle==='rounded'?' corners-rounded':c.cornerStyle==='square'?' corners-square':'');
       card.style.setProperty('--accent',c.accent);
+      card.style.setProperty('width',c.boxWidth+'px','important');
+      for(const prop of ['height','min-height','max-height'])card.style.setProperty(prop,c.boxHeight+'px','important');
       card.style.setProperty('--custom-text-color',c.textColor||'initial');
       card.style.setProperty('--custom-bar-color',c.barColor||c.accent);
       card.style.setProperty('--custom-bg-color',c.backgroundColor||'transparent');
@@ -239,9 +241,32 @@
     for(const kind of kinds){const card=get('overlay-preview')?.querySelector('.'+kind+'-card');if(card){const grip=document.createElement('span');grip.className='tsrb-resize-grip';grip.title='Overlay-Größe durch Ziehen ändern';grip.setAttribute('aria-label','Overlay-Größe ändern');card.appendChild(grip)}}
   }
   let resizeDrag=null;
-  get('overlay-preview').addEventListener('pointerdown',ev=>{const grip=ev.target.closest('.tsrb-resize-grip');if(!grip)return;const card=grip.closest('.goal-card');const kind=card.classList.contains('subs-card')?'subs':'followers';if(kind!==state.selectedWidget)return;const w=widget(kind);resizeDrag={kind,x:ev.clientX,y:ev.clientY,width:w.boxWidth||440,height:w.boxHeight||100};get('overlay-preview').setPointerCapture(ev.pointerId);ev.preventDefault();ev.stopPropagation()});
-  get('overlay-preview').addEventListener('pointermove',ev=>{if(!resizeDrag)return;const scale=get('overlay-preview').getBoundingClientRect().width/Math.max(1,get('overlay-preview').offsetWidth);const w=widget(resizeDrag.kind);w.boxWidth=clamp(Math.round(resizeDrag.width+(ev.clientX-resizeDrag.x)/scale),160,1200);w.boxHeight=clamp(Math.round(resizeDrag.height+(ev.clientY-resizeDrag.y)/scale),65,350);persistAndRender()});
-  for(const type of ['pointerup','pointercancel'])get('overlay-preview').addEventListener(type,()=>resizeDrag=null);
+  const resizePreview=get('overlay-preview');
+  resizePreview.addEventListener('pointerdown',ev=>{
+    const grip=ev.target.closest('.tsrb-resize-grip');
+    if(!grip||ev.button!==0)return;
+    const card=grip.closest('.goal-card');
+    const kind=kinds.find(key=>card?.classList.contains(key+'-card'));
+    if(!kind||kind!==state.selectedWidget)return;
+    const w=widget(kind);
+    const scale=resizePreview.getBoundingClientRect().width/Math.max(1,resizePreview.offsetWidth);
+    resizeDrag={kind,pointerId:ev.pointerId,x:ev.clientX,y:ev.clientY,width:w.boxWidth,height:w.boxHeight,scale:scale||1};
+    resizePreview.setPointerCapture(ev.pointerId);
+    ev.preventDefault();ev.stopPropagation();
+  });
+  resizePreview.addEventListener('pointermove',ev=>{
+    if(!resizeDrag||ev.pointerId!==resizeDrag.pointerId)return;
+    const w=widget(resizeDrag.kind);
+    w.boxWidth=clamp(Math.round(resizeDrag.width+(ev.clientX-resizeDrag.x)/resizeDrag.scale),160,1200);
+    w.boxHeight=clamp(Math.round(resizeDrag.height+(ev.clientY-resizeDrag.y)/resizeDrag.scale),65,600);
+    render();
+  });
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])resizePreview.addEventListener(type,ev=>{
+    if(!resizeDrag||ev.pointerId!==resizeDrag.pointerId)return;
+    resizeDrag=null;
+    persist();
+    if(resizePreview.hasPointerCapture(ev.pointerId))resizePreview.releasePointerCapture(ev.pointerId);
+  });
   let drag=null;
   const preview=get('overlay-preview');
   preview.addEventListener('pointerdown',ev=>{const target=ev.target.closest('.goal-label,#preview-subs,#preview-followers');if(!target)return;const card=target.closest('.goal-card');const kind=card?.classList.contains('subs-card')?'subs':card?.classList.contains('followers-card')?'followers':null;if(!kind||kind!==state.selectedWidget)return;const w=widget(kind);drag={kind,x:ev.clientX,y:ev.clientY,startX:w.labelX||0,startY:w.labelY||0};preview.setPointerCapture(ev.pointerId);ev.preventDefault()});
@@ -251,7 +276,7 @@
   for(const [id,output,prop] of [['overlay-text-color','overlay-text-color-value','textColor'],['overlay-bar-color','overlay-bar-color-value','barColor'],['overlay-bg-color','overlay-bg-color-value','backgroundColor']])get(id).addEventListener('input',ev=>{widget()[prop]=ev.target.value;get(output).textContent=ev.target.value.toUpperCase();persistAndRender()});
   document.querySelectorAll('[data-reset-color]').forEach(button=>button.addEventListener('click',()=>{widget()[button.dataset.resetColor]='';syncFields();persistAndRender()}));
   document.querySelectorAll('[data-corner-style]').forEach(button=>button.addEventListener('click',()=>{widget().cornerStyle=button.dataset.cornerStyle;syncFields();persistAndRender()}));
-  get('background-file').addEventListener('change',ev=>{const file=ev.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){notify('Bitte eine Bilddatei auswählen.');return}if(file.size>800000){notify('Maximal 800 KB: bitte Bild verkleinern oder Bild-URL nutzen.');return}const reader=new FileReader();reader.onload=()=>{widget().bgData=String(reader.result);widget().bgUrl='';get('background-url').value='';widget().style='image';persistAndRender()};reader.readAsDataURL(file)});
+  get('background-file').addEventListener('change',ev=>{const file=ev.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){notify('Bitte eine Bilddatei auswählen.');return}if(file.size>800000){notify('Maximal 800 KB: bitte Bild verkleinern oder Bild-URL nutzen.');return}const reader=new FileReader();const uploadKind=state.selectedWidget;reader.onload=()=>{const target=widget(uploadKind);target.bgData=String(reader.result);target.bgUrl='';target.style='image';if(state.selectedWidget===uploadKind)syncFields();persistAndRender()};reader.onerror=()=>notify('Bild konnte nicht geladen werden. Bitte erneut auswählen.');reader.readAsDataURL(file)});
   get('timer-toggle').addEventListener('click',toggleTimer);get('timer-reset').addEventListener('click',resetTimer);document.querySelectorAll('[data-hours]').forEach(b=>b.addEventListener('click',()=>chooseDuration(b.dataset.hours)));get('custom-hours').addEventListener('change',ev=>{if(Number(ev.target.value)>0)chooseDuration(ev.target.value)});
   get('copy-overlay-all').addEventListener('click',()=>copy(state.selectedWidget));for(const [id,view] of [['copy-all','all'],['copy-subs','subs'],['copy-followers','followers'],['copy-timer','timer']])get(id).addEventListener('click',()=>copy(view));get('open-preview').addEventListener('click',()=>window.open(linkFor(state.selectedWidget),'_blank','noopener,noreferrer'));
   get('reset-all').addEventListener('click',()=>{if(window.confirm('Alle lokalen Einstellungen zurücksetzen?')){state=normalize({...defaultState,widgets:createWidgets()});try{localStorage.removeItem('subboost-studio-independent-widgets-v1')}catch(_){}persist();syncFields();render();notify('Einstellungen zurückgesetzt.')}});render();setInterval(render,300);
