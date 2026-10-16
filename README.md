@@ -4,8 +4,8 @@ Ein eigenständiger, kostenlos hostbarer Webseiten-Prototyp für Twitch-Overlay-
 
 ## Bereits eingebaut
 - Professionelles responsives Dashboard ohne Neon als Standard-Oberfläche
-- Sieben verschiedene Overlay-Designs: Neon, Glas, Fill, Sharp, Outline, Transparent, Eigenes Bild
-- Live-Vorschau, unabhängige Akzentfarbe, eigener Titel, Bildhintergrund
+- Sieben auswählbare Designs: fünf animierte Vorlagen (Silber-Rahmen, Cyber Violet, Pastell-Lila, Arcade Glow, Cyber Blue) plus Transparent und Blue Counter. Die sechs früheren Designs Neon, Glas, Fill, Sharp, Outline und Eigenes Bild sind aus dem Editor entfernt.
+- Live-Vorschau und in OBS identisch gerenderte Themes mit individuell anpassbaren Farben, Schriften, Boxmaßen und Position. Die Animationen respektieren die Systemeinstellung für reduzierte Bewegung.
 - Getrennte Abo- und Follower-Ziele mit aufwärts laufenden Zählern
 - Test-Buttons für neue Follows und Subs (kein Twitch-Zugriff erforderlich)
 - Countdown-Timer (12, 24, 48 oder eigene Stunden), Start/Pause/Reset
@@ -54,10 +54,10 @@ Technische Referenzen:
 - Die drei oberen Auswahlkarten bleiben unverändert. Unter **Text & Größe** werden Schriftart, gemeinsame Schriftgröße und Textposition eingestellt – auch für den Timer.
 - Beschriftung, Zähler, Zielzahl und Prozentzahl bilden eine gemeinsame Textgruppe. Ziehen verschiebt die ganze Gruppe. Box und Balken bleiben dabei unverändert.
 - Boxmaße und Position können numerisch geändert werden; der Griff unten rechts ändert nur die Boxgröße. Die Vorschau wird bei wenig Platz verkleinert, die OBS-Ausgabe bleibt in Originalgröße.
-- **Speichern & OBS-Link kopieren** sichert die Einstellungen lokal und erstellt einen vollständigen Schnappschuss einschließlich hochgeladener Bilder im URL-Fragment. Alte `?config=`-Links funktionieren weiterhin. Für spätere Designänderungen muss der neue Link in OBS eingesetzt werden.
+- **Speichern & OBS-Link kopieren** sichert die Einstellungen lokal und erstellt einen vollständigen Schnappschuss der aktuellen Widget-Einstellungen im URL-Fragment. Alte `?config=`-Links funktionieren weiterhin. Für spätere Designänderungen muss der neue Link in OBS eingesetzt werden.
 - In OBS eine Browser-Quelle mit **1920 × 1080** anlegen. Sehr große Boxpositionen oder die kombinierte Ansicht können eine größere Quelle benötigen. Twitch-Zahlen werden bei bestehender Verbindung weiterhin separat aktualisiert.
 
 ### Funktionstests
 `npm install` und `npx playwright install chromium` ausführen. Dann mit `python -m http.server 8765` die Website bereitstellen und in einem zweiten Terminal `npm test` starten. Optional: `TEST_URL` für einen anderen Server, `CHROMIUM_PATH` für ein vorhandenes Chromium.
 
-Die Browsertests prüfen alle drei Widgets, alle acht Designs, gemeinsame Typografie, feste Box-/Balkengeometrie, Ziehen und Größenänderung, Farben, Sichtbarkeit, Timer Start/Pause, lokale Speicherung, mobile Darstellung sowie OBS-Schnappschüsse in einem frischen Browser-Kontext inklusive Transparenz und Bildübertragung. Ein direkter Test im nativen OBS-Programm und mit realen Twitch-Ereignissen ist damit nicht ersetzt.
+Die automatisierten Playwright-Browsertests prüfen die drei Widgets und sieben auswählbaren Designs, CSS-Animationen in der OBS-Ansicht, gemeinsame Typografie, feste Box-/Balkengeometrie, Ziehen und Größenänderung, Farben, Sichtbarkeit, Timer Start/Pause, lokale Speicherung, Migration entfernter Designs, mobile Darstellung sowie OBS-Schnappschüsse in einem frischen Browser-Kontext. Ein direkter Test im nativen OBS-Programm und mit realen Twitch-Ereignissen ist damit nicht ersetzt.
