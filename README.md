@@ -64,7 +64,7 @@ Die automatisierten Playwright-Browsertests prüfen die drei Widgets und sieben 
 
 ## TSRB MultiChat herunterladen (Windows)
 
-Oben rechts im Creator Studio steht direkt neben **Twitch verbinden** der Button **↓ MultiChat**. Er führt zum Windows-Web-Installer:
+Oben rechts im Creator Studio steht direkt neben **Twitch verbinden** der Button **↓ MultiChat installieren**. Zusätzlich gibt es unter den drei Widget-Auswahlkarten einen eigenen Download-Bereich **TSRB MultiChat installieren**. Er führt zum Windows-Web-Installer:
 
 https://github.com/CedricTSRB/StreamOverlays/releases/latest/download/TSRB-MultiChat-Setup.exe
 
