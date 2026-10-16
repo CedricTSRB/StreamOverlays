@@ -6,10 +6,11 @@
   const KEY='subboost-studio-v1';
   const kinds=['subs','followers','timer'];
   const choices=['frame','cyber','pastel','arcade','sparkle','transparent','counter'];
+  const themeAccents={frame:'#e7e8ee',cyber:'#ab8aff',pastel:'#cf9cf5',arcade:'#bdf782',sparkle:'#36bff1',transparent:'#7863ee',counter:'#9b88d3'};
   const fonts={sans:'Arial, Helvetica, sans-serif',mono:'Consolas, monospace',serif:'Georgia, serif',impact:'Impact, sans-serif'};
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'frame',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default',boxWidth:440,boxHeight:100}]));
-  const defaultState={style:'frame',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'frame',accent:'#e7e8ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default',boxWidth:440,boxHeight:100}]));
+  const defaultState={style:'frame',accent:'#e7e8ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
   function load(){
@@ -18,7 +19,7 @@
       const d={...defaultState,...old};
       if(!old.widgets){
         let prior={};try{prior=JSON.parse(localStorage.getItem('subboost-studio-independent-widgets-v1'))||{}}catch(_){}
-        const base={style:old.style||'frame',accent:old.accent||'#7863ee',title:old.title||'STREAM GOALS',bgUrl:old.bgUrl||'',bgData:old.bgData||''};
+        const base={style:old.style||'frame',accent:old.accent||'#e7e8ee',title:old.title||'STREAM GOALS',bgUrl:old.bgUrl||'',bgData:old.bgData||''};
         d.widgets=Object.fromEntries(kinds.map(kind=>[kind,{...base,style:prior[kind]?.style||base.style,accent:prior[kind]?.accent||base.accent}]));
         if(prior.subs){if(prior.subs.current!==undefined)d.subs=prior.subs.current;if(prior.subs.target!==undefined)d.subsTarget=prior.subs.target}
         if(prior.followers){if(prior.followers.current!==undefined)d.followers=prior.followers.current;if(prior.followers.target!==undefined)d.followersTarget=prior.followers.target}
@@ -30,7 +31,7 @@
   function normalize(obj){
     const d={...defaultState,...obj};
     d.style=choices.includes(d.style)?d.style:'frame';
-    d.accent=/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent:'#7863ee';
+    d.accent=/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent:'#e7e8ee';
     d.title=String(d.title||'STREAM GOALS').slice(0,32);
     d.subs=clamp(d.subs,0,1000000);d.subsTarget=clamp(d.subsTarget,1,1000000);
     d.followers=clamp(d.followers,0,1000000);d.followersTarget=clamp(d.followersTarget,1,1000000);
@@ -115,7 +116,7 @@
       const row=card.querySelector('.goal-top');
       const bar=card.querySelector('.bar');
       const percent=card.querySelector('.goal-percent');
-      const name=conf.labelText.trim()||(conf.style==='counter'?(kind==='subs'?'SUBS:':'FOLLOWS:'):(kind==='subs'?'Abo-Ziel':'Follower-Ziel'));
+      const name=conf.labelText.trim()||(conf.style==='counter'?(kind==='subs'?'SUBS:':'FOLLOWS:'):themeAccents[conf.style]&&!['transparent','counter'].includes(conf.style)?(kind==='subs'?'SUB GOAL':'FOLLOW GOAL'):(kind==='subs'?'Abo-Ziel':'Follower-Ziel'));
       label.textContent=name;
       const labelBox=card.querySelector('.goal-label');
       labelBox.style.setProperty('font-size',(15*(conf.allSize||100)/100)+'px','important');
@@ -165,8 +166,7 @@
       card.classList.toggle('has-custom-text',!!c.textColor);
       card.classList.toggle('has-custom-bar',!!c.barColor);
       card.classList.toggle('has-custom-bg',!!c.backgroundColor);
-      const bg=c.bgUrl||c.bgData;
-      card.style.backgroundImage=c.style==='image'&&bg?`linear-gradient(#12203255,#12203255),url(${JSON.stringify(bg)})`:'';
+      card.style.backgroundImage='';
     }
     const bg=w.bgUrl||w.bgData;
     el.style.backgroundImage='';
@@ -239,8 +239,8 @@
   let toastTimeout;function notify(message){let el=get('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),3200)}
   function linkFor(view){
     persist();
-    const widgets=Object.fromEntries(kinds.map(k=>[k,{...widget(k),bgData:view==='all'||view===k?widget(k).bgData:''}]));
-    const obj={...state,widgets,bgData:'',remainingMs:currentTimer(),startedAt:state.running?Date.now():null};
+    const widgets=Object.fromEntries(kinds.map(k=>[k,{...widget(k),bgData:'',bgUrl:''}]));
+    const obj={...state,widgets,bgData:'',bgUrl:'',remainingMs:currentTimer(),startedAt:state.running?Date.now():null};
     if(!/^https?:$/i.test(location.protocol))notify('Für OBS-Link zuerst auf GitHub Pages veröffentlichen.');
     const url=new URL(window.location.href);url.search='';url.hash='';
     url.searchParams.set('overlay',view);url.hash=new URLSearchParams({config:JSON.stringify(obj)}).toString();
@@ -252,7 +252,7 @@
   if(overlayMode){document.body.classList.add('obs-mode');get('obs-overlay-root').hidden=false;get('obs-overlay-root').dataset.view=obsView;get('obs-overlay-root').classList.toggle('has-timer',['all','timer'].includes(obsView));const cloned=get('overlay-preview').cloneNode(true);cloned.style.zoom='';get('obs-content').appendChild(cloned);const s=document.createElement('style');s.textContent=obsView==='subs'?'.obs-root .followers-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='followers'?'.obs-root .subs-card,.obs-root .timer-card,.obs-root .preview-heading{display:none}':obsView==='timer'?'.obs-root .subs-card,.obs-root .followers-card,.obs-root .preview-heading{display:none}':'';document.head.appendChild(s);get('obs-start-pause').addEventListener('click',toggleTimer);get('obs-reset').addEventListener('click',resetTimer);render();setInterval(render,300);if(liveReady()){updateLiveCounts();setInterval(updateLiveCounts,30000)}return}
   syncFields();
   new ResizeObserver(fitPreview).observe(get('overlay-preview').parentElement);
-  document.querySelectorAll('[data-widget]').forEach(el=>el.addEventListener('click',()=>selectWidget(el.dataset.widget)));document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('click',()=>{const w=widget();w.style=el.dataset.style;if(w.style==='counter'&&['#7863ee','#4f9ed2'].includes(w.accent.toLowerCase()))w.accent='#9b88d3';syncFields();persistAndRender()}));changeNum('subs-current','subs',0);changeNum('subs-target','subsTarget',1);changeNum('followers-current','followers',0);changeNum('followers-target','followersTarget',1);
+  document.querySelectorAll('[data-widget]').forEach(el=>el.addEventListener('click',()=>selectWidget(el.dataset.widget)));document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('click',()=>{const w=widget();const oldAccent=w.accent.toLowerCase();const priorDefault=themeAccents[w.style];w.style=el.dataset.style;if(oldAccent===priorDefault.toLowerCase()||['#7863ee','#4f9ed2'].includes(oldAccent))w.accent=themeAccents[w.style];syncFields();persistAndRender()}));changeNum('subs-current','subs',0);changeNum('subs-target','subsTarget',1);changeNum('followers-current','followers',0);changeNum('followers-target','followersTarget',1);
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
   get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;state.title=ev.target.value;persistAndRender()});
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
