@@ -4,6 +4,7 @@ const assert=require('node:assert/strict');
 const path=require('node:path');
 const {spawn}=require('node:child_process');
 const {once}=require('node:events');
+const {request}=require('node:http');
 const token='test-secret-token-abcdefghijklmnopqrstuvwxyz';
 let child,port,base;
 test.before(async()=>{
@@ -35,8 +36,20 @@ test('private dock and API reject calls without token',async()=>{
  }
 });
 test('only same-origin host is accepted (DNS rebinding mitigation)',async()=>{
- const res=await fetch(base+'/api/status',{headers:{host:'malicious.example:'+port,'X-TSRB-Token':token}});
- assert.equal(res.status,403);
+ // Node fetch may override the Host header. Send a real HTTP request to prove
+ // that the server rejects forged Host headers even with a valid access token.
+ const actualStatus=await new Promise((resolve,reject)=>{
+  const req=request({
+   hostname:'127.0.0.1',
+   port,
+   path:'/api/status',
+   method:'GET',
+   headers:{Host:'malicious.example:'+port,'X-TSRB-Token':token}
+  },res=>{res.resume();res.on('end',()=>resolve(res.statusCode))});
+  req.on('error',reject);
+  req.end();
+ });
+ assert.equal(actualStatus,403);
 });
 test('dock and overlay assets, auth and statuses are served',async()=>{
  const res=await fetch(base+'/dock?token='+token);assert.equal(res.status,200);
