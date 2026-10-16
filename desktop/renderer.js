@@ -64,7 +64,7 @@ const dialog=$('obs-dialog');
 $('obs-btn').addEventListener('click',()=>{if(obsUrl){$('obs-url').value=obsUrl;dialog.showModal()}else toast('OBS-Quelle wird gestartet …')});
 $('dialog-close').addEventListener('click',()=>dialog.close());
 $('copy-url').addEventListener('click',()=>navigator.clipboard.writeText(obsUrl).then(()=>toast('OBS-Link kopiert')).catch(()=>{$('obs-url').select();toast('Link markieren und kopieren')}));
-$('obs-preview').addEventListener('click',()=>{if(obsUrl)window.open(obsUrl,'_blank','noopener')});
+$('obs-preview').addEventListener('click',()=>{if(obsUrl)api.preview().catch(e=>toast(e.message))});
 api.onEvent(e=>{
  if(e.type==='message')add(e.message);
  else if(e.type==='status')updateStatus(e.platform,e.state,e.detail);
