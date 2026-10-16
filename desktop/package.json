@@ -1,6 +1,6 @@
 {
   "name": "tsrb-multichat",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "Windows multi-platform live chat dashboard and local OBS source",
   "main": "main.js",

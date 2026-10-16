@@ -40,10 +40,18 @@ function createConnectionManager(deps={}){
     const connector=deps.tiktok||await import('tiktok-live-connector');
     const Tiktok=connector.TikTokLiveConnection||connector.default?.TikTokLiveConnection;
     if(!Tiktok)throw Error('TikTok-Connector nicht verfügbar');
-    const conn=new Tiktok(target.channel);cleanups.push(()=>conn.disconnect?.());
+    // TikTok-Live-Connector v2.5 requires an explicit options object.
+    // Passing only the username throws while reading options.processInitialData.
+    const conn=new Tiktok(target.channel,{
+     processInitialData:true,
+     fetchRoomInfoOnConnect:true,
+     enableExtendedGiftInfo:false,
+     authenticateWs:false,
+     useMobile:false
+    });cleanups.push(()=>conn.disconnect?.());
     conn.on('chat',data=>{if(active())message(fromTikTok(data))});
     conn.on('disconnected',()=>{if(active())publish(platform,'disconnected','TikTok LIVE getrennt')});
-    conn.on('error',fail);
+    conn.on('error',error=>fail(error?.exception||error));
     await conn.connect();
     if(active())publish(platform,'connected','TikTok LIVE '+target.channel+' verbunden');
    }catch(e){fail(e)}})();return {state:'connecting',target};
