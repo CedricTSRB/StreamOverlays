@@ -39,6 +39,27 @@ jobs:
           Invoke-WebRequest -Uri 'https://nodejs.org/dist/v22.16.0/node-v22.16.0-win-x64.zip' -OutFile $nodeArchive
           Expand-Archive -LiteralPath $nodeArchive -DestinationPath (Join-Path $env:RUNNER_TEMP 'node-win')
           Copy-Item (Join-Path $env:RUNNER_TEMP 'node-win/node-v22.16.0-win-x64/node.exe') "$stage/runtime/node.exe"
+          # End-to-end smoke test under Windows PowerShell 5.1, as used by the user's .cmd launcher.
+          $launcher = (Resolve-Path "$stage/Start-MultiChat-OBS.ps1").Path
+          $stopper = (Resolve-Path "$stage/Stop-MultiChat-OBS.ps1").Path
+          try {
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $launcher
+            if ($LASTEXITCODE -ne 0) { throw 'Windows PowerShell launcher smoke test failed' }
+            $tokenPath = Join-Path $env:LOCALAPPDATA 'TSRBMultiChatOBS/access-token.txt'
+            if (-not (Test-Path $tokenPath)) { throw 'Launcher did not generate its access token' }
+            $accessToken = [IO.File]::ReadAllText($tokenPath).Trim()
+            if ($accessToken.Length -lt 24) { throw 'Launcher generated an invalid token' }
+            $authenticated = Invoke-RestMethod -Uri 'http://127.0.0.1:18765/api/status' -Headers @{'X-TSRB-Token'=$accessToken} -TimeoutSec 5
+            if ($null -eq $authenticated.platforms) { throw 'OBS chat service did not respond to authenticated requests' }
+            $dockLink = Get-Content "$stage/OBS-DOCK-LINK.txt" -Raw
+            $overlayLink = Get-Content "$stage/OBS-OVERLAY-LINK.txt" -Raw
+            if ($dockLink -notmatch '/dock\\?token=' -or $overlayLink -notmatch '/overlay\\?token=') { throw 'OBS links were not created' }
+            $dockResponse = Invoke-WebRequest -Uri $dockLink.Trim() -UseBasicParsing -TimeoutSec 5
+            if ($dockResponse.StatusCode -ne 200 -or $dockResponse.Content -notmatch 'TSRB MultiChat') { throw 'OBS dock HTML is not served correctly' }
+            Write-Host 'Windows PowerShell 5.1 OBS dock end-to-end smoke test passed.'
+          } finally {
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $stopper
+          }
           Compress-Archive -Path "$stage/*" -DestinationPath 'TSRB-MultiChat-OBS-Dock-Windows.zip' -CompressionLevel Optimal
           if (-not (Test-Path 'TSRB-MultiChat-OBS-Dock-Windows.zip')) { throw 'Missing OBS dock package' }
       - uses: actions/upload-artifact@v4
