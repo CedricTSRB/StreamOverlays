@@ -49,6 +49,7 @@ app.whenReady().then(()=>{
  ipcMain.handle('chat:disconnect',(_,platform)=>{manager.stop(platform);return true});
  ipcMain.handle('chat:snapshot',()=>({history,status:manager.getStatus(),url:overlayPort?'http://127.0.0.1:'+overlayPort+'/overlay':''}));
  ipcMain.handle('chat:open',(_,platform,input)=>{const target=parseTarget(platform,input);const url=target.url||({twitch:'https://www.twitch.tv/',tiktok:'https://www.tiktok.com/@',kick:'https://kick.com/',youtube:'https://www.youtube.com/'}[platform]||'')+(target.channel||target.handle||'');if(allowedExternal(url))return shell.openExternal(url);throw Error('Ungültiges Ziel')});
+ ipcMain.handle('chat:preview',()=>{if(!overlayPort)throw Error('OBS-Server noch nicht bereit');const u='http://127.0.0.1:'+overlayPort+'/overlay';const win=new BrowserWindow({width:930,height:760,backgroundColor:'#111626',title:'TSRB MultiChat · OBS Vorschau',webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true}});win.loadURL(u);return true});
  ipcMain.handle('chat:mini',()=>{if(miniWindow&&!miniWindow.isDestroyed()){miniWindow.focus();return true}miniWindow=createWindow(true);return true});
  ipcMain.handle('chat:close-mini',()=>{if(miniWindow&&!miniWindow.isDestroyed())miniWindow.close();return true});
  ipcMain.handle('chat:clear',()=>{history=[];push({type:'clear'});return true});
