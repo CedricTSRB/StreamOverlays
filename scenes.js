@@ -72,7 +72,7 @@ const holder=document.createElement('div');holder.className='ss-pack-holder';con
 tile.append(createScene(i,'soon',true));
 const title=document.createElement('strong');title.textContent=p[0];const desc=document.createElement('span');desc.textContent=p[4]+' · 3 Bildschirme';tile.append(title,desc);
 tile.addEventListener('click',()=>{state.pack=i;feature();document.querySelector('.ss-feature').scrollIntoView({behavior:'smooth',block:'start'})});
-const more=document.createElement('a');more.href='https://www.pinterest.com/pin/'+p[5]+'/';more.target='_blank';more.rel='noopener noreferrer';more.textContent='Pinterest-Inspiration ↗';more.title='Separater Pinterest-Pin als Inspirationsquelle, nicht das verwendete Design';
+const more=document.createElement('a');more.href='https://www.pinterest.com/search/pins/?q='+encodeURIComponent(p[4]+' stream starting soon be right back ending bundle');more.target='_blank';more.rel='noopener noreferrer';more.textContent='Pinterest-Inspiration ↗';more.title='Pinterest-Suche nach ähnlichen Stream-Bundles. Keine fremden Vorlagen werden verwendet.';
 holder.append(tile,more);lib.append(holder);
 })}
 async function copy(stage,button){state.stage=stage;feature();try{await navigator.clipboard.writeText(url());if(button){button.textContent='✓';setTimeout(()=>button.textContent='OBS ↗',1400)}else{$('ss-copy').textContent='✓ Link kopiert';setTimeout(()=>$('ss-copy').textContent='OBS-Link kopieren ↗',1400)}}catch(_){window.prompt('OBS-Link kopieren:',url())}}
