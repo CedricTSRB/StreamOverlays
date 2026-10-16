@@ -1,0 +1,62 @@
+name: Build TSRB MultiChat OBS Dock (Windows)
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'desktop/obs-*'
+      - 'desktop/connections.js'
+      - 'desktop/core.js'
+      - 'desktop/package.json'
+      - 'desktop/tests/**'
+      - 'obs-dock/**'
+      - '.github/workflows/obs-dock-windows.yml'
+permissions:
+  contents: write
+jobs:
+  obs-dock:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install and test
+        working-directory: desktop
+        run: |
+          npm install --no-audit --no-fund
+          npm test
+      - name: Package portable backend and OBS launcher
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $stage = 'obs-dock-package'
+          New-Item -ItemType Directory -Force -Path "$stage/app","$stage/runtime" | Out-Null
+          Copy-Item obs-dock/* -Destination $stage -Recurse -Exclude '*.md'
+          $files = @('obs-server.js','obs-dock.html','obs-dock.css','obs-dock.js','obs-overlay.html','obs-overlay.css','obs-overlay.js','connections.js','core.js','package.json')
+          foreach ($file in $files) { Copy-Item "desktop/$file" "$stage/app/$file" }
+          Copy-Item 'desktop/node_modules' "$stage/app/node_modules" -Recurse
+          $nodeArchive = Join-Path $env:RUNNER_TEMP 'node-win-x64.zip'
+          Invoke-WebRequest -Uri 'https://nodejs.org/dist/v22.16.0/node-v22.16.0-win-x64.zip' -OutFile $nodeArchive
+          Expand-Archive -LiteralPath $nodeArchive -DestinationPath (Join-Path $env:RUNNER_TEMP 'node-win')
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'node-win/node-v22.16.0-win-x64/node.exe') "$stage/runtime/node.exe"
+          Compress-Archive -Path "$stage/*" -DestinationPath 'TSRB-MultiChat-OBS-Dock-Windows.zip' -CompressionLevel Optimal
+          if (-not (Test-Path 'TSRB-MultiChat-OBS-Dock-Windows.zip')) { throw 'Missing OBS dock package' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TSRB-MultiChat-OBS-Dock-Windows
+          path: TSRB-MultiChat-OBS-Dock-Windows.zip
+          if-no-files-found: error
+      - name: Publish OBS Dock ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = 'obs-dock-v0.1.0'
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag TSRB-MultiChat-OBS-Dock-Windows.zip --clobber --repo $env:GITHUB_REPOSITORY
+          } else {
+            gh release create $tag TSRB-MultiChat-OBS-Dock-Windows.zip --repo $env:GITHUB_REPOSITORY --target main --title 'TSRB MultiChat OBS Dock v0.1.0' --notes 'OBS Browser-Dock-Erweiterung fuer Windows (kein natives OBS-C++-Plugin). ZIP entpacken, Start-MultiChat-OBS.cmd starten, URL unter OBS > Docks > Custom Browser Docks einfuegen.'
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to publish OBS Dock' }
