@@ -5,11 +5,11 @@
   if(new URLSearchParams(location.search).get('overlay')==='social')return;
   const KEY='subboost-studio-v1';
   const kinds=['subs','followers','timer'];
-  const choices=['neon','glass','fill','sharp','outline','transparent','image','counter'];
+  const choices=['frame','cyber','pastel','arcade','sparkle','transparent','counter'];
   const fonts={sans:'Arial, Helvetica, sans-serif',mono:'Consolas, monospace',serif:'Georgia, serif',impact:'Impact, sans-serif'};
   const labels={subs:'Abo-Ziel',followers:'Follower-Ziel',timer:'Stream-Timer'};
-  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'neon',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default',boxWidth:440,boxHeight:100}]));
-  const defaultState={style:'neon',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
+  const createWidgets=()=>Object.fromEntries(kinds.map(kind=>[kind,{style:'frame',accent:'#7863ee',title:'STREAM GOALS',bgUrl:'',bgData:'',showLabel:true,showNumbers:true,showBar:true,showPercent:false,labelText:'',labelSize:12,numberSize:15,allSize:100,labelX:0,labelY:0,numberX:0,numberY:0,textColor:'',barColor:'',backgroundColor:'',cornerStyle:'default',boxWidth:440,boxHeight:100}]));
+  const defaultState={style:'frame',accent:'#7863ee',title:'STREAM GOALS',subs:24,subsTarget:50,followers:128,followersTarget:200,durationMs:43200000,remainingMs:43200000,running:false,startedAt:null,bgUrl:'',bgData:'',selectedWidget:'subs',widgets:createWidgets()};
   const get=id=>document.getElementById(id);
   const clamp=(val,min,max)=>Math.min(max,Math.max(min,Number.isFinite(Number(val))?Number(val):min));
   function load(){
@@ -18,7 +18,7 @@
       const d={...defaultState,...old};
       if(!old.widgets){
         let prior={};try{prior=JSON.parse(localStorage.getItem('subboost-studio-independent-widgets-v1'))||{}}catch(_){}
-        const base={style:old.style||'neon',accent:old.accent||'#7863ee',title:old.title||'STREAM GOALS',bgUrl:old.bgUrl||'',bgData:old.bgData||''};
+        const base={style:old.style||'frame',accent:old.accent||'#7863ee',title:old.title||'STREAM GOALS',bgUrl:old.bgUrl||'',bgData:old.bgData||''};
         d.widgets=Object.fromEntries(kinds.map(kind=>[kind,{...base,style:prior[kind]?.style||base.style,accent:prior[kind]?.accent||base.accent}]));
         if(prior.subs){if(prior.subs.current!==undefined)d.subs=prior.subs.current;if(prior.subs.target!==undefined)d.subsTarget=prior.subs.target}
         if(prior.followers){if(prior.followers.current!==undefined)d.followers=prior.followers.current;if(prior.followers.target!==undefined)d.followersTarget=prior.followers.target}
@@ -29,7 +29,7 @@
   }
   function normalize(obj){
     const d={...defaultState,...obj};
-    d.style=choices.includes(d.style)?d.style:'neon';
+    d.style=choices.includes(d.style)?d.style:'frame';
     d.accent=/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent:'#7863ee';
     d.title=String(d.title||'STREAM GOALS').slice(0,32);
     d.subs=clamp(d.subs,0,1000000);d.subsTarget=clamp(d.subsTarget,1,1000000);
@@ -196,7 +196,7 @@
     document.querySelectorAll('[data-hours]').forEach(b=>b.classList.toggle('active',!state.running&&state.durationMs===Number(b.dataset.hours)*3600000));
     get('hex-label').textContent=w.accent.toUpperCase();
     get('overlay-bar-color').value=w.barColor||w.accent;
-    const shape=w.cornerStyle==='square'?'square':w.cornerStyle==='rounded'?'rounded':w.style==='sharp'?'square':'rounded';
+    const shape=w.cornerStyle==='square'?'square':w.cornerStyle==='rounded'?'rounded':w.style==='frame'||w.style==='sparkle'?'square':'rounded';
     document.querySelectorAll('[data-corner-style]').forEach(button=>{const active=button.dataset.cornerStyle===shape;button.classList.toggle('is-active',active);button.setAttribute('aria-pressed',String(active))});
     if(get('counter-display-settings'))get('counter-display-settings').hidden=selected==='timer';
     const copyLabel=get('copy-overlay-all');if(copyLabel.firstChild)copyLabel.firstChild.textContent='Speichern & OBS-Link kopieren ';
@@ -213,7 +213,7 @@
   }
   function syncFields(){
     const w=widget();
-    for(const [id,v] of [['subs-current',state.subs],['subs-target',state.subsTarget],['followers-current',state.followers],['followers-target',state.followersTarget],['label-name',w.title],['accent',w.accent],['background-url',w.bgUrl]]){
+    for(const [id,v] of [['subs-current',state.subs],['subs-target',state.subsTarget],['followers-current',state.followers],['followers-target',state.followersTarget],['label-name',w.title],['accent',w.accent]]){
       const el=get(id);if(el)el.value=v;
     }
     get('font-family').value=w.fontFamily;
@@ -254,7 +254,7 @@
   new ResizeObserver(fitPreview).observe(get('overlay-preview').parentElement);
   document.querySelectorAll('[data-widget]').forEach(el=>el.addEventListener('click',()=>selectWidget(el.dataset.widget)));document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('click',()=>{const w=widget();w.style=el.dataset.style;if(w.style==='counter'&&['#7863ee','#4f9ed2'].includes(w.accent.toLowerCase()))w.accent='#9b88d3';syncFields();persistAndRender()}));changeNum('subs-current','subs',0);changeNum('subs-target','subsTarget',1);changeNum('followers-current','followers',0);changeNum('followers-target','followersTarget',1);
   get('test-sub').addEventListener('click',()=>{state.subs=Math.min(1000000,state.subs+1);get('subs-current').value=state.subs;persistAndRender()});get('test-follower').addEventListener('click',()=>{state.followers=Math.min(1000000,state.followers+1);get('followers-current').value=state.followers;persistAndRender()});
-  get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;state.title=ev.target.value;persistAndRender()});get('background-url').addEventListener('input',ev=>{widget().bgUrl=ev.target.value.trim().slice(0,2048);persistAndRender()});
+  get('accent').addEventListener('input',ev=>{widget().accent=ev.target.value;get('hex-label').textContent=ev.target.value.toUpperCase();if(!widget().barColor)get('overlay-bar-color').value=ev.target.value;persistAndRender()});get('label-name').addEventListener('input',ev=>{widget().title=ev.target.value;state.title=ev.target.value;persistAndRender()});
   for(const [id,prop] of [['counter-show-label','showLabel'],['counter-show-numbers','showNumbers'],['counter-show-bar','showBar'],['counter-show-percent','showPercent']])get(id).addEventListener('change',ev=>{widget()[prop]=ev.target.checked;persistAndRender()});
   get('all-size').addEventListener('input',ev=>{widget().allSize=Number(ev.target.value);get('all-size-value').textContent=ev.target.value+' %';persistAndRender()});
   get('reset-text-position').addEventListener('click',()=>{Object.assign(widget(),{labelX:0,labelY:0,numberX:0,numberY:0});persistAndRender()});
@@ -321,7 +321,6 @@
   for(const [id,output,prop] of [['overlay-text-color','overlay-text-color-value','textColor'],['overlay-bar-color','overlay-bar-color-value','barColor'],['overlay-bg-color','overlay-bg-color-value','backgroundColor']])get(id).addEventListener('input',ev=>{widget()[prop]=ev.target.value;get(output).textContent=ev.target.value.toUpperCase();persistAndRender()});
   document.querySelectorAll('[data-reset-color]').forEach(button=>button.addEventListener('click',()=>{widget()[button.dataset.resetColor]='';syncFields();persistAndRender()}));
   document.querySelectorAll('[data-corner-style]').forEach(button=>button.addEventListener('click',()=>{widget().cornerStyle=button.dataset.cornerStyle;syncFields();persistAndRender()}));
-  get('background-file').addEventListener('change',ev=>{const file=ev.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){notify('Bitte eine Bilddatei auswählen.');return}if(file.size>800000){notify('Maximal 800 KB: bitte Bild verkleinern oder Bild-URL nutzen.');return}const reader=new FileReader();const uploadKind=state.selectedWidget;reader.onload=()=>{const target=widget(uploadKind);target.bgData=String(reader.result);target.bgUrl='';target.style='image';if(state.selectedWidget===uploadKind)syncFields();persistAndRender()};reader.onerror=()=>notify('Bild konnte nicht geladen werden. Bitte erneut auswählen.');reader.readAsDataURL(file)});
   get('timer-toggle').addEventListener('click',toggleTimer);get('timer-reset').addEventListener('click',resetTimer);document.querySelectorAll('[data-hours]').forEach(b=>b.addEventListener('click',()=>chooseDuration(b.dataset.hours)));get('custom-hours').addEventListener('change',ev=>{if(Number(ev.target.value)>0)chooseDuration(ev.target.value)});
   get('copy-overlay-all').addEventListener('click',()=>copy(state.selectedWidget));for(const [id,view] of [['copy-all','all'],['copy-subs','subs'],['copy-followers','followers'],['copy-timer','timer']])get(id).addEventListener('click',()=>copy(view));get('open-preview').addEventListener('click',()=>window.open(linkFor(state.selectedWidget),'_blank','noopener,noreferrer'));
   get('reset-all').addEventListener('click',()=>{if(window.confirm('Alle lokalen Einstellungen zurücksetzen?')){state=normalize({...defaultState,widgets:createWidgets()});try{localStorage.removeItem('subboost-studio-independent-widgets-v1')}catch(_){}persist();syncFields();render();notify('Einstellungen zurückgesetzt.')}});render();setInterval(render,300);
