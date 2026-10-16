@@ -218,6 +218,7 @@
     const widgets=Object.fromEntries(kinds.map(k=>[k,{...widget(k),bgData:''}]));
     const obj={...state,widgets,bgData:'',remainingMs:currentTimer(),startedAt:state.running?Date.now():null};
     if(!/^https?:$/i.test(location.protocol))notify('Für OBS-Link zuerst auf GitHub Pages veröffentlichen.');
+    if(kinds.some(k=>widget(k).bgData))notify('Hinweis: Lokale Hintergrundbilder werden nicht im OBS-Link übertragen. Bitte eine Bild-URL verwenden.');
     const url=new URL(window.location.href);url.search='';url.hash='';
     url.searchParams.set('overlay',view);url.searchParams.set('config',JSON.stringify(obj));
     const id=currentLiveId();
