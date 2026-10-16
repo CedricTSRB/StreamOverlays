@@ -1,13 +1,14 @@
 {
   "name": "tsrb-multichat",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "description": "Windows multi-platform live chat dashboard and local OBS source",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.cjs",
-    "dist": "electron-builder --win nsis-web --x64 --publish never"
+    "dist": "electron-builder --win nsis-web --x64 --publish never",
+    "start:obs": "node obs-server.js"
   },
   "devDependencies": {
     "electron": "^38.0.0",
@@ -27,7 +28,14 @@
       "style.css",
       "core.js",
       "connections.js",
-      "package.json"
+      "package.json",
+      "obs-server.js",
+      "obs-dock.html",
+      "obs-dock.js",
+      "obs-dock.css",
+      "obs-overlay.html",
+      "obs-overlay.js",
+      "obs-overlay.css"
     ],
     "win": {
       "target": [
