@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('tsrb',Object.freeze({
  snapshot:()=>ipcRenderer.invoke('chat:snapshot'),
  open:(id,target)=>permitted.has(id)?ipcRenderer.invoke('chat:open',id,String(target||'')):Promise.reject(Error('Unknown platform')),
  mini:()=>ipcRenderer.invoke('chat:mini'),
+ preview:()=>ipcRenderer.invoke('chat:preview'),
  closeMini:()=>ipcRenderer.invoke('chat:close-mini'),
  clear:()=>ipcRenderer.invoke('chat:clear'),
  onEvent:callback=>{if(typeof callback!=='function')return ()=>{};const handler=(_,event)=>callback(event);ipcRenderer.on('multichat:event',handler);return ()=>ipcRenderer.removeListener('multichat:event',handler)}
