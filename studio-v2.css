@@ -633,6 +633,16 @@ body:not(.obs-mode) .counter-display-fields{grid-template-columns:1fr}
 
 
 /* Compact Twitch account controls in the global top bar. The studio hero is removed. */
+body:not(.obs-mode) .header-multichat-download{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  flex:0 0 auto;padding:9px 12px;border-radius:10px;
+  color:var(--ui-ink);background:var(--ui-panel);
+  border:1px solid var(--ui-border);font-size:12px;font-weight:800;
+  box-shadow:0 3px 12px rgba(62,70,118,.08);text-decoration:none;
+}
+body:not(.obs-mode) .header-multichat-download:hover{background:var(--ui-hover);border-color:var(--ui-primary);color:var(--ui-primary)}
+body:not(.obs-mode) .header-multichat-download .download-icon{display:grid;place-items:center;width:18px;height:18px;border-radius:5px;background:rgba(118,80,239,.12);color:var(--ui-primary);font-size:15px;line-height:1}
+@media(max-width:620px){body:not(.obs-mode) .header-multichat-download{gap:5px;padding:8px 9px;font-size:10px}}
 body:not(.obs-mode) .header-twitch{display:flex;align-items:center;gap:6px;position:relative;flex:0 0 auto}
 body:not(.obs-mode) .header-twitch-connect{background:#9146ff;color:#fff;border:1px solid #a56bff;font-weight:800;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 3px 14px #9146ff2c}
 body:not(.obs-mode) .header-twitch-connect:hover{background:#a16afa;color:#fff}
