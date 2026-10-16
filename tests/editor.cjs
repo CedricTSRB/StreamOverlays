@@ -64,7 +64,8 @@ const assert=require('node:assert/strict');
  assert.equal(await themedPage.locator('.obs-content .subs-card').evaluate(e=>e.classList.contains('style-sparkle')),true);
  assert.equal(await themedPage.locator('.obs-content .subs-card .bar-fill').evaluate(e=>getComputedStyle(e).animationName),'cyber-glow');
  await themedOBS.close();
- assert.deepEqual(await page.locator('[data-style]').evaluateAll(nodes=>nodes.map(n=>n.dataset.style)),['frame','cyber','pastel','arcade','sparkle','transparent','counter']);
+ assert.equal(await page.locator('[data-style]').count(),43);
+ assert.deepEqual(await page.locator('[data-style]').evaluateAll(nodes=>nodes.slice(0,7).map(n=>n.dataset.style)),['frame','cyber','pastel','arcade','sparkle','transparent','counter']);
  // Existing saved presets should migrate.
  await page.evaluate(()=>{const old=JSON.parse(localStorage.getItem('subboost-studio-v1'));old.widgets.subs.style='sharp';localStorage.setItem('subboost-studio-v1',JSON.stringify(old))});
  await page.reload();assert.equal(await page.locator('#overlay-preview .subs-card').evaluate(e=>e.classList.contains('style-frame')),true);await page.locator('[data-editor-tab=fine]').click();assert.equal(await page.locator('#text-x').inputValue(),'42');
