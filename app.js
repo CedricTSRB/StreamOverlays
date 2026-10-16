@@ -59,7 +59,7 @@
   let liveData=null,liveError='';
   let liveId=currentLiveId();
   function liveReady(){return !!LIVE_API && /^[a-f0-9]{40}$/.test(liveId)}
-  if(overlayMode){try{const raw=params.get('config');if(raw&&raw.length<12000)state=normalize({...state,...JSON.parse(raw),bgData:''})}catch(_){}}
+  if(overlayMode){try{const raw=params.get('config');if(raw&&raw.length<30000)state=normalize({...state,...JSON.parse(raw),bgData:''})}catch(_){}}
   const widget=kind=>state.widgets[kind||state.selectedWidget];
   const safePct=(cur,total)=>Math.min(100,Math.max(0,Math.round(cur/Math.max(1,total)*100)));
   const fmt=(ms)=>{const s=Math.max(0,Math.ceil(ms/1000));const hrs=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return `${String(hrs).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`};
@@ -133,7 +133,7 @@
       numbers.append(document.createTextNode(count+' '));
       const small=document.createElement('small');
       small.textContent='/ '+target;
-      numbers.append(small);
+      small.style.fontSize='inherit';small.style.fontWeight='inherit';numbers.append(small);
       card.querySelector('#'+kind+'-progress').style.width=pct+'%';
     }
     if(overlayMode && params.get('live') && !liveData){
