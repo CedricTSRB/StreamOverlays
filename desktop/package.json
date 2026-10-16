@@ -1,11 +1,12 @@
 {
   "name": "tsrb-multichat",
-  "version": "0.2.0",
+  "version": "0.8.0",
   "private": true,
-  "description": "TSRB MultiChat Desktop",
+  "description": "Windows multi-platform live chat dashboard and local OBS source",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
     "dist": "electron-builder --win portable"
   },
   "devDependencies": {
@@ -21,12 +22,23 @@
     "files": [
       "main.js",
       "index.html",
-      "renderer.js"
+      "renderer.js",
+      "preload.js",
+      "style.css",
+      "core.js",
+      "connections.js",
+      "package.json"
     ],
     "win": {
       "target": [
         "portable"
       ]
     }
+  },
+  "dependencies": {
+    "kick-live-connector": "*",
+    "tiktok-live-connector": "^2.5.0",
+    "ws": "^8.18.2",
+    "youtube-chat": "^2.2.0"
   }
 }
