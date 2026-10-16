@@ -31,10 +31,10 @@ jobs:
       - name: Check web installer and downloadable package
         shell: pwsh
         run: |
-          if (-not (Test-Path "dist/TSRB-MultiChat-Setup.exe")) {
+          if (-not (Test-Path "dist/nsis-web/TSRB-MultiChat-Setup.exe")) {
             throw "Web installer EXE was not built"
           }
-          $packages = @(Get-ChildItem -Path dist -Filter '*.7z' -File)
+          $packages = @(Get-ChildItem -Path dist/nsis-web -Filter '*.nsis.7z' -File)
           if ($packages.Count -eq 0) {
             throw "Missing required application download package (*.7z)"
           }
@@ -42,9 +42,9 @@ jobs:
         with:
           name: TSRB-MultiChat-Web-Installer
           path: |
-            desktop/dist/TSRB-MultiChat-Setup.exe
-            desktop/dist/*.7z
-            desktop/dist/latest.yml
+            desktop/dist/nsis-web/TSRB-MultiChat-Setup.exe
+            desktop/dist/nsis-web/*.nsis.7z
+            desktop/dist/nsis-web/latest.yml
           if-no-files-found: error
       - name: Publish web installer and package to GitHub Releases
         if: github.ref == 'refs/heads/main'
@@ -54,9 +54,9 @@ jobs:
         run: |
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
           $tag = "v$version"
-          $assets = @("dist/TSRB-MultiChat-Setup.exe")
-          $assets += @(Get-ChildItem -Path dist -Filter '*.7z' -File | ForEach-Object { $_.FullName })
-          if (Test-Path 'dist/latest.yml') { $assets += 'dist/latest.yml' }
+          $assets = @("dist/nsis-web/TSRB-MultiChat-Setup.exe")
+          $assets += @(Get-ChildItem -Path dist/nsis-web -Filter '*.nsis.7z' -File | ForEach-Object { $_.FullName })
+          if (Test-Path 'dist/nsis-web/latest.yml') { $assets += 'dist/nsis-web/latest.yml' }
           gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag @assets --clobber --repo $env:GITHUB_REPOSITORY
