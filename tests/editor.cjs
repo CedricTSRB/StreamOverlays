@@ -38,7 +38,7 @@ const assert=require('node:assert/strict');
  await page.mouse.move(gr.x+gr.width/2,gr.y+gr.height/2);await page.mouse.down();await page.mouse.move(gr.x+gr.width/2+20*gs,gr.y+gr.height/2+20*gs);await page.mouse.up();
  assert.equal(await page.locator('#box-width').inputValue(),'570');assert.equal(await page.locator('#box-height').inputValue(),'160');
  await page.locator('[data-editor-tab=goals]').click();await page.locator('#timer-toggle').click();
- const time=await page.locator('#preview-timer').textContent();await page.waitForTimeout(1100);assert.notEqual(await page.locator('#preview-timer').textContent(),time);
+ const time=await page.locator('#preview-timer').textContent();await page.waitForFunction(previous=>document.querySelector('#preview-timer')?.textContent!==previous,time,{timeout:5000});assert.notEqual(await page.locator('#preview-timer').textContent(),time);
  await page.locator('#timer-toggle').click();const paused=await page.locator('#preview-timer').textContent();await page.waitForTimeout(1100);assert.equal(await page.locator('#preview-timer').textContent(),paused);
  await page.locator('#timer-reset').click();
  await page.locator('[data-widget=subs]').click();
