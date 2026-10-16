@@ -51,27 +51,97 @@ const root=document.getElementById('obs-overlay-root');if(root)root.hidden=true;
 const canvas=document.createElement('main');canvas.className='ss-obs-canvas';canvas.append(createScene(state.pack,state.stage));document.body.append(canvas);return;
 }
 const work=document.createElement('section');work.className='ss-workspace';work.id='stream-scenes';work.hidden=true;
-work.innerHTML='<div class="ss-header"><span class="section-index">CREATOR TOOLS / STREAM-SZENEN</span><h1>Deine Stream-Szenen.</h1><p>Such dir ein Design aus und sieh dir alle drei passenden Bildschirme an. 24 eigenständige animierte Design-Sets mit Pinterest-Inspiration.</p></div><div class="ss-feature"><div class="ss-feature-main"><span class="section-index">01 / GROẞE VORSCHAU</span><div class="ss-controls"><label>Dein Kanalname <input id="ss-name" maxlength="48" placeholder="Dein Kanalname"></label><label>Eigener Untertitel (optional) <input id="ss-caption" maxlength="48" placeholder="Der Stream beginnt gleich"></label></div><div id="ss-feature-preview"></div><div class="ss-stage-switch"><button type="button" data-ss-stage="soon">Starting Soon</button><button type="button" data-ss-stage="brb">Be Right Back</button><button type="button" data-ss-stage="ending">Stream Ending</button></div><div class="ss-feature-actions"><button type="button" class="btn btn-primary" id="ss-copy">OBS-Link kopieren ↗</button><button type="button" class="btn btn-outline" id="ss-open">Vollbildvorschau ⤢</button><button type="button" class="btn btn-outline" id="ss-image">Bilddatei speichern ↓</button></div><p class="ss-note">Animiert in OBS mit einer Browserquelle (1920 × 1080). Die Bilddatei ist eine statische SVG-Datei. Änderungen erfordern einen neuen OBS-Link.</p></div><div class="ss-trio-panel"><span class="section-index">02 / ALLE DREI BILDSCHIRME</span><div id="ss-trio" class="ss-trio"></div></div></div><div class="ss-library-head"><div><span class="section-index">03 / DESIGN AUSWÄHLEN</span><h2>24 Stream-Bundles</h2><p>Jedes Design besteht aus Starting Soon, Be Right Back und Stream Ending. Eigenständig gestaltet statt fremde Pinterest-Bilder zu kopieren.</p></div><div class="ss-filter"><label for="ss-filter">Kategorie</label><select id="ss-filter"><option value="Alle">Alle Designs</option></select></div></div><div class="ss-library" id="ss-library"></div>';
+work.innerHTML=`
+  <div class="ss-header">
+    <span class="section-index">CREATOR TOOLS / STREAM-SZENEN</span>
+    <h1>Stream-Szenen</h1>
+    <p>Wähle oben deinen Bildschirm – genau wie bei Abo-Ziel, Follower-Ziel und Stream-Timer. Such dir danach ein Design aus. Jede Karte zeigt dir direkt eine Bild-Vorschau.</p>
+  </div>
+  <div class="ss-section-heading">
+    <div><span class="section-index">01 / BILDSCHIRM AUSWÄHLEN</span><h2>Was möchtest du zeigen?</h2></div>
+    <span class="ss-section-hint">Einfach auf eine Vorschau klicken</span>
+  </div>
+  <div class="ss-mode-picker" id="ss-mode-picker" role="group" aria-label="Stream-Bildschirm auswählen"></div>
+  <div class="ss-work-grid" id="ss-work-grid">
+    <section class="ss-panel ss-preview-panel">
+      <div class="ss-panel-title"><div><span class="section-index">02 / LIVE-VORSCHAU</span><h2 id="ss-current-title">Starting Soon</h2></div><span class="ss-live-dot">● VORSCHAU</span></div>
+      <div id="ss-feature-preview" aria-live="polite"></div>
+      <div class="ss-stage-switch" role="group" aria-label="Bildschirm wechseln">
+        <button type="button" data-ss-stage="soon">Starting Soon</button>
+        <button type="button" data-ss-stage="brb">Be Right Back</button>
+        <button type="button" data-ss-stage="ending">Stream Ending</button>
+      </div>
+      <div class="ss-feature-actions">
+        <button type="button" class="btn btn-primary" id="ss-copy">OBS-Link kopieren ↗</button>
+        <button type="button" class="btn btn-outline" id="ss-open">Große Vorschau ⤢</button>
+        <button type="button" class="btn btn-outline" id="ss-image">Als Bild speichern ↓</button>
+      </div>
+      <p class="ss-note">Browserquelle in OBS: 1920 × 1080 Pixel. Die OBS-Version ist animiert; die Bilddatei ist ein statisches SVG. Bei Änderungen bitte einen neuen Link kopieren.</p>
+    </section>
+    <section class="ss-panel ss-settings-panel">
+      <span class="section-index">03 / PERSONALISIEREN</span>
+      <h2>Mach es zu deinem Stream</h2>
+      <p>Die Anpassungen gelten für alle drei Bildschirme deines gewählten Sets.</p>
+      <div class="ss-controls">
+        <label for="ss-name">Kanalname<input id="ss-name" maxlength="48" placeholder="Dein Kanalname"></label>
+        <label for="ss-caption">Untertitel (optional)<input id="ss-caption" maxlength="48" placeholder="Der Stream beginnt gleich"></label>
+      </div>
+      <div class="ss-selected-pack"><span>Aktuell ausgewähltes Design</span><strong id="ss-pack-title">Cyber Violet</strong><span id="ss-pack-category">Gaming</span></div>
+      <p class="ss-note">Klicke unten auf eines der 24 Designs. Alle drei Szenen übernehmen die Auswahl gleichzeitig.</p>
+    </section>
+  </div>
+  <section class="ss-panel ss-trio-panel">
+    <div class="ss-section-heading"><div><span class="section-index">04 / PASSENDES 3ER-BUNDLE</span><h2>Alle drei Bildschirme</h2></div><span class="ss-section-hint">Jeden einzeln in OBS verwenden</span></div>
+    <div id="ss-trio" class="ss-trio"></div>
+  </section>
+  <div class="ss-section-heading ss-gallery-heading"><div><span class="section-index">05 / DESIGN-BIBLIOTHEK</span><h2>Design wählen <span class="ss-count">24 Vorlagen</span></h2><p>Bild-Vorschau anklicken und sofort oben sehen. Alle Designs sind eigenständig erstellt; Pinterest-Links dienen nur der Inspiration.</p></div><div class="ss-filter"><label for="ss-filter">Kategorie</label><select id="ss-filter"><option value="Alle">Alle Designs</option></select></div></div>
+  <div class="ss-library" id="ss-library"></div>
+`;
 document.querySelector('.main')?.append(work);
 const nav=document.querySelector('.sidebar nav');
 if(nav&&!nav.querySelector('[data-nav="stream-scenes"]'))nav.insertAdjacentHTML('beforeend','<a href="#stream-scenes" class="nav-link" data-nav="stream-scenes"><span class="nav-ico">▣</span> Stream-Szenen</a>');
 const $=id=>document.getElementById(id);
 for(const cat of [...new Set(packs.map(p=>p[4]))]){const el=document.createElement('option');el.textContent=cat;el.value=cat;$('ss-filter').append(el)}
 function url(){const result=new URL(location.href);result.hash='';result.search='';result.searchParams.set('overlay','scene');result.searchParams.set('config',JSON.stringify(state));return result.href}
-function feature(){save();$('ss-feature-preview').replaceChildren(createScene(state.pack,state.stage));$('ss-trio').replaceChildren(...screens.map(screen=>{
-const wrapper=document.createElement('div');wrapper.className='ss-trio-item';wrapper.append(createScene(state.pack,screen[0],true));
-const foot=document.createElement('div');foot.className='ss-trio-foot';const label=document.createElement('strong');label.textContent=screen[1];
-const actions=document.createElement('div');actions.className='ss-trio-actions';
-const link=document.createElement('button');link.className='ss-mini-button';link.type='button';link.textContent='OBS ↗';link.addEventListener('click',()=>copy(screen[0],link));
-const img=document.createElement('button');img.className='ss-mini-button';img.type='button';img.textContent='Bild ↓';img.addEventListener('click',()=>download(screen[0]));
-actions.append(link,img);foot.append(label,actions);wrapper.append(foot);return wrapper
-}));document.querySelectorAll('[data-ss-stage]').forEach(b=>b.classList.toggle('is-selected',b.dataset.ssStage===state.stage));document.querySelectorAll('.ss-pack').forEach(b=>b.classList.toggle('is-selected',Number(b.dataset.pack)===state.pack))}
+function feature(){
+save();
+$('ss-feature-preview').replaceChildren(createScene(state.pack,state.stage));
+$('ss-current-title').textContent=screens.find(x=>x[0]===state.stage)?.[1]||'Starting Soon';
+$('ss-pack-title').textContent=packs[state.pack][0];
+$('ss-pack-category').textContent=packs[state.pack][4];
+const picker=$('ss-mode-picker');picker.replaceChildren(...screens.map((screen,i)=>{
+ const button=document.createElement('button');
+ button.type='button';button.className='ss-mode-card'+(state.stage===screen[0]?' is-selected':'');
+ button.dataset.sceneType=screen[0];button.setAttribute('aria-pressed',String(state.stage===screen[0]));
+ button.setAttribute('aria-label',screen[1]+' auswählen');
+ button.append(createScene(state.pack,screen[0],true));
+ const footer=document.createElement('div');footer.className='ss-mode-footer';
+ const icon=document.createElement('span');icon.className='ss-mode-icon';icon.textContent=['▶','Ⅱ','■'][i];
+ const info=document.createElement('div');const title=document.createElement('strong');title.textContent=screen[1];
+ const desc=document.createElement('span');desc.textContent=['Vor dem Stream','Pause im Stream','Nach dem Stream'][i];info.append(title,desc);
+ const check=document.createElement('span');check.className='ss-mode-check';check.textContent='✓';
+ footer.append(icon,info,check);button.append(footer);
+ button.addEventListener('click',()=>{state.stage=screen[0];feature()});return button
+}));
+$('ss-trio').replaceChildren(...screens.map(screen=>{
+ const wrapper=document.createElement('div');wrapper.className='ss-trio-item'+(state.stage===screen[0]?' is-selected':'');
+ wrapper.append(createScene(state.pack,screen[0],true));
+ const foot=document.createElement('div');foot.className='ss-trio-foot';
+ const label=document.createElement('strong');label.textContent=screen[1];
+ const actions=document.createElement('div');actions.className='ss-trio-actions';
+ const link=document.createElement('button');link.className='ss-mini-button';link.type='button';link.textContent='OBS ↗';link.addEventListener('click',()=>copy(screen[0],link));
+ const img=document.createElement('button');img.className='ss-mini-button ss-subtle-button';img.type='button';img.textContent='Bild ↓';img.addEventListener('click',()=>download(screen[0]));
+ actions.append(link,img);foot.append(label,actions);wrapper.append(foot);return wrapper
+}));
+document.querySelectorAll('[data-ss-stage]').forEach(b=>{const selected=b.dataset.ssStage===state.stage;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected))});
+document.querySelectorAll('.ss-pack').forEach(b=>{const selected=Number(b.dataset.pack)===state.pack;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected))});
+}
 function gallery(){const filter=$('ss-filter').value,lib=$('ss-library');lib.replaceChildren();packs.forEach((p,i)=>{
 if(filter!=='Alle'&&filter!==p[4])return;
 const holder=document.createElement('div');holder.className='ss-pack-holder';const tile=document.createElement('button');tile.type='button';tile.className='ss-pack'+(i===state.pack?' is-selected':'');tile.dataset.pack=i;
-tile.append(createScene(i,'soon',true));
-const title=document.createElement('strong');title.textContent=p[0];const desc=document.createElement('span');desc.textContent=p[4]+' · 3 Bildschirme';tile.append(title,desc);
-tile.addEventListener('click',()=>{state.pack=i;feature();document.querySelector('.ss-feature').scrollIntoView({behavior:'smooth',block:'start'})});
+tile.setAttribute('aria-pressed',String(i===state.pack));tile.setAttribute('aria-label',p[0]+' Design auswählen');tile.append(createScene(i,'soon',true));
+const title=document.createElement('strong');title.textContent=p[0];const desc=document.createElement('span');desc.textContent=p[4]+' · 3 Bildschirme';tile.append(title,desc);const mark=document.createElement('span');mark.className='ss-design-selected';mark.textContent='✓ Ausgewählt';tile.append(mark);
+tile.addEventListener('click',()=>{state.pack=i;feature();document.querySelector('.ss-work-grid')?.scrollIntoView({behavior:'smooth',block:'start'});});
 const more=document.createElement('a');more.href='https://www.pinterest.com/search/pins/?q='+encodeURIComponent(p[4]+' stream starting soon be right back ending bundle');more.target='_blank';more.rel='noopener noreferrer';more.textContent='Pinterest-Inspiration ↗';more.title='Pinterest-Suche nach ähnlichen Stream-Bundles. Keine fremden Vorlagen werden verwendet.';
 holder.append(tile,more);lib.append(holder);
 })}
