@@ -31,5 +31,24 @@ function connect(session,handle,status){
  }
  open();return ()=>{active=false;clearTimeout(timer);if(ws){ws.onclose=null;ws.close()}};
 }
-window.TSRB_CHAT_BRIDGE=Object.freeze({parse,connect});
+function connectTwitch(channel,handle,status){
+ const name=String(channel||'').trim().replace(/^#/,'').toLowerCase();
+ if(!/^[a-z0-9_]{3,25}$/.test(name)){status?.('error','Ungültiger Twitch-Kanal');return ()=>{}}
+ let ws=null,timer=null,active=true,attempt=0;
+ function start(){if(!active)return;status?.('connecting','Twitch IRC wird verbunden …');
+ try{
+  ws=new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+  ws.onopen=()=>{attempt=0;ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands');ws.send('NICK justinfan'+Math.floor(100000+Math.random()*899999));ws.send('JOIN #'+name);status?.('connected','Twitch-Verbindung geöffnet – warte auf Nachrichten')};
+  ws.onmessage=e=>{for(const line of String(e.data).split(/\r?\n/)){
+   if(line.startsWith('PING ')){ws.send(line.replace(/^PING /,'PONG '));continue}
+   if(/Login authentication failed/i.test(line)){status?.('error','Twitch blockiert den anonymen IRC-Zugang');continue}
+   const m=line.match(/^(?:@([^ ]+) )?:([^! ]+)![^ ]+ PRIVMSG #[^ ]+ :([\s\S]*)$/);
+   if(m){const tag=(m[1]||'').split(';').find(t=>t.startsWith('display-name='));handle({platform:'twitch',user:clean(tag?.slice(13)||m[2]).replace(/\\s/g,' '),text:clean(m[3]),time:Date.now()})}
+  }};
+  ws.onerror=()=>status?.('error','Twitch IRC nicht erreichbar');
+  ws.onclose=()=>{if(active){status?.('disconnected','Twitch getrennt – erneuter Versuch …');timer=setTimeout(start,Math.min(30000,1000*2**Math.min(attempt++,5)))}};
+ }catch(e){status?.('error',e.message);timer=setTimeout(start,5000)} }
+ start();return ()=>{active=false;clearTimeout(timer);if(ws){ws.onclose=null;ws.close()}}
+}
+window.TSRB_CHAT_BRIDGE=Object.freeze({parse,connect,connectTwitch});
 })();
