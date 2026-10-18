@@ -1,0 +1,29 @@
+name: Browser MultiChat Tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'multichat.js'
+      - 'multichat-relay.js'
+      - 'multichat.css'
+      - 'index.html'
+      - 'tests/multichat.cjs'
+      - '.github/workflows/multichat-browser.yml'
+  workflow_dispatch:
+jobs:
+  chat-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Start local website
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/tsrb-mc.log 2>&1 &
+          sleep 2
+      - name: Check browser MultiChat UI and OBS
+        run: node tests/multichat.cjs
