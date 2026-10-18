@@ -6,4 +6,23 @@ const url=await page.evaluate(()=>navigator.clipboard.readText());assert(url.inc
 const obs=await browser.newPage({viewport:{width:800,height:900}});await obs.goto(url);assert.equal(await obs.locator('.mc-obs-feed').count(),1);
 await obs.evaluate(()=>{window.WebSocket=class{constructor(url){this.url=url;window.__connectedSocket=url;setTimeout(()=>this.onopen?.(),0)}close(){}}});await obs.close();
 await page.locator('[data-mc-tab=connections]').click();await page.locator('#mc-session').fill('Invalid session!!');await page.locator('#mc-connect').click();assert.match(await page.locator('#mc-connection-status').textContent(),/Twitch|Verbinde|Verbindung|verbunden/i);
-await page.reload();await page.locator('[data-nav="multi-chat"]').click();await page.locator('#multi-chat').waitFor({state:'visible'});assert.equal(await page.locator('#mc-channel-twitch').inputValue(),'samplechannel');assert.deepEqual(errors,[]);await browser.close();console.log('PASS: six channels, saved fields, OBS snapshot, transparent overlay, invalid session');})().catch(e=>{console.error(e);process.exit(1)});
+await page.reload();await page.locator('[data-nav="multi-chat"]').click();await page.locator('#multi-chat').waitFor({state:'visible'});assert.equal(await page.locator('#mc-channel-twitch').inputValue(),'samplechannel');const fake=await browser.newPage({viewport:{width:1200,height:850}});
+await fake.addInitScript(()=>{
+ window.WebSocket=class{
+ constructor(url){this.url=url;window.__relaySocket=this;setTimeout(()=>this.onopen?.(),15)}
+ send(){}
+ close(){}
+ emit(data){this.onmessage?.({data:JSON.stringify(data)})}
+ };
+});
+await fake.goto(process.env.TEST_URL||'http://127.0.0.1:8765/');
+await fake.locator('[data-nav="multi-chat"]').click();await fake.locator('#multi-chat').waitFor({state:'visible'});
+await fake.locator('#mc-session').fill('TesterSession987');
+await fake.locator('#mc-connect').click();
+await fake.waitForFunction(()=>window.__relaySocket?.url.includes('/TesterSession987/4'));
+for(const type of ['twitch','tiktok','kick','youtube','facebook','instagram'])await fake.evaluate(t=>window.__relaySocket.emit({type:t,chatname:'TestUser',chatmessage:'Message from '+t}),type);
+assert.equal(await fake.locator('.mc-live-item').count(),6);
+await fake.locator('#mc-live-filter').selectOption('tiktok');
+assert.equal(await fake.locator('.mc-live-item:visible').count(),1);
+await fake.close();
+assert.deepEqual(errors,[]);await browser.close();console.log('PASS: six channels, saved fields, OBS snapshot, transparent overlay, invalid session');})().catch(e=>{console.error(e);process.exit(1)});
