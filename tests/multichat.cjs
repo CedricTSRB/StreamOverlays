@@ -3,6 +3,16 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 for(const platform of ['twitch','tiktok','kick','youtube','facebook','instagram'])assert.equal(await page.locator('#mc-channel-'+platform).count(),1);
 await page.locator('#mc-channel-twitch').fill('samplechannel');await page.locator('.mc-relay-card summary').click();await page.locator('#mc-session').fill('ExampleSession123');await page.locator('#mc-save').click();assert.match(await page.locator('#mc-save-status').textContent(),/lokal gespeichert/i,'save works even without cloud backend');assert.doesNotMatch(await page.locator('#mc-save-status').textContent(),/Failed to fetch|fehlgeschlagen/i);await page.locator('[data-mc-tab=overlay]').click();
 assert.equal(await page.locator('.mc-theme-tile').count(),20,'20 theme tiles should be shown');
+const previewBeforeGallery=await page.evaluate(()=>document.querySelector('#mc-preview').compareDocumentPosition(document.querySelector('.mc-theme-gallery'))&Node.DOCUMENT_POSITION_FOLLOWING);
+assert(previewBeforeGallery,'large preview must appear before theme gallery');
+assert.equal(await page.locator('.mc-preview-dock').evaluate(el=>getComputedStyle(el).position),'sticky','preview stays visible when scrolling');
+await page.locator('#mc-position').selectOption('top');
+assert.equal(await page.locator('#mc-preview').getAttribute('data-position'),'top','preview reflects position immediately');
+await page.locator('#mc-platform-label').selectOption('false');
+assert.equal(await page.locator('#mc-preview .mc-msg strong').first().textContent(),'BeispielUser:','platform labels update immediately');
+await page.locator('#mc-size').fill('28');
+assert.equal(await page.locator('#mc-preview .mc-msg').first().evaluate(el=>el.style.fontSize),'28px','font size updates immediately');
+
 await page.locator('#mc-theme-search').fill('arcade');
 assert.equal(await page.locator('.mc-theme-tile:visible').count(),1,'theme search filters cards');
 await page.locator('#mc-theme-search').fill('');
