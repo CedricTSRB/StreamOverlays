@@ -1,2 +1,3 @@
-/* Public chat configuration API; no OAuth secrets are stored in the website. */
-window.STREAMOVERLAYS_CHAT_API='https://streamoverlays-chat.cedric-liese1307.workers.dev';
+/* Cloud chat syncing is disabled until the dedicated chat Worker is deployed.
+   MultiChat always saves locally and creates self-contained OBS links. */
+window.STREAMOVERLAYS_CHAT_API='';
