@@ -22,6 +22,16 @@ body:not(.obs-mode) .mc-space{padding:28px clamp(18px,3vw,48px);max-width:1500px
 @media(max-width:600px){.mc-relay-card{padding:12px}.mc-live-header h3{flex:1 0 100%}.mc-live-item b{min-width:66px}}
 
 
+/* Keep the example chat visible while choosing styles and editing settings. */
+.mc-preview-dock{position:sticky;top:12px;z-index:4;background:var(--ui-panel,#172235);border:1px solid var(--ui-border,#44506a);border-radius:16px;padding:13px 15px 2px;box-shadow:0 8px 28px #060c2040}
+.mc-preview-dock-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mc-preview-dock-heading h3{font-size:16px;margin:0;color:var(--ui-ink,#eef2ff)}
+.mc-preview-dock-heading span{font-size:11px;color:var(--ui-muted,#b0bed4)}
+.mc-preview-dock .mc-preview{margin:11px 0 12px}
+.mc-preview[data-position="top"]{justify-content:flex-start;padding-top:43px}
+.mc-preview[data-position="bottom"]{justify-content:flex-end}
+@media(max-width:700px){.mc-preview-dock{top:7px;padding:10px 11px 0}.mc-preview-dock .mc-preview{min-height:170px;max-height:205px;overflow:hidden;padding:32px 12px 12px}.mc-preview-dock-heading h3{font-size:14px}}
+
 /* MultiChat theme gallery v2 */
 .mc-theme-gallery{margin:20px 0 28px}
 .mc-theme-gallery-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
