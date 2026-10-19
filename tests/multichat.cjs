@@ -1,7 +1,7 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});const page=await browser.newPage({viewport:{width:1400,height:960},permissions:['clipboard-read','clipboard-write']});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.TEST_URL||'http://127.0.0.1:8765/');await page.locator('[data-nav="multi-chat"]').click();await page.locator('#multi-chat').waitFor({state:'visible'});
 for(const platform of ['twitch','tiktok','kick','youtube','facebook','instagram'])assert.equal(await page.locator('#mc-channel-'+platform).count(),1);
-await page.locator('#mc-channel-twitch').fill('samplechannel');await page.locator('.mc-relay-card summary').click();await page.locator('#mc-session').fill('ExampleSession123');await page.locator('#mc-save').click();await page.locator('[data-mc-tab=overlay]').click();
+await page.locator('#mc-channel-twitch').fill('samplechannel');await page.locator('.mc-relay-card summary').click();await page.locator('#mc-session').fill('ExampleSession123');await page.locator('#mc-save').click();assert.match(await page.locator('#mc-save-status').textContent(),/lokal gespeichert/i,'save works even without cloud backend');assert.doesNotMatch(await page.locator('#mc-save-status').textContent(),/Failed to fetch|fehlgeschlagen/i);await page.locator('[data-mc-tab=overlay]').click();
 assert.equal(await page.locator('.mc-theme-tile').count(),20,'20 theme tiles should be shown');
 await page.locator('#mc-theme-search').fill('arcade');
 assert.equal(await page.locator('.mc-theme-tile:visible').count(),1,'theme search filters cards');
