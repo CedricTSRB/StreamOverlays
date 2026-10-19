@@ -17,6 +17,11 @@ await fake.addInitScript(()=>{
 });
 await fake.goto(process.env.TEST_URL||'http://127.0.0.1:8765/');
 await fake.locator('[data-nav="multi-chat"]').click();await fake.locator('#multi-chat').waitFor({state:'visible'});
+await fake.locator('#mc-channel-twitch').fill('testchannel');
+await fake.waitForFunction(()=>window.__relaySocket?.url.includes('irc-ws.chat.twitch.tv'),{timeout:5000});
+await fake.evaluate(()=>window.__relaySocket.onmessage?.({data:':Viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #testchannel :Hallo aus Twitch\\r\\n'.replace(/\\r/g,'\r').replace(/\\n/g,'\n')}));
+assert.equal(await fake.locator('.mc-live-item').count(),1,'typing Twitch channel starts live chat automatically');
+await fake.locator('#mc-clear').click();
 await fake.locator('#mc-session').fill('TesterSession987');
 await fake.locator('#mc-connect').click();
 await fake.waitForFunction(()=>window.__relaySocket?.url.includes('/TesterSession987/4'));
