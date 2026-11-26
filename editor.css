@@ -28,7 +28,10 @@
 }
 body.obs-mode .obs-content {width:max-content;max-width:none}
 body.obs-mode .obs-root {padding:24px!important}
-body:not(.obs-mode) .preview-inner {display:block!important;overflow:auto;max-height:720px;min-height:300px;padding:24px!important}
+body:not(.obs-mode) .preview-inner {display:block!important;position:relative!important;overflow:auto;max-height:720px;min-height:300px;padding:24px!important}
+/* Keep the preview canvas anchored while text size/content changes; the previous
+   in-flow layout let its vertical position drift as the rendered content grew. */
+body:not(.obs-mode) #overlay-preview {position:absolute!important;left:24px!important;top:24px!important;margin:0!important;align-self:flex-start!important}
 body:not(.obs-mode) .preview-inner::after {pointer-events:none}
 body:not(.obs-mode) .preview-stage :is(.goal-top,.timer-card-content) {cursor:grab;touch-action:none;user-select:none}
 body:not(.obs-mode) .preview-stage :is(.goal-top,.timer-card-content):hover {outline:1px dashed #b4a5ff;outline-offset:5px}
