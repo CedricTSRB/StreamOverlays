@@ -1,0 +1,79 @@
+name: Full project regression checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.js'
+      - '**/*.css'
+      - '**/*.html'
+      - '**/*.json'
+      - '**/*.sql'
+      - '**/*.toml'
+      - 'tests/**'
+      - 'desktop/tests/**'
+      - '.github/workflows/full-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    name: Browser and OBS overlay tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Start local website
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/streamoverlays-http.log 2>&1 &
+          sleep 2
+      - name: Overlay editor and OBS
+        run: npm test
+      - name: Goal presets and OBS
+        run: node tests/goal-presets.cjs
+      - name: Stream scenes and OBS
+        run: node tests/scenes.cjs
+      - name: MultiChat browser and OBS
+        run: node tests/multichat.cjs
+
+  desktop:
+    name: Windows MultiChat backend unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+
+  syntax:
+    name: JavaScript syntax validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript files
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node --check "$file"
+          done < <(find . -path './.git' -prune -o -path './desktop/node_modules' -prune -o -name '*.js' -print0)
