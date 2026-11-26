@@ -6,6 +6,8 @@ let hasSession = false;
 const timerKey = 'SubBoostStudioTimerV1';
 let timer = { durationMs: 12 * 3600000, remainingMs: 12 * 3600000, running: false, startedAt: null };
 let lastSessionUpdate = { followers: 0, subs: 0 };
+const pendingFallback = { followers: 0, subs: 0 };
+const fallbackTimers = { followers: null, subs: null };
 const $ = (id) => document.getElementById(id);
 const number = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 const pct = (value, target) => Math.min(100, Math.max(0, value / Math.max(1, target) * 100));
@@ -31,11 +33,21 @@ function readSession(data) {
   const root = config.countMode === 'total' ? '-total' : '-session';
   const f = data['follower' + root]?.count;
   const s = data['subscriber' + root]?.count;
-  if (Number.isFinite(Number(f))) session.followers = number(f);
-  if (Number.isFinite(Number(s))) session.subs = number(s);
+  if (Number.isFinite(Number(f))) {
+    session.followers = number(f);
+    pendingFallback.followers = 0;
+    if (fallbackTimers.followers) clearTimeout(fallbackTimers.followers);
+    fallbackTimers.followers = null;
+    lastSessionUpdate.followers = Date.now();
+  }
+  if (Number.isFinite(Number(s))) {
+    session.subs = number(s);
+    pendingFallback.subs = 0;
+    if (fallbackTimers.subs) clearTimeout(fallbackTimers.subs);
+    fallbackTimers.subs = null;
+    lastSessionUpdate.subs = Date.now();
+  }
   hasSession = true;
-  lastSessionUpdate.followers = Date.now();
-  lastSessionUpdate.subs = Date.now();
   render();
 }
 function persistTimer() { try { SE_API.store.set(timerKey, timer); } catch (_) {} }
@@ -72,11 +84,23 @@ window.addEventListener('onEventReceived', function (obj) {
     if (event.field === 'toggleTimer') toggleTimer();
     if (event.field === 'resetTimer') resetTimer();
   }
-  /* Fallback, falls der Session-Update-Event ausbleibt; max verhindert doppelte Zählung. */
+  /* Fallback, falls Session-Updates ausbleiben. Ereignisse im selben Zeitfenster sammeln,
+     damit mehrere schnelle Subs/Follows nicht versehentlich zu einem einzigen werden.
+     Ein echtes Session-Update verwirft den Puffer und verhindert doppelte Zählung. */
   if (type === 'follower-latest' || type === 'subscriber-latest') {
     const key = type === 'follower-latest' ? 'followers' : 'subs';
     const amount = key === 'followers' ? 1 : (event.bulkGifted ? Math.max(1, number(event.amount, 1)) : 1);
-    const old = session[key];
-    setTimeout(() => { if (session[key] === old && Date.now() - lastSessionUpdate[key] > 600) { session[key] = old + amount; render(); } }, 900);
+    pendingFallback[key] += amount;
+    if (!fallbackTimers[key]) {
+      fallbackTimers[key] = setTimeout(() => {
+        fallbackTimers[key] = null;
+        const pending = pendingFallback[key];
+        pendingFallback[key] = 0;
+        if (pending > 0 && Date.now() - lastSessionUpdate[key] > 600) {
+          session[key] += pending;
+          render();
+        }
+      }, 900);
+    }
   }
 });
